@@ -1,0 +1,38 @@
+.performanceGrid {
+  grid-template-columns: minmax(120px, 1.5fr) repeat(4, minmax(50px, 1fr));
+}
+
+.volumeGrid {
+  grid-template-columns: minmax(120px, 1.5fr) minmax(70px, 1fr);
+}
+
+.legendIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.375rem;
+  border-radius: 0.125rem;
+}
+
+.performancePositive {
+  background-color: rgba(34, 197, 94, 0.8);
+}
+
+.performanceNeutral {
+  background-color: rgba(234, 179, 8, 0.8);
+}
+
+.performanceNegative {
+  background-color: rgba(239, 68, 68, 0.8);
+}
+
+.volumeHigh {
+  background-color: #166534;
+}
+
+.volumeMid {
+  background-color: #b45309;
+}
+
+.volumeLow {
+  background-color: #7f1d1d;
+}

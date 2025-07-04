@@ -1,0 +1,5 @@
+{
+  "name": "Crypto Analysis Suite",
+  "description": "An integrated suite to analyze and visualize performance data for top cryptocurrencies using data tables, heatmaps, statistical charts, a portfolio simulator, and AI-driven insights from the Gemini API.",
+  "requestFramePermissions": []
+}

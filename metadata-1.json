@@ -1,0 +1,6 @@
+
+{
+  "name": "Crypto Performance Analyzer",
+  "description": "Analyzes and visualizes performance data for the top 1000 cryptocurrencies using heatmaps and AI-driven insights from the Gemini API.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,73 @@
+.heatmapGrid {
+  display: grid;
+  gap: 2px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgb(30 41 59 / 0.5);
+  border: 1px solid rgb(51 65 85);
+}
+
+.heatmapCell {
+  width: 120px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.heatmapCell:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  z-index: 10;
+}
+
+.cellSymbol {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.cellValue {
+  font-size: 0.6875rem;
+  opacity: 0.9;
+}
+
+.legendIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.375rem;
+  border-radius: 0.125rem;
+}
+
+.legendPositive {
+  background-color: rgba(34, 197, 94, 0.8);
+}
+
+.legendNeutral {
+  background-color: rgba(234, 179, 8, 0.8);
+}
+
+.legendNegative {
+  background-color: rgba(239, 68, 68, 0.8);
+}
+
+.legendHigh {
+  background-color: #166534;
+}
+
+.legendMid {
+  background-color: #b45309;
+}
+
+.legendLow {
+  background-color: #7f1d1d;
+}

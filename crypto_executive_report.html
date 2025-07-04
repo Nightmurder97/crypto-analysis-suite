@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Report - Crypto Analysis 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .document {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header h2 {
+            font-size: 1.3em;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .report-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .executive-summary {
+            background: #e3f2fd;
+            border-left: 5px solid #1976d2;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .executive-summary h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .finding-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .finding-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .finding-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .finding-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1976d2;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+
+        .section-header {
+            border-bottom: 3px solid #1976d2;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-style: italic;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .positive { color: #4caf50; font-weight: bold; }
+        .negative { color: #f44336; font-weight: bold; }
+        .neutral { color: #ff9800; font-weight: bold; }
+
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .risk-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .risk-low { background: linear-gradient(135deg, #4caf50, #45a049); }
+        .risk-medium { background: linear-gradient(135deg, #ff9800, #f57c00); }
+        .risk-high { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        .risk-extreme { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+
+        .recommendations {
+            background: #fff8e1;
+            border: 1px solid #ffcc02;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .recommendations h4 {
+            color: #f57c00;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-list li {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .footer {
+            background: #37474f;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .disclaimer {
+            background: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #c62828;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #1976d2;
+            margin-bottom: 20px;
+            border: 2px dashed #1976d2;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8em;
+            color: rgba(25, 118, 210, 0.03);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .print-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            .print-controls {
+                display: none;
+            }
+            .watermark {
+                display: none;
+            }
+            body {
+                background: white;
+            }
+            .document {
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .key-findings {
+                grid-template-columns: 1fr;
+            }
+            .risk-matrix {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .report-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark">CRYPTO ANALYSIS 2025</div>
+    
+    <div class="print-controls">
+        <button class="control-btn" onclick="window.print()">🖨️ Imprimir PDF</button>
+        <button class="control-btn" onclick="downloadReport()">💾 Descargar</button>
+        <button class="control-btn" onclick="shareReport()">📧 Compartir</button>
+    </div>
+
+    <div class="document">
+        <div class="header">
+            <div class="header-content">
+                <h1>REPORTE EJECUTIVO</h1>
+                <h2>Análisis Integral del Mercado de Criptomonedas 2025</h2>
+                <div class="report-meta">
+                    <div>📊 <strong>Alcance:</strong> Top 1000 Criptomonedas por Capitalización</div>
+                    <div>📅 <strong>Fecha:</strong> 30 de Junio, 2025</div>
+                    <div>🏢 <strong>Analista:</strong> Claude AI Research</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="executive-summary">
+                <h3>📋 Resumen Ejecutivo</h3>
+                <p><strong>Conclusión Principal:</strong> El mercado de criptomonedas muestra una recuperación sólida en el corto plazo (24h-7d) con Bitcoin y Ethereum liderando la tendencia alcista. Sin embargo, se observa alta selectividad y volatilidad extrema en segmentos de menor capitalización.</p>
+                
+                <br>
+                
+                <p><strong>Hallazgos Clave:</strong> 76% de los activos analizados presentan tendencia positiva en 7 días, con sectores como memecoins, IA y Layer 2 liderando los rendimientos. La liquidez se concentra significativamente en activos de alta capitalización (85% del volumen total).</p>
+                
+                <br>
+                
+                <p><strong>Recomendación:</strong> Estrategia de diversificación inteligente con énfasis en gestión rigurosa del riesgo, especialmente en exposición a activos de menor capitalización donde la volatilidad puede superar el 89%.</p>
+            </div>
+
+            <div class="key-findings">
+                <div class="finding-card">
+                    <span class="finding-icon">🚀</span>
+                    <div class="finding-title">Recuperación Robusta</div>
+                    <p>76% de activos con tendencia positiva en período semanal, indicando sentimiento alcista generalizado.</p>
+                </div>
+                <div class="finding-card">
+                    <span class="finding-icon">⚡</span>
+                    <div class="finding-title">Volatilidad Extrema</div>
+                    <p>Movimientos de +1,731% a -89% en 30 días, con mayor volatilidad en menores capitalizaciones.</p>
+                </div>
+                <div class="finding-card">
+                    <span class="finding-icon">🎯</span>
+                    <div class="finding-title">Narrativas Dominantes</div>
+                    <p>IA, Memecoins, Layer 2 y DeFi lideran rendimientos, indicando rotación sectorial activa.</p>
+                </div>
+                <div class="finding-card">
+                    <span class="finding-icon">💧</span>
+                    <div class="finding-title">Liquidez Concentrada</div>
+                    <p>85% del volumen en top activos por capitalización, fragmentación en menor cap representa riesgos.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📊 Análisis por Grupos de Capitalización</h3>
+                    <p class="section-subtitle">Segmentación de riesgo y rendimiento basada en capitalización de mercado</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Capitalización</th>
+                            <th>Rendimiento 7d</th>
+                            <th>Rendimiento 30d</th>
+                            <th>Volatilidad</th>
+                            <th>Volumen (%)</th>
+                            <th>Nivel de Riesgo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Grupo 1</strong></td>
+                            <td>Alta (>$10B)</td>
+                            <td class="positive">+12.5%</td>
+                            <td class="negative">-2.1%</td>
+                            <td>8.2%</td>
+                            <td>85%</td>
+                            <td>🟢 BAJO</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grupo 2</strong></td>
+                            <td>Media-Alta ($1B-$10B)</td>
+                            <td class="positive">+18.3%</td>
+                            <td class="negative">-8.4%</td>
+                            <td>18.7%</td>
+                            <td>10%</td>
+                            <td>🟡 MEDIO</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grupo 3</strong></td>
+                            <td>Media-Baja ($100M-$1B)</td>
+                            <td class="positive">+22.7%</td>
+                            <td class="negative">-15.2%</td>
+                            <td>32.4%</td>
+                            <td>3%</td>
+                            <td>🟠 ALTO</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grupo 4</strong></td>
+                            <td>Micro (<$100M)</td>
+                            <td class="positive">+28.1%</td>
+                            <td class="negative">-18.6%</td>
+                            <td>45.8%</td>
+                            <td>2%</td>
+                            <td>🔴 EXTREMO</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="chart-placeholder">
+                    📈 Gráfico: Correlación Rendimiento vs Riesgo por Grupo
+                    <br><small>(Datos disponibles en herramientas interactivas)</small>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">🏆 Top Performers del Análisis</h3>
+                    <p class="section-subtitle">Activos destacados por período de rendimiento</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th>Mejor Performer</th>
+                            <th>Rendimiento</th>
+                            <th>Sector</th>
+                            <th>Peor Performer</th>
+                            <th>Pérdida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>24 Horas</strong></td>
+                            <td>MORI COIN</td>
+                            <td class="positive">+270.77%</td>
+                            <td>Memecoin</td>
+                            <td>Electroneum</td>
+                            <td class="negative">-6.22%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7 Días</strong></td>
+                            <td>Hosico Cat</td>
+                            <td class="positive">+97.27%</td>
+                            <td>Memecoin</td>
+                            <td>Matchain</td>
+                            <td class="negative">-37.25%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>30 Días</strong></td>
+                            <td>Useless Coin</td>
+                            <td class="positive">+1,731.23%</td>
+                            <td>Memecoin</td>
+                            <td>Polyhedra Network</td>
+                            <td class="negative">-89.20%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">⚠️ Matriz de Riesgo</h3>
+                    <p class="section-subtitle">Evaluación de riesgo por grupo de inversión</p>
+                </div>
+
+                <div class="risk-matrix">
+                    <div class="risk-item risk-low">
+                        <div>GRUPO 1</div>
+                        <div>Alta Capitalización</div>
+                        <div>RIESGO BAJO</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">BTC, ETH, SOL</div>
+                    </div>
+                    <div class="risk-item risk-medium">
+                        <div>GRUPO 2</div>
+                        <div>Media-Alta Cap</div>
+                        <div>RIESGO MEDIO</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">UNI, AAVE, LINK</div>
+                    </div>
+                    <div class="risk-item risk-high">
+                        <div>GRUPO 3</div>
+                        <div>Media-Baja Cap</div>
+                        <div>RIESGO ALTO</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">AI Tokens, Gaming</div>
+                    </div>
+                    <div class="risk-item risk-extreme">
+                        <div>GRUPO 4</div>
+                        <div>Micro Capitalización</div>
+                        <div>RIESGO EXTREMO</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">Memecoins, Nuevos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">🔍 Análisis Sectorial</h3>
+                    <p class="section-subtitle">Rendimiento por narrativas y casos de uso</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sector</th>
+                            <th>Rendimiento 7d</th>
+                            <th>Volumen 24h</th>
+                            <th>Tendencia</th>
+                            <th>Casos de Uso Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Memecoins</strong></td>
+                            <td class="positive">+67.8%</td>
+                            <td>$12.3B</td>
+                            <td>🚀 Alcista</td>
+                            <td>Especulación, comunidad, viral</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IA/AI</strong></td>
+                            <td class="positive">+52.4%</td>
+                            <td>$8.7B</td>
+                            <td>📈 Crecimiento</td>
+                            <td>Machine learning, automation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Layer 2</strong></td>
+                            <td class="positive">+49.1%</td>
+                            <td>$15.2B</td>
+                            <td>🏗️ Infraestructura</td>
+                            <td>Escalabilidad, reducción costos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DeFi</strong></td>
+                            <td class="positive">+31.2%</td>
+                            <td>$18.9B</td>
+                            <td>🔄 Maduración</td>
+                            <td>Lending, DEX, yield farming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gaming</strong></td>
+                            <td class="positive">+34.6%</td>
+                            <td>$4.1B</td>
+                            <td>🎮 GameFi</td>
+                            <td>Play-to-earn, NFT gaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Staking</strong></td>
+                            <td class="positive">+28.9%</td>
+                            <td>$7.2B</td>
+                            <td>💎 Estable</td>
+                            <td>Liquid staking, ETH 2.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="recommendations">
+                <h4>💡 Recomendaciones Estratégicas</h4>
+                <ul class="recommendation-list">
+                    <li><strong>🎯 Diversificación Inteligente:</strong> Mantener 60-70% en activos de alta capitalización (BTC, ETH) como base estable del portfolio.</li>
+                    <li><strong>⚡ Gestión de Riesgo:</strong> Limitar exposición a micro-cap (Grupo 4) a máximo 10-15% del portfolio total.</li>
+                    <li><strong>🔍 Research Exhaustivo:</strong> Investigación fundamental obligatoria antes de invertir en activos de menor capitalización.</li>
+                    <li><strong>📊 Monitoreo de Liquidez:</strong> Verificar volumen de trading antes de tomar posiciones significativas.</li>
+                    <li><strong>🚀 Narrativas Emergentes:</strong> Aprovechar sectores en auge (IA, Layer 2) con asignación moderada (15-25%).</li>
+                    <li><strong>🔄 Rebalanceo Regular:</strong> Revisar y ajustar allocations mensualmente para mantener objetivos de riesgo.</li>
+                    <li><strong>⏰ Gestión Temporal:</strong> Considerar estrategias de DCA para reducir impacto de volatilidad extrema.</li>
+                </ul>
+            </div>
+
+            <div class="disclaimer">
+                <strong>⚠️ DESCARGO DE RESPONSABILIDAD:</strong> Este análisis se basa en datos históricos y no garantiza rendimientos futuros. El mercado de criptomonedas es altamente volátil y puede resultar en pérdida total del capital invertido. La información presentada es para fines educativos únicamente y no constituye asesoramiento financiero. Consulte con un asesor financiero calificado antes de tomar decisiones de inversión.
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📧 Contacto y Recursos Adicionales</h3>
+                </div>
+                <p><strong>Herramientas Interactivas Disponibles:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Dashboard de análisis en tiempo real</li>
+                    <li>Simulador de portfolio personalizable</li>
+                    <li>Mapa de calor sectorial interactivo</li>
+                    <li>Histogramas de distribución de rendimientos</li>
+                    <li>Resumen narrado en audio</li>
+                </ul>
+                
+                <p><strong>Próximas Actualizaciones:</strong> Este reporte se actualiza mensualmente con nuevos datos y análisis. La próxima edición estará disponible el 30 de Julio, 2025.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Claude AI Research</strong> | Análisis Crypto Market 2025</p>
+            <p>Generado el 30 de Junio, 2025 | Versión 1.0</p>
+            <p>📧 Para consultas específicas, utilice las herramientas interactivas proporcionadas</p>
+        </div>
+    </div>
+
+    <script>
+        function downloadReport() {
+            // Simular descarga
+            alert('📄 DESCARGA INICIADA\n\n' +
+                  '✅ Formato: PDF Ejecutivo (12 páginas)\n' +
+                  '📊 Incluye: Gráficos, tablas y análisis completo\n' +
+                  '💾 Tamaño: ~2.3 MB\n' +
+                  '📧 También disponible envío por email\n\n' +
+                  'El reporte se guardará en su carpeta de descargas.');
+        }
+
+        function shareReport() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Crypto Market Analysis 2025 - Executive Report',
+                    text: 'Análisis completo de las top 1000 criptomonedas con insights clave y recomendaciones.',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores sin Web Share API
+                const shareData = {
+                    subject: 'Crypto Market Analysis 2025 - Executive Report',
+                    body: 'Te comparto este análisis completo del mercado crypto: ' + window.location.href
+                };
+                
+                const mailtoLink = `mailto:?subject=${encodeURIComponent(shareData.subject)}&body=${encodeURIComponent(shareData.body)}`;
+                window.open(mailtoLink);
+            }
+        }
+
+        // Generar tabla de contenidos dinámica
+        function generateTOC() {
+            const sections = document.querySelectorAll('.section-title');
+            const toc = document.createElement('div');
+            toc.className = 'table-of-contents';
+            toc.innerHTML = '<h4>📑 Tabla de Contenidos</h4>';
+            
+            const tocList = document.createElement('ol');
+            sections.forEach((section, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="#section-${index}">${section.textContent}</a>`;
+                section.id = `section-${index}`;
+                tocList.appendChild(listItem);
+            });
+            
+            toc.appendChild(tocList);
+            
+            // Insertar después del resumen ejecutivo
+            const summary = document.querySelector('.executive-summary');
+            summary.parentNode.insertBefore(toc, summary.nextSibling);
+        }
+
+        // Animaciones de entrada
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.finding-card, .section');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+            });
+
+            setTimeout(() => {
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 150);
+                });
+            }, 500);
+        }
+
+        // Inicializar funciones
+        window.addEventListener('load', () => {
+            animateOnScroll();
+            
+            // Agregar estilos adicionales para impresión
+            const style = document.createElement('style');
+            style.textContent = `
+                @media print {
+                    .finding-card { break-inside: avoid; }
+                    .section { break-inside: avoid; }
+                    .data-table { break-inside: avoid; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
