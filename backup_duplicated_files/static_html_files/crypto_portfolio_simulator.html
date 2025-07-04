@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Portfolio Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d1b69 0%, #11998e 50%, #38ef7d 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .allocation-panel {
+            height: fit-content;
+        }
+
+        .results-panel {
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2d1b69;
+            text-align: center;
+            border-bottom: 3px solid #11998e;
+            padding-bottom: 10px;
+        }
+
+        .allocation-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #11998e;
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .group-title {
+            font-weight: bold;
+            color: #2d1b69;
+            font-size: 1.1em;
+        }
+
+        .group-percentage {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #11998e;
+        }
+
+        .allocation-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            outline: none;
+            appearance: none;
+            margin-bottom: 10px;
+        }
+
+        .allocation-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .risk-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .risk-low { background: #d4edda; color: #155724; }
+        .risk-medium { background: #fff3cd; color: #856404; }
+        .risk-high { background: #f8d7da; color: #721c24; }
+        .risk-extreme { background: #d1ecf1; color: #0c5460; }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #2d1b69, #11998e);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45,27,105,0.3);
+        }
+
+        .results-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .neutral { color: #ffc107; }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .performance-chart {
+            height: 300px;
+            margin-bottom: 25px;
+        }
+
+        .recommendations {
+            background: #e8f5e8;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #28a745;
+        }
+
+        .recommendations h4 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #28a745;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .simulate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .simulate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(40,167,69,0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .results-summary {
+                grid-template-columns: 1fr;
+            }
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .allocation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .allocation-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .allocation-item strong {
+            color: #11998e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel header">
+            <h1>💼 Simulador de Portfolio Crypto</h1>
+            <p>Optimiza tu cartera basada en el análisis de mercado 2025</p>
+        </div>
+
+        <div class="panel allocation-panel">
+            <h2 class="section-title">🎯 Configuración de Cartera</h2>
+            
+            <div class="input-group">
+                <label>💰 Capital Inicial:</label>
+                <input type="number" id="initialCapital" value="10000" min="100" max="1000000">
+                <span>USD</span>
+            </div>
+
+            <div class="warning-box">
+                ⚠️ <strong>Simulación Educativa:</strong> Los resultados se basan en datos históricos y no garantizan rendimientos futuros.
+            </div>
+
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="setPreset('conservative')">🛡️ Conservador</button>
+                <button class="preset-btn" onclick="setPreset('balanced')">⚖️ Balanceado</button>
+                <button class="preset-btn" onclick="setPreset('aggressive')">🚀 Agresivo</button>
+                <button class="preset-btn" onclick="setPreset('degen')">💀 Degen</button>
+            </div>
+
+            <div class="allocation-group">
+                <div class="group-header">
+                    <span class="group-title">Grupo 1 - Alta Capitalización <span class="risk-indicator risk-low">BAJO RIESGO</span></span>
+                    <span class="group-percentage" id="group1-pct">50%</span>
+                </div>
+                <input type="range" class="allocation-slider" id="group1-slider" min="0" max="100" value="50" 
+                       oninput="updateAllocation(1, this.value)">
+                <div class="allocation-details">
+                    <div class="allocation-item">
+                        <strong>BTC</strong><br>60% del grupo
+                    </div>
+                    <div class="allocation-item">
+                        <strong>ETH</strong><br>30% del grupo
+                    </div>
+                    <div class="allocation-item">
+                        <strong>SOL</strong><br>10% del grupo
+                    </div>
+                </div>
+            </div>
+
+            <div class="allocation-group">
+                <div class="group-header">
+                    <span class="group-title">Grupo 2 - Media-Alta Cap <span class="risk-indicator risk-medium">RIESGO MEDIO</span></span>
+                    <span class="group-percentage" id="group2-pct">30%</span>
+                </div>
+                <input type="range" class="allocation-slider" id="group2-slider" min="0" max="100" value="30" 
+                       oninput="updateAllocation(2, this.value)">
+                <div class="allocation-details">
+                    <div class="allocation-item">
+                        <strong>UNI</strong><br>DeFi líder
+                    </div>
+                    <div class="allocation-item">
+                        <strong>AAVE</strong><br>Lending protocol
+                    </div>
+                    <div class="allocation-item">
+                        <strong>LINK</strong><br>Oracle líder
+                    </div>
+                </div>
+            </div>
+
+            <div class="allocation-group">
+                <div class="group-header">
+                    <span class="group-title">Grupo 3 - Media-Baja Cap <span class="risk-indicator risk-high">ALTO RIESGO</span></span>
+                    <span class="group-percentage" id="group3-pct">15%</span>
+                </div>
+                <input type="range" class="allocation-slider" id="group3-slider" min="0" max="100" value="15" 
+                       oninput="updateAllocation(3, this.value)">
+                <div class="allocation-details">
+                    <div class="allocation-item">
+                        <strong>AI Tokens</strong><br>Narrativa emergente
+                    </div>
+                    <div class="allocation-item">
+                        <strong>Gaming</strong><br>GameFi projects
+                    </div>
+                    <div class="allocation-item">
+                        <strong>Layer 2</strong><br>Escalabilidad
+                    </div>
+                </div>
+            </div>
+
+            <div class="allocation-group">
+                <div class="group-header">
+                    <span class="group-title">Grupo 4 - Micro Cap <span class="risk-indicator risk-extreme">RIESGO EXTREMO</span></span>
+                    <span class="group-percentage" id="group4-pct">5%</span>
+                </div>
+                <input type="range" class="allocation-slider" id="group4-slider" min="0" max="100" value="5" 
+                       oninput="updateAllocation(4, this.value)">
+                <div class="allocation-details">
+                    <div class="allocation-item">
+                        <strong>Memecoins</strong><br>Alta especulación
+                    </div>
+                    <div class="allocation-item">
+                        <strong>Nuevos Proyectos</strong><br>Early stage
+                    </div>
+                    <div class="allocation-item">
+                        <strong>Experimentales</strong><br>Beta/test
+                    </div>
+                </div>
+            </div>
+
+            <button class="simulate-btn" onclick="runSimulation()">📊 Simular Rendimiento</button>
+        </div>
+
+        <div class="panel results-panel">
+            <h2 class="section-title">📈 Resultados de Simulación</h2>
+            
+            <div class="results-summary">
+                <div class="metric-card">
+                    <div class="metric-value positive" id="totalReturn">+18.4%</div>
+                    <div class="metric-label">Rendimiento Total (30d)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value neutral" id="riskScore">6.2/10</div>
+                    <div class="metric-label">Puntuación de Riesgo</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value positive" id="finalValue">$11,840</div>
+                    <div class="metric-label">Valor Final</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value neutral" id="maxDrawdown">-12.3%</div>
+                    <div class="metric-label">Max Drawdown</div>
+                </div>
+            </div>
+
+            <div class="performance-chart">
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div class="recommendations">
+                <h4>💡 Recomendaciones Personalizadas</h4>
+                <div id="recommendationsList">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allocations = { 1: 50, 2: 30, 3: 15, 4: 5 };
+        let performanceChart;
+
+        // Datos de rendimiento por grupo (basados en el análisis)
+        const groupPerformance = {
+            1: { return30d: 8.2, volatility: 15, sharpe: 0.54, maxDrawdown: -8.1 },
+            2: { return30d: 12.7, volatility: 28, sharpe: 0.45, maxDrawdown: -15.2 },
+            3: { return30d: 18.9, volatility: 45, sharpe: 0.42, maxDrawdown: -28.7 },
+            4: { return30d: 35.2, volatility: 89, sharpe: 0.39, maxDrawdown: -52.3 }
+        };
+
+        function updateAllocation(group, value) {
+            allocations[group] = parseInt(value);
+            
+            // Normalizar para que sume 100%
+            const total = Object.values(allocations).reduce((sum, val) => sum + val, 0);
+            if (total !== 100) {
+                const remaining = 100 - total;
+                const otherGroups = Object.keys(allocations).filter(g => g != group);
+                const adjustment = remaining / otherGroups.length;
+                
+                otherGroups.forEach(g => {
+                    allocations[g] = Math.max(0, Math.min(100, allocations[g] + adjustment));
+                });
+            }
+            
+            // Actualizar UI
+            updateUI();
+        }
+
+        function updateUI() {
+            Object.keys(allocations).forEach(group => {
+                document.getElementById(`group${group}-pct`).textContent = `${Math.round(allocations[group])}%`;
+                document.getElementById(`group${group}-slider`).value = allocations[group];
+            });
+        }
+
+        function setPreset(type) {
+            switch(type) {
+                case 'conservative':
+                    allocations = { 1: 70, 2: 25, 3: 5, 4: 0 };
+                    break;
+                case 'balanced':
+                    allocations = { 1: 50, 2: 30, 3: 15, 4: 5 };
+                    break;
+                case 'aggressive':
+                    allocations = { 1: 30, 2: 35, 3: 25, 4: 10 };
+                    break;
+                case 'degen':
+                    allocations = { 1: 20, 2: 20, 3: 30, 4: 30 };
+                    break;
+            }
+            updateUI();
+            runSimulation();
+        }
+
+        function runSimulation() {
+            const capital = parseFloat(document.getElementById('initialCapital').value);
+            
+            // Calcular métricas del portfolio
+            let portfolioReturn = 0;
+            let portfolioVolatility = 0;
+            let portfolioMaxDrawdown = 0;
+            let portfolioRisk = 0;
+
+            Object.keys(allocations).forEach(group => {
+                const weight = allocations[group] / 100;
+                const groupData = groupPerformance[group];
+                
+                portfolioReturn += weight * groupData.return30d;
+                portfolioVolatility += weight * weight * groupData.volatility * groupData.volatility;
+                portfolioMaxDrawdown += weight * groupData.maxDrawdown;
+                portfolioRisk += weight * (parseInt(group) * 2); // Risk score based on group
+            });
+
+            portfolioVolatility = Math.sqrt(portfolioVolatility);
+            const finalValue = capital * (1 + portfolioReturn / 100);
+
+            // Actualizar métricas
+            document.getElementById('totalReturn').textContent = `${portfolioReturn > 0 ? '+' : ''}${portfolioReturn.toFixed(1)}%`;
+            document.getElementById('totalReturn').className = `metric-value ${portfolioReturn > 0 ? 'positive' : 'negative'}`;
+            document.getElementById('finalValue').textContent = `$${finalValue.toLocaleString()}`;
+            document.getElementById('riskScore').textContent = `${portfolioRisk.toFixed(1)}/10`;
+            document.getElementById('maxDrawdown').textContent = `${portfolioMaxDrawdown.toFixed(1)}%`;
+
+            // Actualizar gráfico
+            updateChart();
+            
+            // Generar recomendaciones
+            generateRecommendations(portfolioReturn, portfolioRisk, portfolioVolatility);
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            // Simular rendimiento diario
+            const days = 30;
+            const labels = [];
+            const data = [];
+            let value = 100;
+
+            for (let i = 0; i <= days; i++) {
+                labels.push(`Día ${i}`);
+                
+                // Simular volatilidad diaria basada en allocation
+                let dailyReturn = 0;
+                Object.keys(allocations).forEach(group => {
+                    const weight = allocations[group] / 100;
+                    const groupData = groupPerformance[group];
+                    const dailyVol = groupData.volatility / Math.sqrt(252); // Volatilidad diaria
+                    const randomReturn = (Math.random() - 0.5) * dailyVol * 2;
+                    dailyReturn += weight * (groupData.return30d / 30 + randomReturn);
+                });
+                
+                value *= (1 + dailyReturn / 100);
+                data.push(value);
+            }
+
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Valor del Portfolio (%)',
+                        data: data,
+                        borderColor: 'rgb(17, 153, 142)',
+                        backgroundColor: 'rgba(17, 153, 142, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateRecommendations(portfolioReturn, portfolioRisk, portfolioVolatility) {
+            const recommendations = [];
+            
+            if (portfolioRisk > 7) {
+                recommendations.push({
+                    icon: '⚠️',
+                    text: 'Portfolio de alto riesgo. Considera reducir exposición a Grupos 3 y 4.',
+                    type: 'warning'
+                });
+            }
+            
+            if (allocations[4] > 20) {
+                recommendations.push({
+                    icon: '💀',
+                    text: 'Exposición extrema a micro-cap. Máximo recomendado: 10-15%.',
+                    type: 'warning'
+                });
+            }
+            
+            if (allocations[1] < 30) {
+                recommendations.push({
+                    icon: '🛡️',
+                    text: 'Considera aumentar exposición a BTC/ETH para estabilidad.',
+                    type: 'info'
+                });
+            }
+            
+            if (portfolioReturn > 20) {
+                recommendations.push({
+                    icon: '💰',
+                    text: 'Excelente potencial de retorno. Considera estrategia de toma de ganancias.',
+                    type: 'success'
+                });
+            }
+            
+            if (portfolioVolatility > 50) {
+                recommendations.push({
+                    icon: '📊',
+                    text: 'Alta volatilidad esperada. Prepárate para drawdowns significativos.',
+                    type: 'info'
+                });
+            }
+
+            // Recomendaciones específicas por sector
+            recommendations.push({
+                icon: '🎯',
+                text: 'Considera rebalancear mensualmente para mantener allocations objetivo.',
+                type: 'info'
+            });
+
+            if (allocations[2] + allocations[3] > 60) {
+                recommendations.push({
+                    icon: '🔄',
+                    text: 'Buena exposición a narrativas emergentes (AI, DeFi, Layer 2).',
+                    type: 'success'
+                });
+            }
+
+            // Renderizar recomendaciones
+            const container = document.getElementById('recommendationsList');
+            container.innerHTML = recommendations.map(rec => 
+                `<div class="recommendation-item">
+                    ${rec.icon} ${rec.text}
+                </div>`
+            ).join('');
+        }
+
+        // Inicializar
+        window.addEventListener('load', () => {
+            updateUI();
+            runSimulation();
+        });
+    </script>
+</body>
+</html>

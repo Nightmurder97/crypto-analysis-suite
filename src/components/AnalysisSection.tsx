@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { LoadingIcon, ErrorIcon, SparklesIcon } from './IconComponents.tsx';
+import { LoadingIcon, ErrorIcon, SparklesIcon, ArrowDownTrayIcon } from './IconComponents.tsx';
+import { exportAnalysisToXlsx } from '../utils/xlsxExporter';
 
 interface AnalysisSectionProps {
   onAnalyze: () => Promise<void>;
@@ -17,18 +18,23 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({
   analysisError,
 }) => {
 
-  const handleDownloadReport = () => {
+  const handleDownloadReport = (format: 'md' | 'xlsx') => {
     if (!analysisResult) return;
-    const blob = new Blob([analysisResult], { type: 'text/markdown;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
-    link.setAttribute('download', `crypto_market_analysis_${timestamp}.md`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    
+    if (format === 'md') {
+      const blob = new Blob([analysisResult], { type: 'text/markdown;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
+      link.setAttribute('download', `crypto_market_analysis_${timestamp}.md`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } else if (format === 'xlsx') {
+      exportAnalysisToXlsx(analysisResult, 'crypto_market_analysis');
+    }
   };
 
   return (
@@ -54,14 +60,26 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({
           )}
         </button>
         {analysisResult && !isAnalyzing && (
-          <button
-            type="button"
-            onClick={handleDownloadReport}
-            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-800 w-full sm:w-auto"
-            aria-label="Download analysis report"
-          >
-            Download Report (.md)
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => handleDownloadReport('md')}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-md shadow-md transition-colors flex items-center justify-center"
+              aria-label="Download analysis report as Markdown"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
+              📄 Reporte (.md)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDownloadReport('xlsx')}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md shadow-md transition-colors flex items-center justify-center"
+              aria-label="Download analysis report as Excel"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
+              📊 Reporte (.xlsx)
+            </button>
+          </div>
         )}
       </div>
 

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico Crypto Analysis 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #3b82f6 50%, #60a5fa 75%, #93c5fd 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .infographic {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 20s linear infinite;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 1.1em;
+            opacity: 0.7;
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+        .neutral { color: #fbbf24; }
+
+        .metric-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .groups-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .group-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 35px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .group-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .group-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .group-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .group-number {
+            font-size: 4em;
+            font-weight: bold;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .group-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .group-subtitle {
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        .group-stats {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .best-performers {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .performers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .performer-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .performer-card.worst {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .performer-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .performer-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .performer-card:hover {
+            transform: scale(1.05);
+        }
+
+        .insights-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .insight-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #fbbf24;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateX(10px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .insight-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .insight-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fbbf24;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #fbbf24;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(16,185,129,0.4);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            .key-metrics {
+                grid-template-columns: 1fr;
+            }
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+            .performers-grid {
+                grid-template-columns: 1fr;
+            }
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="left: 10%; animation-delay: 0s;">₿</div>
+        <div class="floating-element" style="left: 20%; animation-delay: 2s;">Ξ</div>
+        <div class="floating-element" style="left: 30%; animation-delay: 4s;">📈</div>
+        <div class="floating-element" style="left: 40%; animation-delay: 6s;">💎</div>
+        <div class="floating-element" style="left: 50%; animation-delay: 8s;">🚀</div>
+        <div class="floating-element" style="left: 60%; animation-delay: 10s;">📊</div>
+        <div class="floating-element" style="left: 70%; animation-delay: 12s;">💰</div>
+        <div class="floating-element" style="left: 80%; animation-delay: 14s;">🌙</div>
+        <div class="floating-element" style="left: 90%; animation-delay: 16s;">⭐</div>
+    </div>
+
+    <div class="infographic">
+        <div class="header">
+            <div class="header-content">
+                <h1>📊 CRYPTO MARKET ANALYSIS 2025</h1>
+                <div class="subtitle">Análisis Completo de las Top 1000 Criptomonedas</div>
+                <div class="date">30 de Junio, 2025</div>
+            </div>
+        </div>
+
+        <div class="key-metrics">
+            <div class="metric-card" onclick="animateCard(this)">
+                <span class="metric-icon">📈</span>
+                <div class="metric-value positive">76%</div>
+                <div class="metric-label">Activos con tendencia positiva en 7 días</div>
+            </div>
+            <div class="metric-card" onclick="animateCard(this)">
+                <span class="metric-icon">🚀</span>
+                <div class="metric-value neutral">+1,731%</div>
+                <div class="metric-label">Máxima ganancia 30d<br>(Useless Coin)</div>
+            </div>
+            <div class="metric-card" onclick="animateCard(this)">
+                <span class="metric-icon">📉</span>
+                <div class="metric-value negative">-89%</div>
+                <div class="metric-label">Máxima pérdida 30d<br>(Polyhedra Network)</div>
+            </div>
+            <div class="metric-card" onclick="animateCard(this)">
+                <span class="metric-icon">💰</span>
+                <div class="metric-value neutral">$45.3B</div>
+                <div class="metric-label">Volumen total de trading<br>(Últimas 24h)</div>
+            </div>
+        </div>
+
+        <div class="groups-section">
+            <h2 class="section-title">🏗️ Análisis por Grupos de Capitalización</h2>
+            <div class="groups-grid">
+                <div class="group-card">
+                    <div class="group-header">
+                        <div class="group-number">01</div>
+                        <div class="group-title">ALTA CAPITALIZACIÓN</div>
+                        <div class="group-subtitle">BTC, ETH, SOL, XRP, BNB...</div>
+                    </div>
+                    <div class="group-stats">
+                        <div class="stat-row">
+                            <span>7d Promedio:</span>
+                            <span class="positive">+12.5%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volatilidad:</span>
+                            <span class="neutral">BAJA</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volumen:</span>
+                            <span class="positive">85% del total</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Riesgo:</span>
+                            <span class="positive">BAJO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group-card">
+                    <div class="group-header">
+                        <div class="group-number">02</div>
+                        <div class="group-title">MEDIA-ALTA CAP</div>
+                        <div class="group-subtitle">Altcoins establecidos</div>
+                    </div>
+                    <div class="group-stats">
+                        <div class="stat-row">
+                            <span>7d Promedio:</span>
+                            <span class="positive">+18.3%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volatilidad:</span>
+                            <span class="neutral">MEDIA</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volumen:</span>
+                            <span class="neutral">10% del total</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Riesgo:</span>
+                            <span class="neutral">MEDIO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group-card">
+                    <div class="group-header">
+                        <div class="group-number">03</div>
+                        <div class="group-title">MEDIA-BAJA CAP</div>
+                        <div class="group-subtitle">Proyectos emergentes</div>
+                    </div>
+                    <div class="group-stats">
+                        <div class="stat-row">
+                            <span>7d Promedio:</span>
+                            <span class="positive">+22.7%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volatilidad:</span>
+                            <span class="negative">ALTA</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volumen:</span>
+                            <span class="negative">3% del total</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Riesgo:</span>
+                            <span class="negative">ALTO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group-card">
+                    <div class="group-header">
+                        <div class="group-number">04</div>
+                        <div class="group-title">MICRO CAP</div>
+                        <div class="group-subtitle">Tokens especulativos</div>
+                    </div>
+                    <div class="group-stats">
+                        <div class="stat-row">
+                            <span>7d Promedio:</span>
+                            <span class="positive">+28.1%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volatilidad:</span>
+                            <span class="negative">EXTREMA</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Volumen:</span>
+                            <span class="negative">2% del total</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Riesgo:</span>
+                            <span class="negative">EXTREMO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="best-performers">
+            <h2 class="section-title">🏆 Top Performers del Análisis</h2>
+            <div class="performers-grid">
+                <div class="performer-card">
+                    <div class="performer-content">
+                        <h3>🚀 Mejor 24h</h3>
+                        <h2>MORI COIN</h2>
+                        <div style="font-size: 2em; margin: 10px 0;">+270.77%</div>
+                        <p>Volatilidad extrema en micro-cap</p>
+                    </div>
+                </div>
+                <div class="performer-card">
+                    <div class="performer-content">
+                        <h3>📈 Mejor 7d</h3>
+                        <h2>Hosico Cat</h2>
+                        <div style="font-size: 2em; margin: 10px 0;">+97.27%</div>
+                        <p>Memecoin con momentum sostenido</p>
+                    </div>
+                </div>
+                <div class="performer-card">
+                    <div class="performer-content">
+                        <h3>💎 Mejor 30d</h3>
+                        <h2>Useless Coin</h2>
+                        <div style="font-size: 2em; margin: 10px 0;">+1,731%</div>
+                        <p>Ganancia histórica especulativa</p>
+                    </div>
+                </div>
+                <div class="performer-card worst">
+                    <div class="performer-content">
+                        <h3>📉 Peor 30d</h3>
+                        <h2>Polyhedra Network</h2>
+                        <div style="font-size: 2em; margin: 10px 0;">-89.20%</div>
+                        <p>Corrección severa post-lanzamiento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insights-section">
+            <h2 class="section-title">💡 Insights Clave del Mercado</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <span class="insight-icon">🎯</span>
+                    <div class="insight-title">Recuperación Sólida</div>
+                    <p>El mercado muestra una recuperación robusta en el corto plazo (24h-7d) con Bitcoin y Ethereum liderando la tendencia alcista.</p>
+                </div>
+                <div class="insight-card">
+                    <span class="insight-icon">🚀</span>
+                    <div class="insight-title">Sectores en Auge</div>
+                    <p>Memecoins, tokens de IA, Layer 2 y protocolos DeFi dominan los mejores rendimientos en todos los grupos de capitalización.</p>
+                </div>
+                <div class="insight-card">
+                    <span class="insight-icon">⚡</span>
+                    <div class="insight-title">Volatilidad Extrema</div>
+                    <p>Menor capitalización = Mayor volatilidad. Grupo 4 muestra movimientos de +1000% y -80% en períodos de 30 días.</p>
+                </div>
+                <div class="insight-card">
+                    <span class="insight-icon">💧</span>
+                    <div class="insight-title">Liquidez Fragmentada</div>
+                    <p>85% del volumen se concentra en el top por capitalización. Muchos tokens de menor cap tienen liquidez muy limitada.</p>
+                </div>
+                <div class="insight-card">
+                    <span class="insight-icon">🔄</span>
+                    <div class="insight-title">Rotación de Capital</div>
+                    <p>Evidencia clara de rotación hacia altcoins de menor capitalización con narrativas específicas (AI, gaming, memes).</p>
+                </div>
+                <div class="insight-card">
+                    <span class="insight-icon">🏗️</span>
+                    <div class="insight-title">Maduración DeFi</div>
+                    <p>Proliferación de tokens wrapped/staked indica maduración del ecosistema DeFi y adopción de staking líquido.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 class="cta-title">🎯 Recomendaciones para Inversores</h2>
+            <p style="margin-bottom: 30px; font-size: 1.2em; opacity: 0.9;">
+                Este análisis revela un mercado en transición con oportunidades y riesgos significativos
+            </p>
+            <div class="cta-buttons">
+                <button class="cta-btn" onclick="showRecommendations()">📋 Ver Recomendaciones</button>
+                <button class="cta-btn" onclick="showRiskMatrix()">⚠️ Matriz de Riesgo</button>
+                <button class="cta-btn" onclick="downloadReport()">📄 Descargar Reporte</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function animateCard(card) {
+            card.style.animation = 'none';
+            setTimeout(() => {
+                card.style.animation = 'pulse 0.6s ease-in-out';
+            }, 10);
+        }
+
+        function showRecommendations() {
+            alert(`🎯 RECOMENDACIONES CLAVE:\n\n` +
+                  `✅ INVESTIGACIÓN EXHAUSTIVA es fundamental\n` +
+                  `⚠️ GESTIÓN DE RIESGO rigurosa obligatoria\n` +
+                  `📊 DIVERSIFICACIÓN por grupos de capitalización\n` +
+                  `🔍 ATENCIÓN a la liquidez antes de invertir\n` +
+                  `📈 APROVECHAR narrativas emergentes con cautela\n` +
+                  `💎 ENFOCARSE en proyectos con fundamentos sólidos\n` +
+                  `⚡ PREPARARSE para alta volatilidad en micro-cap`);
+        }
+
+        function showRiskMatrix() {
+            alert(`⚠️ MATRIZ DE RIESGO POR GRUPO:\n\n` +
+                  `🟢 GRUPO 1 (Alta Cap): RIESGO BAJO\n` +
+                  `   • Volatilidad: 8-15%\n` +
+                  `   • Liquidez: Excelente\n` +
+                  `   • Recomendado para: Inversores conservadores\n\n` +
+                  `🟡 GRUPO 2 (Media Cap): RIESGO MEDIO\n` +
+                  `   • Volatilidad: 15-35%\n` +
+                  `   • Liquidez: Buena\n` +
+                  `   • Recomendado para: Inversores moderados\n\n` +
+                  `🟠 GRUPO 3 (Baja Cap): RIESGO ALTO\n` +
+                  `   • Volatilidad: 35-60%\n` +
+                  `   • Liquidez: Variable\n` +
+                  `   • Recomendado para: Inversores agresivos\n\n` +
+                  `🔴 GRUPO 4 (Micro Cap): RIESGO EXTREMO\n` +
+                  `   • Volatilidad: 60%+\n` +
+                  `   • Liquidez: Muy limitada\n` +
+                  `   • Recomendado para: Especuladores expertos`);
+        }
+
+        function downloadReport() {
+            alert(`📄 REPORTE COMPLETO DISPONIBLE:\n\n` +
+                  `📊 Incluye:\n` +
+                  `• Análisis detallado de los 4 grupos\n` +
+                  `• Datos de rendimiento y volumen\n` +
+                  `• Identificación de outliers\n` +
+                  `• Recomendaciones específicas\n` +
+                  `• Matriz de riesgo completa\n\n` +
+                  `💾 El reporte se puede generar en formato PDF\n` +
+                  `📧 También disponible para envío por email`);
+        }
+
+        // Animaciones adicionales
+        setInterval(() => {
+            const cards = document.querySelectorAll('.metric-card, .group-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'scale(1.01)';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 100);
+            });
+        }, 10000);
+
+        // Animación de entrada
+        window.addEventListener('load', () => {
+            const elements = document.querySelectorAll('.metric-card, .group-card, .performer-card, .insight-card');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.6s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
