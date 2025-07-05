@@ -14,11 +14,11 @@ function getNestedValue<T>(obj: T, path: string): any {
 // Configuración de la carpeta de descarga fija
 const DOWNLOAD_FOLDER = 'CryptoAnalysisExports';
 
-// Función para crear la estructura de carpetas si no existe
-function createDownloadFolder(): string {
-  const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  return `${DOWNLOAD_FOLDER}/${timestamp}`;
-}
+// Función para crear la estructura de carpetas si no existe (no utilizada actualmente)
+// function createDownloadFolder(): string {
+//   const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+//   return `${DOWNLOAD_FOLDER}/${timestamp}`;
+// }
 
 // Función para generar nombre de archivo con timestamp
 function generateFileName(baseName: string, extension: string = 'xlsx'): string {

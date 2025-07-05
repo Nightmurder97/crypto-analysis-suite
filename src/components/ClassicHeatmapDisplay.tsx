@@ -1,5 +1,5 @@
 import React from 'react';
-import { CryptoData, HeatmapMetric } from '@/types';
+import { CryptoData, HeatmapMetric } from '../types';
 
 interface ClassicHeatmapDisplayProps {
   data: CryptoData[]; // Paginated data (100 items)
@@ -81,7 +81,7 @@ const ClassicHeatmapDisplay: React.FC<ClassicHeatmapDisplayProps> = ({ data, sel
   return (
     <div className="bg-slate-800 p-3 rounded-lg border border-slate-700">
       <h3 className="text-lg font-semibold text-sky-300 mb-3 text-center">
-        {selectedMetric.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Heatmap
+        {selectedMetric.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Heatmap
       </h3>
       <ClassicLegend metric={selectedMetric} />
       <div 
