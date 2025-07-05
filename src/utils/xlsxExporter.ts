@@ -12,7 +12,7 @@ function getNestedValue<T>(obj: T, path: string): any {
 }
 
 // Configuración de la carpeta de descarga fija
-const DOWNLOAD_FOLDER = 'CryptoAnalysisExports';
+// const DOWNLOAD_FOLDER = 'CryptoAnalysisExports'; // Para futuras versiones
 
 // Función para crear la estructura de carpetas si no existe (no utilizada actualmente)
 // function createDownloadFolder(): string {

@@ -48,8 +48,10 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
   const handleDownloadReport = (format: 'md' | 'xlsx') => {
     if (!analysisResult) return;
     
+    const analysisContent = typeof analysisResult === 'string' ? analysisResult : JSON.stringify(analysisResult);
+    
     if (format === 'md') {
-      const blob = new Blob([analysisResult], { type: 'text/markdown;charset=utf-8;' });
+      const blob = new Blob([analysisContent], { type: 'text/markdown;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
@@ -60,7 +62,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } else if (format === 'xlsx') {
-      exportAnalysisToXlsx(analysisResult, 'crypto_market_analysis');
+      exportAnalysisToXlsx(analysisContent, 'crypto_market_analysis');
     }
   };
 
@@ -146,7 +148,9 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
                           prose-code:text-amber-300 prose-code:bg-slate-900 prose-code:p-1 prose-code:rounded-md
                           prose-blockquote:border-l-sky-500 prose-blockquote:text-slate-400
                           prose-table:border-slate-600 prose-th:bg-slate-700 prose-th:p-2 prose-td:p-2 prose-td:border-slate-600">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysisResult}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {typeof analysisResult === 'string' ? analysisResult : JSON.stringify(analysisResult)}
+            </ReactMarkdown>
           </div>
         </section>
       )}

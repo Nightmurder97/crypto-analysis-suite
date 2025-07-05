@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { CryptoData } from '../types';
-import { generateAnalysisWithGemini } from '../services/geminiService';
+import { generateAnalysisFromPrompt } from '../services/geminiService';
 
 const fetchCryptoData = async (page: number = 1, perPage: number = 50): Promise<CryptoData[]> => {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d`;
@@ -20,6 +20,6 @@ export const useCryptoData = (page: number) => {
 
 export const useGenerateAnalysis = () => {
     return useMutation({
-        mutationFn: (prompt: string) => generateAnalysisWithGemini(prompt),
+        mutationFn: (prompt: string) => generateAnalysisFromPrompt(prompt),
     });
 };

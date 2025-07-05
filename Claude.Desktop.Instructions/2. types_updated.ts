@@ -1,3 +1,5 @@
+// src/types.ts - Tipos actualizados con integración CSV
+
 // 🪙 Interfaz principal para datos de CoinGecko (extendida con categoría)
 export interface CryptoData {
   id: string;
@@ -44,8 +46,6 @@ export interface CryptoData {
   
   // 🆕 Nueva propiedad para categoría (integrada desde CSV)
   category?: string;
-  
-  [key: string]: any; // Index signature for dynamic access
 }
 
 // 📊 Interfaz para datos del CSV de categorías
@@ -247,12 +247,4 @@ export interface SearchFilters {
   sortDirection: 'asc' | 'desc';
 }
 
-export type ViewType = 
-  | 'table'
-  | 'heatmap'
-  | 'classic-heatmap'
-  | 'sector-heatmap'
-  | 'statistics'
-  | 'analysis'
-  | 'simulator'
-  | 'reports';
+// Export de tipos principales para fácil importación - ya están exportados individualmente arriba

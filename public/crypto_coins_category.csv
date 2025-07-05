@@ -1,0 +1,26 @@
+Coin,Description,Rank,Price,Price - Currency,Market capitalization,Market capitalization - Currency,Circulating supply,Volume / Market Capitalization,Category
+Bitcoin,A peer-to-peer electronic cash system,1,43127.45,USD,827374839204,USD,19234567,0.45,Smart Contract Platform
+Ethereum,Decentralized platform for smart contracts,2,2634.12,USD,317234567890,USD,120456789,0.67,Smart Contract Platform
+Tether,USD-pegged stablecoin,3,1.00,USD,98456789012,USD,98456789012,0.12,Stablecoin
+BNB,Binance ecosystem token,4,312.45,USD,48123456789,USD,154123456,0.34,Exchange Token
+XRP,Digital payment protocol,5,0.63,USD,34567890123,USD,54876543210,0.89,Payments
+Solana,High-performance blockchain,6,24.78,USD,11234567890,USD,453456789,0.78,Smart Contract Platform
+USDC,USD-backed stablecoin,7,1.00,USD,28456789012,USD,28456789012,0.15,Stablecoin
+Cardano,Proof-of-stake blockchain platform,8,0.48,USD,16789012345,USD,35012345678,0.56,Smart Contract Platform
+Avalanche,Scalable blockchain platform,9,36.89,USD,14567890123,USD,394678901,0.67,Smart Contract Platform
+Dogecoin,Meme-based cryptocurrency,10,0.082,USD,11789012345,USD,143678901234,0.45,Meme Coin
+TRON,Decentralized entertainment content sharing,11,0.078,USD,6789012345,USD,87012345678,0.23,Smart Contract Platform
+Polygon,Ethereum scaling solution,12,0.89,USD,8234567890,USD,9250000000,0.34,Layer 2
+Wrapped Bitcoin,Bitcoin on Ethereum,13,43089.23,USD,6789012345,USD,157234,0.12,DeFi
+Chainlink,Decentralized oracle network,14,16.78,USD,9876543210,USD,588654321,0.45,AI & Big Data
+Polkadot,Interoperable blockchain platform,15,6.34,USD,7890123456,USD,1244567890,0.56,Smart Contract Platform
+Bitcoin Cash,Bitcoin fork with larger blocks,16,267.89,USD,5234567890,USD,19534567,0.78,Payments
+Litecoin,Silver to Bitcoin's gold,17,92.45,USD,6789012345,USD,73423456,0.34,Payments
+Uniswap,Decentralized exchange protocol,18,7.23,USD,4345678901,USD,601234567,0.89,DeFi
+Internet Computer,Decentralized cloud computing,19,4.56,USD,2123456789,USD,465678901,0.23,Infrastructure
+Cosmos,Internet of blockchains,20,8.91,USD,3456789012,USD,388012345,0.45,Smart Contract Platform
+Ethereum Classic,Original Ethereum blockchain,21,23.45,USD,3234567890,USD,138012345,0.67,Smart Contract Platform
+Stellar,Cross-border payments platform,22,0.124,USD,3123456789,USD,25189012345,0.12,Payments
+Near Protocol,Scalable blockchain platform,23,2.89,USD,3089012345,USD,1070123456,0.34,Smart Contract Platform
+Monero,Privacy-focused cryptocurrency,24,158.67,USD,2890123456,USD,18234567,0.56,Privacy Coin
+VeChain,Supply chain management blockchain,25,0.034,USD,2767890123,USD,81345678901,0.78,Infrastructure
