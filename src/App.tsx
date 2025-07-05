@@ -192,54 +192,147 @@ const App: React.FC = () => {
         fullResult += `${i+1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${coin.value?.toFixed(2)}%\n`;
       });
 
-      // Process data in groups of 250
-      const groupSize = 250;
-      const totalGroups = Math.ceil(filteredCryptoData.length / groupSize);
+      // Calcular estadísticas completas del mercado
+      const marketStats = {
+        totalCoins: filteredCryptoData.length,
+        totalMarketCap: filteredCryptoData.reduce((sum, coin) => sum + (coin.market_cap || 0), 0),
+        totalVolume24h: filteredCryptoData.reduce((sum, coin) => sum + (coin.total_volume || 0), 0),
+        avgPrice: filteredCryptoData.reduce((sum, coin) => sum + (coin.current_price || 0), 0) / filteredCryptoData.length,
+        positiveCoins1h: filteredCryptoData.filter(c => (c.price_change_percentage_1h_in_currency || 0) > 0).length,
+        positiveCoins24h: filteredCryptoData.filter(c => (c.price_change_percentage_24h || 0) > 0).length,
+        positiveCoins7d: filteredCryptoData.filter(c => (c.price_change_percentage_7d_in_currency || 0) > 0).length,
+        positiveCoins30d: filteredCryptoData.filter(c => (c.price_change_percentage_30d_in_currency || 0) > 0).length,
+      };
 
-      for (let i = 0; i < totalGroups; i++) {
-        const start = i * groupSize;
-        const end = start + groupSize;
-        const groupData = filteredCryptoData.slice(start, end).map(c => ({
-          name: c.name,
-          symbol: c.symbol,
-          market_cap: c.market_cap,
-          current_price: c.current_price,
-          price_change_percentage_1h: c.price_change_percentage_1h_in_currency,
-          price_change_percentage_24h: c.price_change_percentage_24h,
-          price_change_percentage_7d: c.price_change_percentage_7d_in_currency,
-          price_change_percentage_30d: c.price_change_percentage_30d_in_currency,
-          total_volume_24h: c.total_volume,
+      // Calcular peores performers
+      const getWorstPerformers = (data: CryptoData[], field: keyof CryptoData, count: number = 10) => {
+        return data
+          .filter(coin => coin[field] !== null && coin[field] !== undefined)
+          .sort((a, b) => (a[field] as number) - (b[field] as number))
+          .slice(0, count)
+          .map(coin => ({
+            name: coin.name,
+            symbol: coin.symbol,
+            value: coin[field] as number
+          }));
+      };
+
+      const worst1h = getWorstPerformers(filteredCryptoData, 'price_change_percentage_1h_in_currency');
+      const worst24h = getWorstPerformers(filteredCryptoData, 'price_change_percentage_24h');
+      const worst7d = getWorstPerformers(filteredCryptoData, 'price_change_percentage_7d_in_currency');
+      const worst30d = getWorstPerformers(filteredCryptoData, 'price_change_percentage_30d_in_currency');
+
+      // Top por volumen y market cap
+      const topByVolume = filteredCryptoData
+        .filter(coin => coin.total_volume !== null)
+        .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0))
+        .slice(0, 10)
+        .map(coin => ({
+          name: coin.name,
+          symbol: coin.symbol,
+          volume: coin.total_volume || 0,
+          marketCap: coin.market_cap || 0
         }));
-        
-        if (groupData.length === 0) continue;
-        
-        const prompt = `Como analista senior de criptomonedas, analiza este grupo de datos (grupo ${i+1} de ${totalGroups}, ordenado por market cap) siguiendo EXACTAMENTE la estructura y formato de la plantilla proporcionada.
 
-PLANTILLA DE REFERENCIA:
+      const topByMarketCap = filteredCryptoData
+        .filter(coin => coin.market_cap !== null)
+        .sort((a, b) => (b.market_cap || 0) - (a.market_cap || 0))
+        .slice(0, 10)
+        .map(coin => ({
+          name: coin.name,
+          symbol: coin.symbol,
+          marketCap: coin.market_cap || 0,
+          price: coin.current_price || 0
+        }));
+
+      // Análisis de volatilidad
+      const volatilityAnalysis = filteredCryptoData
+        .filter(coin => coin.high_24h && coin.low_24h && coin.current_price)
+        .map(coin => ({
+          name: coin.name,
+          symbol: coin.symbol,
+          volatility: ((coin.high_24h! - coin.low_24h!) / coin.current_price!) * 100,
+          high24h: coin.high_24h!,
+          low24h: coin.low_24h!,
+          currentPrice: coin.current_price!
+        }))
+        .sort((a, b) => b.volatility - a.volatility)
+        .slice(0, 10);
+
+      // Crear prompt completo con toda la información procesada
+      const comprehensivePrompt = `
+# ANÁLISIS COMPLETO DE MERCADO DE CRIPTOMONEDAS
+
+## DATOS PROCESADOS PARA ANÁLISIS:
+
+### 📊 ESTADÍSTICAS GENERALES DEL MERCADO
+- **Total de criptomonedas analizadas**: ${marketStats.totalCoins}
+- **Capitalización total del mercado**: $${(marketStats.totalMarketCap / 1e12).toFixed(2)}T
+- **Volumen total 24h**: $${(marketStats.totalVolume24h / 1e9).toFixed(2)}B
+- **Precio promedio**: $${marketStats.avgPrice.toFixed(2)}
+- **Coins positivas 1h**: ${marketStats.positiveCoins1h}/${marketStats.totalCoins} (${((marketStats.positiveCoins1h/marketStats.totalCoins)*100).toFixed(1)}%)
+- **Coins positivas 24h**: ${marketStats.positiveCoins24h}/${marketStats.totalCoins} (${((marketStats.positiveCoins24h/marketStats.totalCoins)*100).toFixed(1)}%)
+- **Coins positivas 7d**: ${marketStats.positiveCoins7d}/${marketStats.totalCoins} (${((marketStats.positiveCoins7d/marketStats.totalCoins)*100).toFixed(1)}%)
+- **Coins positivas 30d**: ${marketStats.positiveCoins30d}/${marketStats.totalCoins} (${((marketStats.positiveCoins30d/marketStats.totalCoins)*100).toFixed(1)}%)
+
+### 🔼 TOP 10 MEJORES PERFORMERS
+
+**Última Hora (1h):**
+${top1h.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value > 10 ? '🟢' : '🔼'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Últimas 24 Horas:**
+${top24h.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value > 10 ? '🟢' : '🔼'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Última Semana (7d):**
+${top7d.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value > 10 ? '🟢' : '🔼'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Último Mes (30d):**
+${top30d.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value > 30 ? '🟢' : '🔼'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+### 🔻 TOP 10 PEORES PERFORMERS
+
+**Última Hora (1h):**
+${worst1h.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value < -10 ? '🔻' : '🔽'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Últimas 24 Horas:**
+${worst24h.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value < -10 ? '🔻' : '🔽'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Última Semana (7d):**
+${worst7d.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value < -10 ? '🔻' : '🔽'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+**Último Mes (30d):**
+${worst30d.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) ${coin.value < -30 ? '🔻' : '🔽'} ${coin.value?.toFixed(2)}%`).join('\n')}
+
+### 💰 TOP 10 POR VOLUMEN DE TRADING (24h)
+${topByVolume.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) - Vol: $${(coin.volume / 1e9).toFixed(2)}B - MC: $${(coin.marketCap / 1e9).toFixed(2)}B`).join('\n')}
+
+### 🏆 TOP 10 POR CAPITALIZACIÓN DE MERCADO
+${topByMarketCap.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) - MC: $${(coin.marketCap / 1e9).toFixed(2)}B - Precio: $${coin.price.toFixed(2)}`).join('\n')}
+
+### ⚡ TOP 10 MÁS VOLÁTILES (24h)
+${volatilityAnalysis.map((coin, i) => `${i+1}. ${coin.name} (${coin.symbol.toUpperCase()}) - Volatilidad: ${coin.volatility.toFixed(2)}% - Rango: $${coin.low24h.toFixed(2)} - $${coin.high24h.toFixed(2)}`).join('\n')}
+
+---
+
+**INSTRUCCIONES PARA EL ANÁLISIS:**
+
+Como analista experto en criptomonedas, genera un análisis completo usando TODA la información procesada arriba. NO solicites datos adicionales - toda la información necesaria está proporcionada.
+
+Usa la plantilla de referencia pero adapta el contenido a los datos reales proporcionados:
+
 ${template}
 
-IMPORTANTE: 
-1. Usa EXACTAMENTE la misma estructura que la plantilla
-2. Incluye todas las secciones: EXECUTIVE SUMMARY, DASHBOARD DE MÉTRICAS CLAVE, Tendencias Generales, Análisis de Rendimientos, Top por Volumen y Market Cap, Análisis de Volumen, Observaciones Clave, Estrategias Recomendadas, Must-Take Insights, y Resumen Final
-3. Usa estos emojis específicos en tu análisis:
-   - 🔼 para subidas menores (0-10%)
-   - 🔽 para bajadas menores (0-10%)
-   - 🔻 para caídas importantes (>10%)
-   - 🟢 para ganancias importantes (>10%)
-4. Incluye tablas formateadas en markdown
-5. Proporciona estrategias de trading específicas con puntos de entrada, salida y stop loss
-6. Mantén el mismo nivel de detalle y profesionalismo que la plantilla
+**IMPORTANTE:**
+1. Usa EXACTAMENTE los datos proporcionados arriba
+2. Incluye todas las estadísticas y rankings calculados
+3. Proporciona insights específicos basados en los números reales
+4. Mantén el formato profesional con emojis y tablas markdown
+5. Incluye estrategias de trading específicas basadas en los datos
+6. Responde en español
+`;
 
-Datos del grupo ${i+1}:
-\`\`\`json
-${JSON.stringify(groupData, null, 2)}
-\`\`\`
-
-Responde en español siguiendo EXACTAMENTE el formato y estructura de la plantilla proporcionada.`;
-
-        const result = await analyzeCryptoData(prompt);
-        fullResult += `\n\n## Grupo ${i+1} de ${totalGroups} (por Capitalización de Mercado)\n` + result;
-      }
+      const result = await analyzeCryptoData(comprehensivePrompt);
+      fullResult += result;
       
       setAnalysisResult(fullResult);
     } catch (err) {

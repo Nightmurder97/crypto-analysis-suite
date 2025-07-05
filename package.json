@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.6.0",
+    "@google/generative-ai": "^0.24.1",
     "@types/xlsx": "^0.0.35",
     "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
