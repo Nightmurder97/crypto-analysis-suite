@@ -1,3 +1,5 @@
+// src/components/StatisticsView.tsx - Estadísticas dinámicas con gráficos
+
 import React, { useMemo } from 'react';
 import { CryptoData } from '../types';
 
@@ -152,13 +154,13 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
           {/* Gráfico de barras simple */}
           <div className="space-y-3">
             {[
-                             { label: 'Ganancia extrema (>20%)', count: statistics.distribution.extremeGain, color: 'bg-emerald-500' },
+              { label: 'Ganancia extrema (>20%)', count: statistics.distribution.extremeGain, color: 'bg-emerald-500' },
               { label: 'Ganancia fuerte (5-20%)', count: statistics.distribution.strongGain, color: 'bg-green-500' },
               { label: 'Ganancia moderada (0-5%)', count: statistics.distribution.moderateGain, color: 'bg-green-400' },
               { label: 'Neutral (0%)', count: statistics.distribution.neutral, color: 'bg-yellow-500' },
               { label: 'Pérdida moderada (0 a -5%)', count: statistics.distribution.moderateLoss, color: 'bg-orange-500' },
               { label: 'Pérdida fuerte (-5 a -20%)', count: statistics.distribution.strongLoss, color: 'bg-red-500' },
-                             { label: 'Pérdida extrema (menos de -20%)', count: statistics.distribution.extremeLoss, color: 'bg-red-600' },
+              { label: 'Pérdida extrema (<-20%)', count: statistics.distribution.extremeLoss, color: 'bg-red-600' },
             ].map((item) => {
               const percentage = getDistributionPercentage(item.count, statistics.total);
               return (
@@ -201,7 +203,7 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-gray-700 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-yellow-400">{statistics.largeCap.length}</div>
-                         <div className="text-gray-400 text-sm">Large Cap (más de $10B)</div>
+            <div className="text-gray-400 text-sm">Large Cap (>$10B)</div>
             <div className="text-xs text-gray-500 mt-1">
               {formatBigNumber(statistics.largeCap.reduce((sum, c) => sum + (c.market_cap || 0), 0))}
             </div>
@@ -217,7 +219,7 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
           
           <div className="bg-gray-700 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-green-400">{statistics.smallCap.length}</div>
-                         <div className="text-gray-400 text-sm">Small Cap (menos de $1B)</div>
+            <div className="text-gray-400 text-sm">Small Cap (<$1B)</div>
             <div className="text-xs text-gray-500 mt-1">
               {formatBigNumber(statistics.smallCap.reduce((sum, c) => sum + (c.market_cap || 0), 0))}
             </div>
@@ -292,8 +294,8 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
           <div>
             <strong className="text-cyan-300">Actividad de trading:</strong>
             <p className="text-gray-300 mt-1">
-                             {statistics.highVolumeAssets.length} activos con volumen excepcional 
-               (más de {formatBigNumber(statistics.avgVolume * 10)})
+              {statistics.highVolumeAssets.length} activos con volumen excepcional 
+              (>{formatBigNumber(statistics.avgVolume * 10)})
             </p>
           </div>
           

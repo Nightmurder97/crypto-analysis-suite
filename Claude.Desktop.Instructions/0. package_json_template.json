@@ -1,0 +1,81 @@
+{
+  "name": "crypto-analysis-suite",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Professional cryptocurrency market analysis suite with AI insights and real-time data visualization",
+  "keywords": ["crypto", "analysis", "react", "typescript", "ai", "data-visualization"],
+  "author": "Crypto Analysis Team",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules/.vite",
+    "install-clean": "npm run clean && npm install",
+    "test": "echo \"Tests will be added in future iterations\"",
+    "analyze": "npm run build && npx vite-bundle-analyzer dist"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@tanstack/react-query": "^5.17.9",
+    "@google/generative-ai": "^0.21.0",
+    "d3": "^7.8.5",
+    "papaparse": "^5.4.1",
+    "zustand": "^4.4.7",
+    "react-markdown": "^9.0.1",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/d3": "^7.4.3",
+    "@types/papaparse": "^5.3.14",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "volta": {
+    "node": "18.19.0",
+    "npm": "10.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/crypto-analysis-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/crypto-analysis-suite/issues"
+  },
+  "homepage": "https://github.com/your-org/crypto-analysis-suite#readme"
+}

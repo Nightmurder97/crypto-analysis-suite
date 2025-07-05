@@ -1,85 +1,92 @@
 # 📂 CryptoAnalysisExports
 
-Esta carpeta contiene todas las exportaciones de datos y reportes generados por la **Crypto Analysis Suite**.
+Esta carpeta contiene **plantillas de reportes profesionales** y datos de referencia para la **Crypto Analysis Suite**.
 
-## 📁 Estructura de Carpetas
+## 📁 Estructura Actual
 
 ```
 CryptoAnalysisExports/
-├── 2025-01-07/                    # Carpeta por fecha (YYYY-MM-DD)
-│   ├── crypto_overview_data_*.xlsx
-│   ├── crypto_complete_data_*.xlsx
-│   ├── crypto_analysis_complete_*.xlsx
-│   ├── crypto_market_analysis_*.xlsx
-│   └── crypto_market_analysis_*.md
-├── 2025-01-08/
-│   └── ...
-└── README.md                      # Este archivo
+├── Template_DDMMYYYY_Thh:mm.md.md     # Plantilla principal de reporte
+├── Template_example_DDMMYYYY_Thh:mm.md # Ejemplo completo de reporte
+├── crypto_coins_category.csv           # Base de datos de categorías
+└── README.md                          # Este archivo
 ```
 
-## 📊 Tipos de Exportación
+## 📊 Contenido de la Carpeta
 
-### 1. **Datos de Criptomonedas**
-- **📊 Resumen (.xlsx)**: Campos básicos y métricas principales
-- **📈 Completo (.xlsx)**: Todos los campos disponibles de la API
-- **🗂️ Multi-Hoja (.xlsx)**: Archivo con múltiples hojas (Resumen, Heatmap, Heatmap Clásico)
+### 1. **Plantillas de Reportes**
+- **� Template_DDMMYYYY_Thh:mm.md.md**: Plantilla base para generar reportes de análisis de mercado
+- **📈 Template_example_DDMMYYYY_Thh:mm.md**: Ejemplo completo de reporte con datos reales para referencia
 
-### 2. **Reportes de Análisis IA**
-- **📄 Reporte (.md)**: Análisis en formato Markdown
-- **📊 Reporte (.xlsx)**: Análisis estructurado en Excel con metadatos
+### 2. **Datos de Categorías**
+- **� crypto_coins_category.csv**: Base de datos con 1000 criptomonedas categorizadas por sectores
 
-### 3. **Datos de Visualización**
-- **🔥 Heatmap Página (.xlsx)**: Datos de la página actual del heatmap
-- **🎯 Heatmap Clásico (.xlsx)**: Datos del heatmap clásico filtrado
+## 🎯 Uso de las Plantillas
 
-## 🔧 Configuración
+### Template Principal (`Template_DDMMYYYY_Thh:mm.md.md`)
+Plantilla estructurada que incluye:
+- **Top Performers** por período (1h, 24h, 7d, 30d)
+- **Análisis Integral** con resumen ejecutivo
+- **Dashboard de Métricas** clave del mercado
+- **Análisis por Grupos** de capitalización
+- **Estrategias de Trading** accionables
+- **Matrices de Riesgo** y recomendaciones
 
-### Formato de Nombres de Archivo
-- **Timestamp**: `YYYY-MM-DDTHH-MM-SS`
-- **Ejemplo**: `crypto_overview_data_2025-01-07T14-30-15.xlsx`
+### Template de Ejemplo (`Template_example_DDMMYYYY_Thh:mm.md`)
+Ejemplo completo con:
+- **Datos reales** de 1000 criptomonedas
+- **Análisis detallado** por sectores
+- **Estrategias específicas** con puntos de entrada/salida
+- **Scoring systems** para evaluación de activos
+- **Consideraciones técnicas** avanzadas
 
-### Campos Incluidos
+## 🔧 Integración con la Aplicación
 
-#### Resumen (Overview)
-- Ranking, Nombre, Símbolo
-- Precio actual (USD)
-- Cambios porcentuales (1h, 24h, 7d, 30d)
-- Capitalización de mercado
-- Volumen 24h
+### Generación Automática de Reportes
+La aplicación utiliza estas plantillas para:
+1. **Análisis IA**: Generar reportes estructurados en español
+2. **Exportación**: Crear documentos profesionales en formato Markdown
+3. **Referencia**: Mantener consistencia en el formato de análisis
 
-#### Completo (Complete)
-- Todos los campos del resumen
-- Datos de sparkline
-- Información adicional de la API de CoinGecko
+### Categorización CSV
+El archivo `crypto_coins_category.csv` proporciona:
+- **Categorías precisas** para 1000 criptomonedas
+- **Datos de mercado** actualizados
+- **Clasificación sectorial** profesional
+- **Base para análisis** sectorial automatizado
 
-#### Multi-Hoja (Multi-Sheet)
-- **Hoja 1**: Resumen general
-- **Hoja 2**: Datos del heatmap
-- **Hoja 3**: Datos del heatmap clásico
+## � Ventajas del Sistema de Plantillas
 
-## 🚀 Ventajas del Formato XLSX
+1. **Consistencia**: Formato estandarizado para todos los reportes
+2. **Profesionalidad**: Estructura de análisis de nivel institucional
+3. **Automatización**: Generación automática con IA
+4. **Escalabilidad**: Fácil modificación y mejora de plantillas
+5. **Referencia**: Ejemplo completo para validar salidas
 
-1. **Mayor Compatibilidad**: Compatible con Excel, Google Sheets, LibreOffice
-2. **Mejor Estructura**: Múltiples hojas en un solo archivo
-3. **Formato Nativo**: Números se mantienen como números (no texto)
-4. **Metadatos**: Información adicional sobre la exportación
-5. **Compresión**: Archivos más pequeños que CSV equivalentes
+## 🎨 Formato de Reportes
 
-## 📍 Ubicación Fija
+### Estructura Estándar
+- **Executive Summary**: Resumen para decisiones rápidas
+- **Análisis Técnico**: Niveles clave y patrones
+- **Análisis Sectorial**: Performance por categorías
+- **Estrategias**: Ideas de trading accionables
+- **Gestión de Riesgo**: Matrices y recomendaciones
 
-Todos los archivos se guardan automáticamente en esta carpeta, organizados por fecha. Esto facilita:
-- **Seguimiento histórico** de exportaciones
-- **Backup automático** de datos
-- **Análisis comparativo** entre fechas
-- **Organización centralizada** de todos los archivos
+### Salida Esperada
+Los reportes generados incluyen:
+- **Análisis de 1000+ criptomonedas**
+- **Categorización automática** por sectores
+- **Estrategias específicas** con R:R
+- **Niveles técnicos** precisos
+- **Recomendaciones** profesionales
 
 ## 💡 Uso Recomendado
 
-1. **Análisis Diario**: Exportar datos completos al final del día
-2. **Reportes Semanales**: Usar análisis IA para reportes ejecutivos
-3. **Investigación**: Mantener historial de datos para análisis de tendencias
-4. **Backup**: Carpeta puede ser respaldada regularmente
+1. **Desarrolladores**: Usar plantillas como referencia para nuevas funcionalidades
+2. **Analistas**: Basar reportes manuales en la estructura de las plantillas
+3. **IA**: Utilizar como prompt base para generar análisis consistentes
+4. **Usuarios**: Referencia para entender el nivel de análisis proporcionado
 
 ---
 
-*Generado automáticamente por Crypto Analysis Suite* 
+*Plantillas profesionales para análisis de criptomonedas • Crypto Analysis Suite v2.0* 

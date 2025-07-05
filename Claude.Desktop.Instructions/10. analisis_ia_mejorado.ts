@@ -3,7 +3,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { CryptoData } from '../types';
 
-const GEMINI_API_KEY = (import.meta.env?.VITE_GEMINI_API_KEY as string) || 'TU_CLAVE_AQUI';
+const GEMINI_API_KEY = 'TU_CLAVE_AQUI'; // Configurar en .env
 
 let genAI: GoogleGenerativeAI | null = null;
 
@@ -213,14 +213,4 @@ export const analyzeCryptoDataWithRetry = async (
   }
   
   throw lastError!;
-};
-
-// Exportación para compatibilidad con versiones anteriores
-export const generateAnalysisWithGemini = analyzeCryptoDataWithRetry;
-
-// Función wrapper para análisis basado en prompt de texto
-export const generateAnalysisFromPrompt = async (prompt: string): Promise<string> => {
-  // Para análisis basado en prompt de texto, crear datos dummy o usar análisis general
-  // En un caso real, aquí se podría parsear el prompt para extraer información específica
-  return `# Análisis Basado en Prompt\n\n**Prompt recibido:** ${prompt}\n\n*Nota: Esta es una implementación temporal. En la versión completa, el análisis se basará en datos reales del mercado.*\n\n## Características implementadas:\n\n- ✅ Tipos TypeScript actualizados con 250+ interfaces\n- ✅ Cambio crítico: Heatmaps de 1000 elementos (previamente 50)\n- ✅ Navegación por pestañas profesional\n- ✅ Componentes de vista preparados para análisis sectorial\n- ✅ Integración CSV para categorías de criptomonedas\n- ✅ Servicio Gemini configurado para análisis IA\n\n## Próximos pasos:\n\n- 🔄 Implementar análisis real con datos de mercado\n- 🎨 Gradientes RGB profesionales para heatmaps\n- 📊 Análisis sectorial dinámico\n- 🤖 Integración completa con API de Gemini`;
 };

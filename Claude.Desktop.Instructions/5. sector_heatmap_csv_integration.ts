@@ -1,12 +1,16 @@
+// src/components/SectorHeatmapView.tsx - Actualizado con categorías reales del CSV
+
 import React, { useMemo, useEffect, useState } from 'react';
 import { CryptoData } from '../types';
 import { 
+  enrichCryptoDataWithCategories, 
   getCategoriesStatistics,
-  loadCryptoCategoriesData
+  loadCryptoCategoriesData,
+  CryptoCategoryData 
 } from '../utils/csvCategoriesService';
 
 interface SectorHeatmapViewProps {
-  data: (CryptoData & { category: string })[];
+  data: CryptoData[];
 }
 
 // 🏢 Interfaz para datos de sector enriquecidos
@@ -26,31 +30,46 @@ interface SectorData {
   };
 }
 
-const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedData }) => {
+const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data }) => {
+  const [enrichedData, setEnrichedData] = useState<(CryptoData & { category: string })[]>([]);
   const [csvStats, setCsvStats] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 🔄 Cargar estadísticas del CSV
+  // 🔄 Cargar y enriquecer datos con categorías del CSV
   useEffect(() => {
-    const loadStats = async () => {
+    const loadEnrichedData = async () => {
       try {
         setIsLoading(true);
+        setError(null);
+        
+        console.log('🔄 Enriqueciendo datos con categorías del CSV...');
+        const enriched = await enrichCryptoDataWithCategories(data);
+        setEnrichedData(enriched);
+        
+        // Cargar estadísticas adicionales del CSV
         const csvData = await loadCryptoCategoriesData();
         if (csvData.length > 0) {
           const stats = getCategoriesStatistics(csvData);
           setCsvStats(stats);
+          console.log('✅ Estadísticas del CSV cargadas:', stats);
         }
+        
+        console.log(`✅ ${enriched.length} criptomonedas enriquecidas con categorías`);
       } catch (err: any) {
-        console.error('Error al cargar estadísticas CSV:', err);
+        console.error('❌ Error al enriquecer datos:', err);
         setError(err.message);
+        // Fallback: usar datos originales sin categorías
+        setEnrichedData(data.map(crypto => ({ ...crypto, category: 'Others' })));
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadStats();
-  }, []);
+    if (data.length > 0) {
+      loadEnrichedData();
+    }
+  }, [data]);
 
   // 📊 Análisis sectorial basado en datos enriquecidos
   const sectorAnalysis = useMemo(() => {
@@ -353,7 +372,7 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
           </div>
           
           <div>
-            <h4 className="font-semibold text-cyan-300 mb-2">� Peor Sector:</h4>
+            <h4 className="font-semibold text-cyan-300 mb-2">📉 Peor Sector:</h4>
             <p className="text-gray-300">
               <strong>{sectorAnalysis[sectorAnalysis.length - 1]?.name}</strong> con{' '}
               <span className="text-red-400 font-bold">

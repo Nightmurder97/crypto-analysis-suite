@@ -14,33 +14,59 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
   const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
 
   const handleAnalyze = async () => {
-    if (selectedCryptos.length === 0) {
-      alert('Por favor selecciona al menos una criptomoneda para analizar');
+    // Si hay criptos seleccionadas, analizarlas. Si no, analizar las seleccionadas
+    const cryptosToAnalyze = selectedCryptos.length > 0 ? selectedCryptos : [];
+    
+    if (cryptosToAnalyze.length === 0) {
+      alert('No hay datos disponibles para analizar');
       return;
     }
 
-    const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
-    const prompt = `Analiza el mercado de las siguientes criptomonedas: ${cryptoNames}. 
-    Proporciona un análisis detallado que incluya:
-    
-    1. **Resumen Ejecutivo**
-    2. **Análisis Individual** para cada criptomoneda seleccionada
-    3. **Análisis de Tendencias del Mercado**
-    4. **Factores de Riesgo**
-    5. **Recomendaciones de Inversión**
-    6. **Conclusiones**
-    
-    Datos actuales de las criptomonedas seleccionadas:
-    ${selectedCryptos.map(crypto => `
-    - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
-      * Precio actual: $${crypto.current_price}
-      * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
-      * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
-      * Market Cap: $${crypto.market_cap?.toLocaleString()}
-      * Ranking: #${crypto.market_cap_rank}
-    `).join('\n')}
-    
-    Por favor proporciona un análisis profesional y detallado en español.`;
+    let prompt: string;
+
+    if (selectedCryptos.length > 0) {
+      // Análisis de criptos seleccionadas
+      const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
+      prompt = `Analiza el mercado de las siguientes criptomonedas seleccionadas: ${cryptoNames}. 
+      
+      Datos actuales de las criptomonedas seleccionadas:
+      ${selectedCryptos.map(crypto => `
+      - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
+        * Precio actual: $${crypto.current_price}
+        * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
+        * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
+        * Market Cap: $${crypto.market_cap?.toLocaleString()}
+        * Ranking: #${crypto.market_cap_rank}
+      `).join('\n')}
+      
+      Proporciona un análisis detallado en español.`;
+    } else {
+      // Análisis automático del mercado completo (top 250)
+      prompt = `Realiza un análisis profesional del mercado de criptomonedas basado en las top 250 criptomonedas por capitalización de mercado.
+
+      DATOS DEL MERCADO:
+      Analizando las ${cryptosToAnalyze.length} principales criptomonedas del mercado.
+      
+      Top 10 por capitalización:
+      ${cryptosToAnalyze.slice(0, 10).map((crypto, idx) => `
+      ${idx + 1}. ${crypto.name} (${crypto.symbol?.toUpperCase()})
+         - Precio: $${crypto.current_price}
+         - Market Cap: $${crypto.market_cap?.toLocaleString()}
+         - Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
+      `).join('')}
+
+      INSTRUCCIONES:
+      Sigue EXACTAMENTE la plantilla de análisis profesional que conoces, generando un reporte completo en español que incluya:
+      
+      1. **RESUMEN EJECUTIVO**
+      2. **ANÁLISIS DE TENDENCIAS** 
+      3. **ANÁLISIS DE VOLUMEN Y LIQUIDEZ**
+      4. **ANÁLISIS SECTORIAL**
+      5. **FACTORES DE RIESGO Y OPORTUNIDADES** 
+      6. **CONCLUSIONES Y PERSPECTIVAS**
+      
+      Usa los datos reales proporcionados y mantén un tono profesional.`;
+    }
 
     generateAnalysis(prompt);
   };
@@ -48,8 +74,10 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
   const handleDownloadReport = (format: 'md' | 'xlsx') => {
     if (!analysisResult) return;
     
+    const analysisContent = typeof analysisResult === 'string' ? analysisResult : JSON.stringify(analysisResult);
+    
     if (format === 'md') {
-      const blob = new Blob([analysisResult], { type: 'text/markdown;charset=utf-8;' });
+      const blob = new Blob([analysisContent], { type: 'text/markdown;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
@@ -60,7 +88,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } else if (format === 'xlsx') {
-      exportAnalysisToXlsx(analysisResult, 'crypto_market_analysis');
+      exportAnalysisToXlsx(analysisContent, 'crypto_market_analysis');
     }
   };
 
@@ -85,7 +113,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
         <button
           type="button"
           onClick={handleAnalyze}
-          disabled={isPending || selectedCryptos.length === 0}
+          disabled={isPending}
           className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto sm:mx-0 w-full sm:w-auto"
           aria-label="Analyze market trends with AI"
         >
@@ -146,7 +174,9 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
                           prose-code:text-amber-300 prose-code:bg-slate-900 prose-code:p-1 prose-code:rounded-md
                           prose-blockquote:border-l-sky-500 prose-blockquote:text-slate-400
                           prose-table:border-slate-600 prose-th:bg-slate-700 prose-th:p-2 prose-td:p-2 prose-td:border-slate-600">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysisResult}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {typeof analysisResult === 'string' ? analysisResult : JSON.stringify(analysisResult)}
+            </ReactMarkdown>
           </div>
         </section>
       )}
