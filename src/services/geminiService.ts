@@ -269,10 +269,10 @@ export const analyzeCryptoData = async (prompt: string): Promise<string> => {
     const model = genAI.getGenerativeModel({ 
       model: "models/gemini-2.5-flash", // Usando Gemini 2.5 Flash correcto
       generationConfig: {
-        temperature: 0.7,
+        temperature: 0.8,
         topK: 40,
         topP: 0.95,
-        maxOutputTokens: 8192,
+        maxOutputTokens: 32768, // Aumentado significativamente para análisis completos
       }
     });
 
