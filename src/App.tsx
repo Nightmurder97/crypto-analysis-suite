@@ -192,7 +192,7 @@ function App() {
 
             {/* Sección de análisis */}
             <div className="w-full bg-gray-800 rounded-lg shadow-lg p-6">
-              <AnalysisSection selectedCryptos={selectedCryptoForAnalysis} />
+              <AnalysisSection selectedCryptos={selectedCryptoForAnalysis} allCryptoData={allCryptoData} />
             </div>
           </div>
         );
@@ -262,7 +262,7 @@ function App() {
           <div className="w-full space-y-6">
             <div className="bg-gray-800 p-6 rounded-lg">
               <h2 className="text-2xl font-semibold text-cyan-400 mb-4">🤖 Análisis IA Avanzado</h2>
-              <AnalysisSection selectedCryptos={allCryptoData.slice(0, 250)} />
+              <AnalysisSection selectedCryptos={allCryptoData.slice(0, 250)} allCryptoData={allCryptoData} />
             </div>
           </div>
         );

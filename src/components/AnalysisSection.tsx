@@ -8,18 +8,27 @@ import { CryptoData } from '../types';
 
 interface AnalysisSectionProps {
   selectedCryptos: CryptoData[];
+  allCryptoData?: CryptoData[];
 }
 
-const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) => {
+const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos, allCryptoData = [] }) => {
   const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
 
   const handleAnalyze = async () => {
-    // Si hay criptos seleccionadas, analizarlas. Si no, analizar las seleccionadas
-    const cryptosToAnalyze = selectedCryptos.length > 0 ? selectedCryptos : [];
+    // Si hay criptos seleccionadas, analizarlas. Si no, analizar las top 250
+    let cryptosToAnalyze = selectedCryptos;
     
     if (cryptosToAnalyze.length === 0) {
-      alert('No hay datos disponibles para analizar');
-      return;
+      // Usar las top 250 criptomonedas si no hay selección
+      cryptosToAnalyze = allCryptoData.slice(0, 250);
+      
+      if (cryptosToAnalyze.length === 0) {
+        alert('No hay datos disponibles para analizar');
+        return;
+      }
+      
+      // Informar al usuario que se analizarán las top 250
+      alert('No seleccionaste ninguna criptomoneda. Se analizarán las 250 principales por capitalización de mercado.');
     }
 
     let prompt: string;
