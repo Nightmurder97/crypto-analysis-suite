@@ -2,8 +2,8 @@ import { useState } from 'react';
 import CryptoTable from './components/CryptoTable';
 import AnalysisSection from './components/AnalysisSection';
 import PaginationControls from './components/PaginationControls';
-import HeatmapDisplay from './components/HeatmapDisplay';
-import ClassicHeatmapDisplay from './components/ClassicHeatmapDisplay';
+import HeatmapView from './components/HeatmapView';
+import ClassicHeatmapView from './components/ClassicHeatmapView';
 import SectorHeatmapView from './components/SectorHeatmapView';
 import StatisticsView from './components/StatisticsView';
 import SimulatorView from './components/SimulatorView';
@@ -39,9 +39,9 @@ function App() {
           </div>
         );
       case 'marketHeatmap':
-        return <HeatmapDisplay data={[]} />;
+        return <HeatmapView />;
       case 'classicHeatmap':
-        return <ClassicHeatmapDisplay data={[]} selectedMetric="price_change_percentage_24h" />;
+        return <ClassicHeatmapView />;
       case 'sectorHeatmap':
         return <SectorHeatmapView />;
       case 'statistics':
