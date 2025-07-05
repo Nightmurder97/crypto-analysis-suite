@@ -89,28 +89,76 @@ const App: React.FC = () => {
     if (currentClassicHeatmapPage > totalClassicHeatmapPages) setCurrentClassicHeatmapPage(1);
   }, [filteredCryptoData, totalHeatmapPages, currentHeatmapPage, totalClassicHeatmapPages, currentClassicHeatmapPage]);
 
+  const loadAnalysisTemplate = async (): Promise<string> => {
+    try {
+      const response = await fetch('/Reports/CryptoReportExample.md');
+      if (!response.ok) {
+        throw new Error('Failed to load analysis template');
+      }
+      return await response.text();
+    } catch (error) {
+      console.error('Error loading analysis template:', error);
+      // Fallback template if the file can't be loaded
+      return `# Analysis of Top 1000 Cryptocurrencies by Market Cap
+
+## EXECUTIVE SUMMARY
+[Análisis ejecutivo del mercado]
+
+## DASHBOARD DE MÉTRICAS CLAVE
+[Métricas clave del mercado]
+
+## Tendencias Generales del Grupo
+[Análisis de tendencias por períodos]
+
+## Análisis de Rendimientos
+[Mejores y peores rendimientos]
+
+## Top por Volumen y Market Cap
+[Análisis de volumen y capitalización]
+
+## Análisis de Volumen
+[Análisis detallado de volumen]
+
+## Observaciones Clave y Contexto del Mercado
+[Observaciones importantes]
+
+## Estrategias Recomendadas
+[Estrategias de trading e inversión]
+
+## Must-Take Insights
+[Oportunidades destacadas]
+
+## Resumen Final
+[Resumen y conclusiones]`;
+    }
+  };
+
   const handleAnalyzeData = useCallback(async () => {
     if (filteredCryptoData.length === 0) {
-      setAnalysisError("No crypto data available to analyze (check filters).");
+      setAnalysisError('No data available for analysis. Please load the market data first.');
       return;
     }
+
     setIsAnalyzing(true);
-    setAnalysisResult('');
     setAnalysisError(null);
+    setAnalysisResult('');
+
     try {
-      const groupSize = 250;
-      const totalGroups = 4;
+      // Load the analysis template
+      const template = await loadAnalysisTemplate();
       
-      // Calcular tops por periodo
+      let fullResult = `# Analysis of Top 1000 Cryptocurrencies by Market Cap\n\n`;
+      
+      // Calculate top performers for all periods
       const getTopPerformers = (data: CryptoData[], field: keyof CryptoData, count: number = 10) => {
-        return [...data]
+        return data
           .filter(coin => coin[field] !== null && coin[field] !== undefined)
           .sort((a, b) => (b[field] as number) - (a[field] as number))
           .slice(0, count)
           .map(coin => ({
             name: coin.name,
             symbol: coin.symbol,
-            value: coin[field]
+            value: coin[field] as number
           }));
       };
 
@@ -119,31 +167,34 @@ const App: React.FC = () => {
       const top7d = getTopPerformers(filteredCryptoData, 'price_change_percentage_7d_in_currency');
       const top30d = getTopPerformers(filteredCryptoData, 'price_change_percentage_30d_in_currency');
 
-      let fullResult = `# 📊 Análisis Completo del Mercado de Criptomonedas - Top 1000\n\n`;
-      fullResult += `## 🏆 Resumen de Mejores Performers\n\n`;
+      // Add top performers summary
       fullResult += `### 🔼 Top 10 - Última Hora (1h)\n`;
       top1h.forEach((coin, i) => {
-        const emoji = coin.value > 5 ? '🟢' : coin.value > 0 ? '🔼' : '🔽';
+        const emoji = coin.value > 10 ? '🟢' : coin.value > 0 ? '🔼' : coin.value < -10 ? '🔻' : '🔽';
         fullResult += `${i+1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${coin.value?.toFixed(2)}%\n`;
       });
-      
+
       fullResult += `\n### 🔼 Top 10 - Últimas 24 Horas\n`;
       top24h.forEach((coin, i) => {
         const emoji = coin.value > 10 ? '🟢' : coin.value > 0 ? '🔼' : coin.value < -10 ? '🔻' : '🔽';
         fullResult += `${i+1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${coin.value?.toFixed(2)}%\n`;
       });
-      
+
       fullResult += `\n### 🔼 Top 10 - Última Semana (7d)\n`;
       top7d.forEach((coin, i) => {
-        const emoji = coin.value > 20 ? '🟢' : coin.value > 0 ? '🔼' : coin.value < -20 ? '🔻' : '🔽';
+        const emoji = coin.value > 10 ? '🟢' : coin.value > 0 ? '🔼' : coin.value < -10 ? '🔻' : '🔽';
         fullResult += `${i+1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${coin.value?.toFixed(2)}%\n`;
       });
-      
+
       fullResult += `\n### 🔼 Top 10 - Último Mes (30d)\n`;
       top30d.forEach((coin, i) => {
         const emoji = coin.value > 30 ? '🟢' : coin.value > 0 ? '🔼' : coin.value < -30 ? '🔻' : '🔽';
         fullResult += `${i+1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${coin.value?.toFixed(2)}%\n`;
       });
+
+      // Process data in groups of 250
+      const groupSize = 250;
+      const totalGroups = Math.ceil(filteredCryptoData.length / groupSize);
 
       for (let i = 0; i < totalGroups; i++) {
         const start = i * groupSize;
@@ -162,30 +213,32 @@ const App: React.FC = () => {
         
         if (groupData.length === 0) continue;
         
-        const prompt = `Como analista senior de criptomonedas, analiza este grupo de datos (grupo ${i+1} de ${totalGroups}, ordenado por market cap).
+        const prompt = `Como analista senior de criptomonedas, analiza este grupo de datos (grupo ${i+1} de ${totalGroups}, ordenado por market cap) siguiendo EXACTAMENTE la estructura y formato de la plantilla proporcionada.
 
-IMPORTANTE: Usa estos emojis específicos en tu análisis:
-- 🔼 para subidas menores (0-10%)
-- 🔽 para bajadas menores (0-10%)
-- 🔻 para caídas importantes (>10%)
-- 🟢 para ganancias importantes (>10%)
+PLANTILLA DE REFERENCIA:
+${template}
+
+IMPORTANTE: 
+1. Usa EXACTAMENTE la misma estructura que la plantilla
+2. Incluye todas las secciones: EXECUTIVE SUMMARY, DASHBOARD DE MÉTRICAS CLAVE, Tendencias Generales, Análisis de Rendimientos, Top por Volumen y Market Cap, Análisis de Volumen, Observaciones Clave, Estrategias Recomendadas, Must-Take Insights, y Resumen Final
+3. Usa estos emojis específicos en tu análisis:
+   - 🔼 para subidas menores (0-10%)
+   - 🔽 para bajadas menores (0-10%)
+   - 🔻 para caídas importantes (>10%)
+   - 🟢 para ganancias importantes (>10%)
+4. Incluye tablas formateadas en markdown
+5. Proporciona estrategias de trading específicas con puntos de entrada, salida y stop loss
+6. Mantén el mismo nivel de detalle y profesionalismo que la plantilla
 
 Datos del grupo ${i+1}:
 \`\`\`json
 ${JSON.stringify(groupData, null, 2)}
 \`\`\`
 
-Proporciona un análisis en formato markdown que incluya:
-1. Tendencias generales del grupo
-2. Performers destacados (usa los emojis específicos)
-3. Análisis de volumen
-4. Observaciones clave
-5. Resumen del grupo
-
-Responde en español y mantén el formato profesional.`;
+Responde en español siguiendo EXACTAMENTE el formato y estructura de la plantilla proporcionada.`;
 
         const result = await analyzeCryptoData(prompt);
-        fullResult += `\n\n## 📈 Grupo ${i+1} de ${totalGroups} (por Market Cap)\n` + result;
+        fullResult += `\n\n## Grupo ${i+1} de ${totalGroups} (por Capitalización de Mercado)\n` + result;
       }
       
       setAnalysisResult(fullResult);
