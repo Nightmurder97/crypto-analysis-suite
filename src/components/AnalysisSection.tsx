@@ -12,35 +12,62 @@ interface AnalysisSectionProps {
 
 const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) => {
   const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
+  const { data: allCryptoData } = useCryptoData(1); // Obtener los 1000 elementos
 
   const handleAnalyze = async () => {
-    if (selectedCryptos.length === 0) {
-      alert('Por favor selecciona al menos una criptomoneda para analizar');
+    // Si hay criptos seleccionadas, analizarlas. Si no, analizar el mercado completo
+    const cryptosToAnalyze = selectedCryptos.length > 0 ? selectedCryptos : (allCryptoData?.slice(0, 250) || []);
+    
+    if (cryptosToAnalyze.length === 0) {
+      alert('No hay datos disponibles para analizar');
       return;
     }
 
-    const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
-    const prompt = `Analiza el mercado de las siguientes criptomonedas: ${cryptoNames}. 
-    Proporciona un análisis detallado que incluya:
-    
-    1. **Resumen Ejecutivo**
-    2. **Análisis Individual** para cada criptomoneda seleccionada
-    3. **Análisis de Tendencias del Mercado**
-    4. **Factores de Riesgo**
-    5. **Recomendaciones de Inversión**
-    6. **Conclusiones**
-    
-    Datos actuales de las criptomonedas seleccionadas:
-    ${selectedCryptos.map(crypto => `
-    - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
-      * Precio actual: $${crypto.current_price}
-      * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
-      * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
-      * Market Cap: $${crypto.market_cap?.toLocaleString()}
-      * Ranking: #${crypto.market_cap_rank}
-    `).join('\n')}
-    
-    Por favor proporciona un análisis profesional y detallado en español.`;
+    let prompt: string;
+
+    if (selectedCryptos.length > 0) {
+      // Análisis de criptos seleccionadas
+      const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
+      prompt = `Analiza el mercado de las siguientes criptomonedas seleccionadas: ${cryptoNames}. 
+      
+      Datos actuales de las criptomonedas seleccionadas:
+      ${selectedCryptos.map(crypto => `
+      - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
+        * Precio actual: $${crypto.current_price}
+        * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
+        * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
+        * Market Cap: $${crypto.market_cap?.toLocaleString()}
+        * Ranking: #${crypto.market_cap_rank}
+      `).join('\n')}
+      
+      Proporciona un análisis detallado en español.`;
+    } else {
+      // Análisis automático del mercado completo (top 250)
+      prompt = `Realiza un análisis profesional del mercado de criptomonedas basado en las top 250 criptomonedas por capitalización de mercado.
+
+      DATOS DEL MERCADO:
+      Analizando las ${cryptosToAnalyze.length} principales criptomonedas del mercado.
+      
+      Top 10 por capitalización:
+      ${cryptosToAnalyze.slice(0, 10).map((crypto, idx) => `
+      ${idx + 1}. ${crypto.name} (${crypto.symbol?.toUpperCase()})
+         - Precio: $${crypto.current_price}
+         - Market Cap: $${crypto.market_cap?.toLocaleString()}
+         - Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
+      `).join('')}
+
+      INSTRUCCIONES:
+      Sigue EXACTAMENTE la plantilla de análisis profesional que conoces, generando un reporte completo en español que incluya:
+      
+      1. **RESUMEN EJECUTIVO**
+      2. **ANÁLISIS DE TENDENCIAS** 
+      3. **ANÁLISIS DE VOLUMEN Y LIQUIDEZ**
+      4. **ANÁLISIS SECTORIAL**
+      5. **FACTORES DE RIESGO Y OPORTUNIDADES** 
+      6. **CONCLUSIONES Y PERSPECTIVAS**
+      
+      Usa los datos reales proporcionados y mantén un tono profesional.`;
+    }
 
     generateAnalysis(prompt);
   };
