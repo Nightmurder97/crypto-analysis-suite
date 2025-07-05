@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Server environment variables
+# Environment variables (SECURITY CRITICAL)
+.env
 server/.env
