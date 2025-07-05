@@ -1,0 +1,239 @@
+{
+  "version": "2.0-hybrid",
+  "name": "Crypto Analysis Template - Versión Híbrida Mejorada",
+  "description": "Template que combina la sofisticación institucional con granularidad técnica operativa",
+  "sections": {
+    "executive_summary": {
+      "required": true,
+      "elements": [
+        "Sentimiento general del mercado",
+        "Contexto macroeconómico",
+        "Fase del ciclo de mercado",
+        "Nivel de riesgo actual",
+        "Oportunidades destacadas",
+        "Recomendación de posicionamiento"
+      ]
+    },
+    "dashboard_metricas": {
+      "required": true,
+      "elements": [
+        "Capitalización total",
+        "Dominancia Bitcoin",
+        "Índice miedo/codicia",
+        "Volumen 24h",
+        "Activos tendencia alcista",
+        "Volatilidad promedio",
+        "Correlación mercados tradicionales"
+      ]
+    },
+    "technical_levels_dashboard": {
+      "required": true,
+      "new_feature": true,
+      "elements": [
+        "Niveles técnicos BTC (soporte/resistencia)",
+        "Niveles técnicos ETH (soporte/resistencia)",
+        "RSI y MACD para BTC/ETH",
+        "Niveles técnicos top 5 altcoins",
+        "Indicadores técnicos específicos"
+      ]
+    },
+    "grupos_capitalizacion": {
+      "required": true,
+      "enhanced": true,
+      "grupos": {
+        "large_caps": {
+          "elements": [
+            "Características del grupo",
+            "Análisis individual performers",
+            "Must-Take Messages (3-5 oportunidades)",
+            "Estrategias específicas con tabla",
+            "Scoring System (1-10 inversión, 1-10 riesgo, 1-5 liquidez)",
+            "Análisis sectorial (DeFi, Layer 1, Payments)"
+          ]
+        },
+        "mid_caps": {
+          "elements": [
+            "Características del grupo",
+            "Performers destacados",
+            "Must-Take Messages (3-5 oportunidades)",
+            "Estrategias específicas con tabla",
+            "Scoring System",
+            "Análisis sectorial (Gaming, AI, Infrastructure)"
+          ]
+        },
+        "small_caps": {
+          "elements": [
+            "Características del grupo",
+            "Activos con potencial",
+            "Must-Take Messages (3-5 oportunidades)",
+            "Estrategias específicas con tabla",
+            "Scoring System",
+            "Análisis sectorial (Memes, Emerging Tech, Niche DeFi)"
+          ]
+        },
+        "micro_caps": {
+          "elements": [
+            "Características del grupo",
+            "Must-Take Messages (2-3 oportunidades)",
+            "Estrategias específicas",
+            "Scoring System"
+          ]
+        }
+      }
+    },
+    "performance_analysis": {
+      "required": true,
+      "tables": [
+        "Top performers 1h (10+ activos)",
+        "Top performers 24h (15+ activos)",
+        "Top performers 7d (10+ activos)",
+        "Top performers 30d (10+ activos)",
+        "Worst performers 24h (10+ activos)",
+        "Worst performers 7d (8+ activos)"
+      ]
+    },
+    "volumen_liquidez": {
+      "required": true,
+      "elements": [
+        "Activos mayor volumen (15+ activos)",
+        "Patrones volumen inusuales",
+        "Correlación volumen-precio",
+        "Oportunidades arbitraje"
+      ]
+    },
+    "observaciones_alertas": {
+      "required": true,
+      "elements": [
+        "Patrones técnicos identificados",
+        "Anomalías en datos",
+        "Factores fundamentales"
+      ]
+    },
+    "consideraciones_tecnicas": {
+      "required": true,
+      "new_feature": true,
+      "elements": [
+        "Análisis chartista general",
+        "Indicadores técnicos clave",
+        "Niveles críticos de mercado",
+        "Patrón mercado dominante",
+        "Fase ciclo técnico",
+        "Correlación BTC/ETH",
+        "Divergencias principales"
+      ]
+    },
+    "matrices_riesgo": {
+      "required": true,
+      "enhanced": true,
+      "elements": [
+        "Matriz riesgo-retorno",
+        "Matriz performance cualitativa (nuevo)",
+        "Análisis correlaciones"
+      ]
+    },
+    "trading_ideas": {
+      "required": true,
+      "enhanced": true,
+      "timeframes": {
+        "corto_plazo": {
+          "period": "1-7 días",
+          "elements": [
+            "Activos objetivo específicos",
+            "Puntos entrada específicos",
+            "Objetivos específicos",
+            "Stop Loss específicos",
+            "Ratio R:R específico",
+            "Triggers técnicos específicos"
+          ]
+        },
+        "medio_plazo": {
+          "period": "1-4 semanas",
+          "elements": [
+            "Detalles completos con niveles específicos"
+          ]
+        },
+        "largo_plazo": {
+          "period": "1-6 meses",
+          "elements": [
+            "Detalles completos con niveles específicos"
+          ]
+        }
+      }
+    },
+    "asignacion_cartera": {
+      "required": true,
+      "enhanced": true,
+      "perfiles": {
+        "conservador": {
+          "elements": [
+            "Objetivo específico",
+            "Horizonte temporal",
+            "Asignación porcentual",
+            "Activos específicos recomendados",
+            "Rationale y niveles entrada"
+          ]
+        },
+        "moderado": {
+          "elements": [
+            "Objetivo específico",
+            "Horizonte temporal",
+            "Asignación porcentual",
+            "Activos específicos recomendados",
+            "Rationale y niveles entrada"
+          ]
+        },
+        "agresivo": {
+          "elements": [
+            "Objetivo específico",
+            "Horizonte temporal",
+            "Asignación porcentual",
+            "Activos específicos recomendados",
+            "Rationale y niveles entrada"
+          ]
+        }
+      }
+    },
+    "conclusiones_perspectivas": {
+      "required": true,
+      "enhanced": true,
+      "elements": [
+        "Fase actual mercado",
+        "Principales takeaways (5 puntos específicos)",
+        "Escenarios prospectivos con niveles específicos",
+        "Factores riesgo monitorear",
+        "Recomendaciones finales con stops específicos"
+      ]
+    }
+  },
+  "critical_requirements": {
+    "specificity": "Incluir precios exactos, niveles técnicos específicos, ratios precisos",
+    "data_usage": "Basar análisis en datos reales proporcionados",
+    "completeness": "Completar todas las tablas sin vacíos",
+    "scoring": "Asignar scores numéricos específicos",
+    "must_take_messages": "Identificar 3-5 oportunidades por grupo",
+    "technical_levels": "Proporcionar niveles específicos soporte/resistencia",
+    "granular_strategies": "Incluir entrada, salida, stop loss específicos",
+    "sectoral_analysis": "Evaluar cada sector por grupo capitalización",
+    "minimum_length": "Mínimo 500 líneas contenido detallado",
+    "professional_format": "Mantener formato tabla exacto y estructura profesional"
+  },
+  "new_features_v2": [
+    "Technical Levels Dashboard",
+    "Must-Take Messages por grupo",
+    "Scoring Systems cuantitativos",
+    "Estrategias granulares con tablas específicas",
+    "Análisis sectorial por grupo",
+    "Consideraciones técnicas específicas",
+    "Matriz performance cualitativa",
+    "Niveles entrada específicos en recomendaciones"
+  ],
+  "improvements_from_v1_3": [
+    "Mantiene estructura macro sofisticada",
+    "Añade granularidad técnica operativa",
+    "Incluye scoring systems numéricos",
+    "Proporciona niveles específicos trading",
+    "Análisis sectorial detallado",
+    "Must-take messages destacados",
+    "Estrategias con ratios R:R específicos"
+  ]
+} 

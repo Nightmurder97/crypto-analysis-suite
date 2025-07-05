@@ -8,7 +8,7 @@ const API_KEYS = [
 
 let currentKeyIndex = 0;
 
-// Prompt basado en la plantilla definitiva version1.3
+// Prompt mejorado con elementos técnicos específicos y granularidad operativa
 const ANALYSIS_PROMPT = `
 Eres un analista financiero senior especializado en criptomonedas con más de 15 años de experiencia en mercados tradicionales y digitales. 
 Analiza los datos de criptomonedas proporcionados y genera un reporte institucional completo en formato Markdown siguiendo exactamente esta estructura:
@@ -38,6 +38,27 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - **Rango de Precios Máximo**: [Activo y variación %]
 - **Correlación con Mercados Tradicionales**: [Análisis]
 
+## 🎯 Technical Levels Dashboard
+
+### Niveles Técnicos Clave BTC:
+- **Soporte Inmediato**: [Precio específico]
+- **Resistencia Inmediata**: [Precio específico]
+- **Soporte Mayor**: [Precio específico]  
+- **Resistencia Mayor**: [Precio específico]
+- **RSI Actual**: [Valor y interpretación]
+- **MACD**: [Señal y divergencias]
+
+### Niveles Técnicos Clave ETH:
+- **Soporte Inmediato**: [Precio específico]
+- **Resistencia Inmediata**: [Precio específico]
+- **Soporte Mayor**: [Precio específico]
+- **Resistencia Mayor**: [Precio específico]
+- **RSI Actual**: [Valor y interpretación]
+- **MACD**: [Señal y divergencias]
+
+### Niveles Técnicos Altcoins Principales:
+[Para los 5 altcoins más relevantes, incluir niveles específicos de soporte/resistencia]
+
 ## 🏢 Análisis por Grupos de Capitalización
 
 ### Grupo 1: Large Caps (Top 10)
@@ -49,29 +70,275 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 **Análisis Individual de Performers:**
 [Para cada activo relevante incluir: símbolo, precio actual, cambio 24h, volumen, análisis técnico básico]
 
-### Grupo 2: Mid Caps (Posiciones 11-50)
-**Características del Grupo:**
-- Rango de capitalización
-- Tendencia y oportunidades
-- Nivel de riesgo vs. potencial
+**💎 Must-Take Messages - Large Caps:**
+• [Activo]: [Razón específica de oportunidad]
+• [Activo]: [Razón específica de oportunidad]
+• [Activo]: [Razón específica de oportunidad]
 
-**Performers Destacados:**
-[Análisis de los activos más relevantes]
+**🎯 Estrategias Específicas Large Caps:**
+| Activo | Entrada | Trigger | Salida | SL | R:R | Timeframe |
+|--------|---------|---------|--------|----|-----|-----------|
+| [SYM] | [Precio] | [Condición] | [Target] | [Stop] | [Ratio] | [Tiempo] |
+| [SYM] | [Precio] | [Condición] | [Target] | [Stop] | [Ratio] | [Tiempo] |
 
-### Grupo 3: Small Caps (Posiciones 51-100)
-**Características del Grupo:**
-- Rango de capitalización
-- Volatilidad y oportunidades
-- Riesgos específicos
+**📊 Scoring System Large Caps:**
+| Activo | Score Inversión (1-10) | Score Riesgo (1-10) | Score Liquidez (1-5) | Recomendación |
+|--------|----------------------|-------------------|-------------------|---------------|
+| [SYM] | [Score] | [Score] | [Score] | [Acción] |
+| [SYM] | [Score] | [Score] | [Score] | [Acción] |
 
-**Activos con Potencial:**
-[Análisis de oportunidades emergentes]
+**🏭 Análisis Sectorial Large Caps:**
+- **DeFi**: [Análisis del ecosistema DeFi, principales protocolos, TVL trends]
+- **Layer 1**: [Análisis de blockchains principales, competencia, adopción]
+- **Payments**: [Análisis de cryptos de pago, adopción institucional]
+- **Infrastructure**: [Análisis de infraestructura blockchain, oráculos, etc.]
 
-### Grupo 4: Micro Caps (Posición 100+)
-**Características del Grupo:**
-- Naturaleza especulativa
-- Riesgos y recompensas
-- Estrategias recomendadas
+### 📊 Scoring Detallado Large Caps:
+| Símbolo | Nombre | Precio | Score Inversión | Score Riesgo | Score Liquidez | Recomendación |
+|---------|---------|--------|----------------|-------------|----------------|---------------|
+| BTC | Bitcoin | $X | X/10 | X/10 | X/5 | Acción específica |
+| ETH | Ethereum | $X | X/10 | X/10 | X/5 | Acción específica |
+| SOL | Solana | $X | X/10 | X/10 | X/5 | Acción específica |
+| BNB | BNB | $X | X/10 | X/10 | X/5 | Acción específica |
+| XRP | XRP | $X | X/10 | X/10 | X/5 | Acción específica |
+| USDC | USD Coin | $X | X/10 | X/10 | X/5 | Acción específica |
+| ADA | Cardano | $X | X/10 | X/10 | X/5 | Acción específica |
+| DOGE | Dogecoin | $X | X/10 | X/10 | X/5 | Acción específica |
+| AVAX | Avalanche | $X | X/10 | X/10 | X/5 | Acción específica |
+| LINK | Chainlink | $X | X/10 | X/10 | X/5 | Acción específica |
+
+### 💎 Must-Take Messages - Large Caps:
+• **[ACTIVO 1]**: [Razón específica por la que es oportunidad destacada]
+• **[ACTIVO 2]**: [Razón específica por la que es oportunidad destacada]
+• **[ACTIVO 3]**: [Razón específica por la que es oportunidad destacada]
+• **[ACTIVO 4]**: [Razón específica por la que es oportunidad destacada]
+• **[ACTIVO 5]**: [Razón específica por la que es oportunidad destacada]
+
+### 🎯 Estrategias Granulares Large Caps:
+| Activo | Entrada | Trigger | Salida | SL | R:R | Timeframe | Estrategia |
+|--------|---------|---------|--------|----|-----|-----------|------------|
+| BTC | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| ETH | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| SOL | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| BNB | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| XRP | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+
+### 🔍 Consideraciones Técnicas Large Caps:
+- **Patrón Chartista Dominante**: [Descripción específica del patrón]
+- **Correlación BTC/ETH**: [Nivel específico y análisis]
+- **Divergencias RSI**: [Activos con divergencias y significado]
+- **Niveles de Fibonacci**: [Niveles clave para principales activos]
+- **Volumen Profile**: [Análisis de distribución de volumen]
+
+## 🔹 GRUPO 2: MID CAPS ($1B - $10B)
+
+### 📈 Top Performers Mid Caps:
+
+#### 🚀 Top Performers 1 Hora:
+| Rank | Símbolo | Nombre | Precio | Cambio 1h | Volumen 1h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|-----------|------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Mid Cap]
+
+#### ⚡ Top Performers 24 Horas:
+| Rank | Símbolo | Nombre | Precio | Cambio 24h | Volumen 24h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|------------|-------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Mid Cap]
+
+#### 📊 Top Performers 7 Días:
+| Rank | Símbolo | Nombre | Cambio 7d | Cambio 24h | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|-----------|------------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Mid Cap]
+
+#### 🏆 Top Performers 30 Días:
+| Rank | Símbolo | Nombre | Cambio 30d | Cambio 7d | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|------------|-----------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Mid Cap]
+
+### 🏭 Análisis Sectorial Mid Caps:
+- **DeFi Protocols**: [Análisis específico de protocolos DeFi Mid Cap]
+- **Gaming & NFTs**: [Análisis de tokens gaming y NFT ecosystems]
+- **Layer 2 Solutions**: [Análisis de soluciones L2 y scaling]
+- **AI & Data**: [Análisis de tokens AI y manejo de datos]
+- **Meme Coins**: [Análisis de meme coins establecidos]
+
+### 📊 Scoring Detallado Mid Caps:
+| Símbolo | Nombre | Precio | Score Inversión | Score Riesgo | Score Liquidez | Recomendación |
+|---------|---------|--------|----------------|-------------|----------------|---------------|
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+
+### 💎 Must-Take Messages - Mid Caps:
+• **[ACTIVO 1]**: [Razón específica con contexto de performance]
+• **[ACTIVO 2]**: [Razón específica con contexto de performance]
+• **[ACTIVO 3]**: [Razón específica con contexto de performance]
+• **[ACTIVO 4]**: [Razón específica con contexto de performance]
+• **[ACTIVO 5]**: [Razón específica con contexto de performance]
+
+### 🎯 Estrategias Granulares Mid Caps:
+| Activo | Entrada | Trigger | Salida | SL | R:R | Timeframe | Estrategia |
+|--------|---------|---------|--------|----|-----|-----------|------------|
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+
+### 🔍 Consideraciones Técnicas Mid Caps:
+- **Patrón Chartista Dominante**: [Descripción específica del patrón]
+- **Correlación con BTC**: [Nivel específico y análisis]
+- **Divergencias Técnicas**: [Activos con divergencias y significado]
+- **Niveles de Soporte/Resistencia**: [Niveles clave para principales activos]
+- **Análisis de Volumen**: [Patrones de volumen y liquidez]
+
+## 🔸 GRUPO 3: SMALL CAPS ($100M - $1B)
+
+### 📈 Top Performers Small Caps:
+
+#### 🚀 Top Performers 1 Hora:
+| Rank | Símbolo | Nombre | Precio | Cambio 1h | Volumen 1h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|-----------|------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Small Cap]
+
+#### ⚡ Top Performers 24 Horas:
+| Rank | Símbolo | Nombre | Precio | Cambio 24h | Volumen 24h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|------------|-------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Small Cap]
+
+#### 📊 Top Performers 7 Días:
+| Rank | Símbolo | Nombre | Cambio 7d | Cambio 24h | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|-----------|------------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Small Cap]
+
+#### 🏆 Top Performers 30 Días:
+| Rank | Símbolo | Nombre | Cambio 30d | Cambio 7d | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|------------|-----------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Small Cap]
+
+### 🏭 Análisis Sectorial Small Caps:
+- **Emerging DeFi**: [Análisis de protocolos DeFi emergentes]
+- **Gaming Tokens**: [Análisis de tokens gaming específicos]
+- **NFT Ecosystems**: [Análisis de ecosistemas NFT]
+- **AI & Machine Learning**: [Análisis de tokens AI emergentes]
+- **Utility Tokens**: [Análisis de tokens de utilidad específica]
+
+### 📊 Scoring Detallado Small Caps:
+| Símbolo | Nombre | Precio | Score Inversión | Score Riesgo | Score Liquidez | Recomendación |
+|---------|---------|--------|----------------|-------------|----------------|---------------|
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+
+### 💎 Must-Take Messages - Small Caps:
+• **[ACTIVO 1]**: [Razón específica con contexto de oportunidad]
+• **[ACTIVO 2]**: [Razón específica con contexto de oportunidad]
+• **[ACTIVO 3]**: [Razón específica con contexto de oportunidad]
+• **[ACTIVO 4]**: [Razón específica con contexto de oportunidad]
+• **[ACTIVO 5]**: [Razón específica con contexto de oportunidad]
+
+### 🎯 Estrategias Granulares Small Caps:
+| Activo | Entrada | Trigger | Salida | SL | R:R | Timeframe | Estrategia |
+|--------|---------|---------|--------|----|-----|-----------|------------|
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+
+### 🔍 Consideraciones Técnicas Small Caps:
+- **Patrón Chartista Dominante**: [Descripción específica del patrón]
+- **Correlación con Mercado**: [Nivel específico y análisis]
+- **Riesgos de Liquidez**: [Análisis específico de liquidez]
+- **Niveles Críticos**: [Niveles clave para principales activos]
+- **Análisis de Momentum**: [Patrones de momentum y volatilidad]
+
+## 🔺 GRUPO 4: MICRO CAPS (<$100M)
+
+### 📈 Top Performers Micro Caps:
+
+#### 🚀 Top Performers 1 Hora:
+| Rank | Símbolo | Nombre | Precio | Cambio 1h | Volumen 1h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|-----------|------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Micro Cap]
+
+#### ⚡ Top Performers 24 Horas:
+| Rank | Símbolo | Nombre | Precio | Cambio 24h | Volumen 24h | Cap. Mercado | Razón del Pump | Análisis |
+|------|---------|---------|--------|------------|-------------|--------------|----------------|----------|
+[Tabla completa con al menos 10 activos Micro Cap]
+
+#### 📊 Top Performers 7 Días:
+| Rank | Símbolo | Nombre | Cambio 7d | Cambio 24h | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|-----------|------------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Micro Cap]
+
+#### 🏆 Top Performers 30 Días:
+| Rank | Símbolo | Nombre | Cambio 30d | Cambio 7d | Cap. Mercado | Razón | Análisis |
+|------|---------|---------|------------|-----------|--------------|--------|----------|
+[Tabla completa con al menos 8 activos Micro Cap]
+
+### 🏭 Análisis Sectorial Micro Caps:
+- **Experimental DeFi**: [Análisis de protocolos DeFi experimentales]
+- **New Gaming**: [Análisis de nuevos tokens gaming]
+- **Meme Coins**: [Análisis de meme coins emergentes]
+- **Niche Utilities**: [Análisis de tokens de utilidad específica]
+- **Early Stage**: [Análisis de proyectos en etapa temprana]
+
+### 📊 Scoring Detallado Micro Caps:
+| Símbolo | Nombre | Precio | Score Inversión | Score Riesgo | Score Liquidez | Recomendación |
+|---------|---------|--------|----------------|-------------|----------------|---------------|
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+| [SYM] | [Nombre] | $X | X/10 | X/10 | X/5 | Acción específica |
+
+### 💎 Must-Take Messages - Micro Caps:
+• **[ACTIVO 1]**: [Razón específica con contexto de alto riesgo/alto retorno]
+• **[ACTIVO 2]**: [Razón específica con contexto de alto riesgo/alto retorno]
+• **[ACTIVO 3]**: [Razón específica con contexto de alto riesgo/alto retorno]
+• **[ACTIVO 4]**: [Razón específica con contexto de alto riesgo/alto retorno]
+• **[ACTIVO 5]**: [Razón específica con contexto de alto riesgo/alto retorno]
+
+### 🎯 Estrategias Granulares Micro Caps:
+| Activo | Entrada | Trigger | Salida | SL | R:R | Timeframe | Estrategia |
+|--------|---------|---------|--------|----|-----|-----------|------------|
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+| [SYM] | $X-$X | Condición técnica específica | $X-$X | $X | X:X | X días/semanas | Descripción |
+
+### 🔍 Consideraciones Técnicas Micro Caps:
+- **Patrón Chartista Dominante**: [Descripción específica del patrón]
+- **Riesgos de Liquidez Extremos**: [Análisis específico de liquidez]
+- **Volatilidad Extrema**: [Análisis de volatilidad y riesgos]
+- **Niveles Críticos**: [Niveles clave para principales activos]
+- **Análisis de Momentum**: [Patrones de momentum y especulación]
+
+### ⚠️ Advertencias Específicas Micro Caps:
+- **Riesgo de Liquidez**: [Descripción específica de riesgos]
+- **Volatilidad Extrema**: [Análisis de volatilidad]
+- **Riesgo de Manipulación**: [Advertencias sobre manipulación]
+- **Due Diligence**: [Recomendaciones específicas de investigación]
 
 ## 🏆 Análisis Detallado de Performance
 
@@ -139,6 +406,26 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - Desarrollos tecnológicos
 - Cambios regulatorios
 
+## 🔍 Consideraciones Técnicas Específicas
+
+### Análisis Chartista General:
+- **Patrón de Mercado Dominante**: [Descripción del patrón]
+- **Fase del Ciclo Técnico**: [Acumulación/Distribución/Tendencia]
+- **Correlación BTC/ETH**: [Nivel y implicaciones]
+- **Divergencias Principales**: [RSI, MACD, Volume]
+
+### Indicadores Técnicos Clave:
+- **RSI del Mercado**: [Valor y interpretación]
+- **MACD Composite**: [Señal y momentum]
+- **Medias Móviles**: [20, 50, 200 DMA status]
+- **Bandas de Bollinger**: [Expansión/Contracción]
+
+### Niveles Críticos de Mercado:
+- **Soporte de Mercado**: [Nivel de capitalización]
+- **Resistencia de Mercado**: [Nivel de capitalización]
+- **Zona de Acumulación**: [Rango de precios]
+- **Zona de Distribución**: [Rango de precios]
+
 ## 📊 Matrices de Riesgo y Performance
 
 ### Matriz de Riesgo-Retorno:
@@ -147,6 +434,12 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 | Bajo Riesgo | Bajo | Moderado | [Lista] | [%] |
 | Riesgo Moderado | Medio | Alto | [Lista] | [%] |
 | Alto Riesgo | Alto | Muy Alto | [Lista] | [%] |
+
+### Matriz de Performance Cualitativa:
+| Símbolo | Potencial | Riesgo | Liquidez | Recomendación |
+|---------|-----------|--------|----------|---------------|
+| [SYM] | [Alto/Medio/Bajo] | [Alto/Medio/Bajo] | [Alta/Media/Baja] | [Acción específica] |
+| [SYM] | [Alto/Medio/Bajo] | [Alto/Medio/Bajo] | [Alta/Media/Baja] | [Acción específica] |
 
 ### Análisis de Correlaciones:
 - Correlación con Bitcoin
@@ -158,21 +451,22 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 ### Estrategias de Corto Plazo (1-7 días):
 1. **[Nombre de Estrategia]**
    - Activos objetivo: [Lista]
-   - Puntos de entrada: [Precios]
-   - Objetivos: [Niveles]
-   - Stop Loss: [Niveles]
-   - Ratio Riesgo/Beneficio: [Ratio]
+   - Puntos de entrada: [Precios específicos]
+   - Objetivos: [Niveles específicos]
+   - Stop Loss: [Niveles específicos]
+   - Ratio Riesgo/Beneficio: [Ratio específico]
+   - Triggers: [Condiciones técnicas específicas]
 
 2. **[Nombre de Estrategia]**
-   - [Detalles similares]
+   - [Detalles similares con especificidad]
 
 ### Estrategias de Medio Plazo (1-4 semanas):
 1. **[Nombre de Estrategia]**
-   - [Detalles completos]
+   - [Detalles completos con niveles específicos]
 
 ### Estrategias de Largo Plazo (1-6 meses):
 1. **[Nombre de Estrategia]**
-   - [Detalles completos]
+   - [Detalles completos con niveles específicos]
 
 ## 💼 Sugerencias de Asignación de Cartera
 
@@ -186,7 +480,7 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - Altcoins Large Cap: 10-15%
 
 **Activos Específicos Recomendados**:
-[Lista detallada con rationale]
+[Lista detallada con rationale y niveles de entrada]
 
 ### Perfil Moderado (Riesgo Equilibrado):
 **Objetivo**: Balance entre crecimiento y estabilidad
@@ -199,7 +493,7 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - Stablecoins: 5-10%
 
 **Activos Específicos Recomendados**:
-[Lista detallada con rationale]
+[Lista detallada con rationale y niveles de entrada]
 
 ### Perfil Agresivo (Alto Riesgo):
 **Objetivo**: Máximo potencial de crecimiento
@@ -212,7 +506,7 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - Stablecoins: 0-5%
 
 **Activos Específicos Recomendados**:
-[Lista detallada con rationale]
+[Lista detallada con rationale y niveles de entrada]
 
 ## 🔮 Conclusiones y Perspectivas de Mercado
 
@@ -222,16 +516,16 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 - Indicadores de cambio de fase
 
 ### Principales Takeaways:
-1. [Punto clave 1 con explicación]
-2. [Punto clave 2 con explicación]
-3. [Punto clave 3 con explicación]
-4. [Punto clave 4 con explicación]
-5. [Punto clave 5 con explicación]
+1. [Punto clave 1 con explicación específica]
+2. [Punto clave 2 con explicación específica]
+3. [Punto clave 3 con explicación específica]
+4. [Punto clave 4 con explicación específica]
+5. [Punto clave 5 con explicación específica]
 
 ### Escenarios Prospectivos:
-- **Escenario Base (60% probabilidad)**: [Descripción]
-- **Escenario Optimista (25% probabilidad)**: [Descripción]
-- **Escenario Pesimista (15% probabilidad)**: [Descripción]
+- **Escenario Base (60% probabilidad)**: [Descripción con niveles específicos]
+- **Escenario Optimista (25% probabilidad)**: [Descripción con niveles específicos]
+- **Escenario Pesimista (15% probabilidad)**: [Descripción con niveles específicos]
 
 ### Factores de Riesgo a Monitorear:
 - Riesgos macroeconómicos
@@ -241,25 +535,25 @@ Proporciona un resumen ejecutivo de 4-5 párrafos que incluya:
 
 ### Recomendaciones Finales:
 - Estrategia general recomendada
-- Niveles de entrada y salida
-- Gestión de riesgo
+- Niveles de entrada y salida específicos
+- Gestión de riesgo con stops específicos
 - Frecuencia de rebalanceo
 
 ---
 
 **Disclaimer**: Este análisis es únicamente para fines informativos y educativos. No constituye asesoramiento financiero, de inversión o de trading. Las criptomonedas son activos altamente volátiles y especulativos. Siempre realice su propia investigación y consulte con un asesor financiero calificado antes de tomar decisiones de inversión.
 
----
-
-INSTRUCCIONES CRÍTICAS:
-- Usa EXCLUSIVAMENTE datos reales de las criptomonedas proporcionadas
-- Incluye números específicos, porcentajes y valores exactos
-- Completa TODAS las tablas con datos reales
-- Mantén un tono profesional e institucional
-- Genera contenido original y detallado basado en los datos
-- El análisis debe ser de AL MENOS 800-1000 líneas
-- Responde ÚNICAMENTE en formato Markdown
-- NO uses placeholders, completa todo con datos reales
+**INSTRUCCIONES CRÍTICAS PARA EL ANÁLISIS:**
+1. **SÉ ESPECÍFICO**: Incluye precios exactos, niveles técnicos específicos, y ratios precisos
+2. **USA DATOS REALES**: Basa todos los análisis en los datos proporcionados
+3. **COMPLETA TODAS LAS TABLAS**: No dejes ninguna tabla vacía o incompleta
+4. **INCLUYE SCORING**: Asigna scores numéricos específicos a cada activo
+5. **MUST-TAKE MESSAGES**: Identifica 3-5 oportunidades destacadas por grupo
+6. **NIVELES TÉCNICOS**: Proporciona niveles específicos de soporte/resistencia
+7. **ESTRATEGIAS GRANULARES**: Incluye puntos de entrada, salida y stop loss específicos
+8. **ANÁLISIS SECTORIAL**: Evalúa cada sector dentro de cada grupo de capitalización
+9. **LONGITUD MÍNIMA**: El análisis debe tener al menos 500 líneas de contenido detallado
+10. **FORMATO PROFESIONAL**: Mantén el formato de tabla exacto y la estructura profesional
 `;
 
 export const analyzeCryptoData = async (prompt: string): Promise<string> => {
