@@ -23,6 +23,20 @@ export default defineConfig(({ mode }) => {
               'User-Agent': 'Mozilla/5.0 (compatible; crypto-analysis-suite/1.0)'
             }
           }
+        },
+        fs: {
+          deny: ['backup_duplicated_files/*']
+        },
+        watch: {
+          ignored: ['**/backup_duplicated_files/**']
+        }
+      },
+      optimizeDeps: {
+        exclude: ['backup_duplicated_files/*']
+      },
+      build: {
+        rollupOptions: {
+          external: ['backup_duplicated_files/*']
         }
       }
     };

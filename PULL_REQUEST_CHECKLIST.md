@@ -75,7 +75,7 @@
 #### 🤖 AnalysisSection
 - [x] ✅ Usa hook `useGenerateAnalysis`
 - [x] ✅ Estados de carga, error y éxito
-- [x] ✅ Exportación MD y XLSX
+- [x] ✅ Exportación MD y CSV
 - [x] ✅ Renderizado con ReactMarkdown
 
 #### 🎛️ PaginationControls

@@ -86,7 +86,7 @@ Este documento valida que todas las modificaciones realizadas por el background 
 ### 🤖 AnalysisSection Optimizado
 - **CUMPLIDO**: ✅ Usa hook `useGenerateAnalysis` mutation
 - **CUMPLIDO**: ✅ Estados de carga, error y éxito
-- **CUMPLIDO**: ✅ Exportación en formatos MD y XLSX
+- **CUMPLIDO**: ✅ Exportación en formatos MD y CSV
 - **CUMPLIDO**: ✅ Renderizado con ReactMarkdown
 
 ---

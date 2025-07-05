@@ -18,7 +18,13 @@ app.post('/api/generate-analysis', async (req, res) => {
     if (!prompt) {
       return res.status(400).json({ error: 'El prompt es obligatorio.' });
     }
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        maxOutputTokens: 32768,
+        temperature: 0.7,
+      }
+    });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();

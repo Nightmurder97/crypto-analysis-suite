@@ -29,7 +29,7 @@ La refactorización del **Crypto Analysis Suite** ha sido **completada exitosame
 - ✅ **Loading States**: Feedback visual durante operaciones
 - ✅ **Error Handling**: Manejo robusto de errores con mensajes informativos
 - ✅ **Selección Múltiple**: Checkboxes para seleccionar criptomonedas específicas
-- ✅ **Exportación de Reportes**: Descarga en Markdown y Excel
+- ✅ **Exportación de Reportes**: Descarga en Markdown y CSV
 
 ## 📊 FUNCIONALIDADES PRINCIPALES
 
@@ -42,7 +42,7 @@ La refactorización del **Crypto Analysis Suite** ha sido **completada exitosame
 ### 🤖 **Análisis con IA (Gemini)**
 - **Análisis Contextual**: Basado en datos actuales de criptomonedas seleccionadas
 - **Reportes Detallados**: Resumen ejecutivo, análisis individual, recomendaciones
-- **Exportación**: Descarga de reportes en formatos MD y XLSX
+- **Exportación**: Descarga de reportes en formatos MD y CSV
 - **Generación Segura**: A través del servidor proxy protegido
 
 ### 📱 **Diseño Responsive**
@@ -65,7 +65,7 @@ crypto-analysis-suite/
 │   │   └── PaginationControls.tsx   # ✅ Navegación eficiente
 │   ├── 🛠️ utils/
 │   │   ├── apiClient.ts             # ✅ Hooks de React Query
-│   │   └── xlsxExporter.ts          # ✅ Exportación de reportes
+│   │   └── csvExporter.ts           # ✅ Exportación de reportes
 │   ├── 🔧 services/
 │   │   └── geminiService.ts         # ✅ Cliente del servidor proxy
 │   └── 📝 types.ts                  # ✅ Tipos TypeScript
@@ -97,7 +97,7 @@ npm run dev  # Puerto 5173
 1. **Navegar**: Usa la paginación para explorar las top 250 criptomonedas
 2. **Seleccionar**: Marca checkboxes de las criptomonedas que te interesen
 3. **Analizar**: Haz clic en "Analizar Mercado" para generar reporte con IA
-4. **Exportar**: Descarga el análisis en formato MD o XLSX
+4. **Exportar**: Descarga el análisis en formato MD o CSV
 
 ## ⚡ MEJORAS DE RENDIMIENTO
 

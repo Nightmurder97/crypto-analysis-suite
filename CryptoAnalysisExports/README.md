@@ -7,10 +7,10 @@ Esta carpeta contiene todas las exportaciones de datos y reportes generados por 
 ```
 CryptoAnalysisExports/
 ├── 2025-01-07/                    # Carpeta por fecha (YYYY-MM-DD)
-│   ├── crypto_overview_data_*.xlsx
-│   ├── crypto_complete_data_*.xlsx
-│   ├── crypto_analysis_complete_*.xlsx
-│   ├── crypto_market_analysis_*.xlsx
+│   ├── crypto_overview_data_*.csv
+│   ├── crypto_complete_data_*.csv
+│   ├── crypto_analysis_complete_*.csv
+│   ├── crypto_market_analysis_*.csv
 │   └── crypto_market_analysis_*.md
 ├── 2025-01-08/
 │   └── ...
@@ -20,23 +20,23 @@ CryptoAnalysisExports/
 ## 📊 Tipos de Exportación
 
 ### 1. **Datos de Criptomonedas**
-- **📊 Resumen (.xlsx)**: Campos básicos y métricas principales
-- **📈 Completo (.xlsx)**: Todos los campos disponibles de la API
-- **🗂️ Multi-Hoja (.xlsx)**: Archivo con múltiples hojas (Resumen, Heatmap, Heatmap Clásico)
+- **📊 Resumen (.csv)**: Campos básicos y métricas principales
+- **📈 Completo (.csv)**: Todos los campos disponibles de la API
+- **🗂️ Multi-Hoja (.csv)**: Archivo con múltiples hojas (Resumen, Heatmap, Heatmap Clásico)
 
 ### 2. **Reportes de Análisis IA**
 - **📄 Reporte (.md)**: Análisis en formato Markdown
-- **📊 Reporte (.xlsx)**: Análisis estructurado en Excel con metadatos
+- **📊 Reporte (.csv)**: Análisis estructurado en Excel con metadatos
 
 ### 3. **Datos de Visualización**
-- **🔥 Heatmap Página (.xlsx)**: Datos de la página actual del heatmap
-- **🎯 Heatmap Clásico (.xlsx)**: Datos del heatmap clásico filtrado
+- **🔥 Heatmap Página (.csv)**: Datos de la página actual del heatmap
+- **�� Heatmap Clásico (.csv)**: Datos del heatmap clásico filtrado
 
 ## 🔧 Configuración
 
 ### Formato de Nombres de Archivo
 - **Timestamp**: `YYYY-MM-DDTHH-MM-SS`
-- **Ejemplo**: `crypto_overview_data_2025-01-07T14-30-15.xlsx`
+- **Ejemplo**: `crypto_overview_data_2025-01-07T14-30-15.csv`
 
 ### Campos Incluidos
 
@@ -57,7 +57,7 @@ CryptoAnalysisExports/
 - **Hoja 2**: Datos del heatmap
 - **Hoja 3**: Datos del heatmap clásico
 
-## 🚀 Ventajas del Formato XLSX
+## 🚀 Ventajas del Formato CSV
 
 1. **Mayor Compatibilidad**: Compatible con Excel, Google Sheets, LibreOffice
 2. **Mejor Estructura**: Múltiples hojas en un solo archivo

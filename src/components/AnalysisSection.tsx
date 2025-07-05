@@ -2,73 +2,72 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LoadingIcon, ErrorIcon, SparklesIcon, ArrowDownTrayIcon } from './IconComponents';
-import { exportAnalysisToXlsx } from '../utils/xlsxExporter';
+import { exportAnalysisToCsv, exportAnalysisToMd } from '../utils/csvExporter';
 import { useGenerateAnalysis } from '../utils/apiClient';
 import { CryptoData } from '../types';
 
 interface AnalysisSectionProps {
   selectedCryptos: CryptoData[];
+  // Props opcionales para control externo
+  onAnalyze?: () => Promise<void>;
+  isAnalyzing?: boolean;
+  analysisResult?: string;
+  analysisError?: string | null;
 }
 
-const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) => {
-  const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
+const AnalysisSection: React.FC<AnalysisSectionProps> = ({ 
+  selectedCryptos, 
+  onAnalyze: externalOnAnalyze,
+  isAnalyzing: externalIsAnalyzing,
+  analysisResult: externalAnalysisResult,
+  analysisError: externalAnalysisError
+}) => {
+  // Hook interno para análisis de selección
+  const { mutate: generateAnalysis, isPending, data: internalAnalysisResult, error: internalError } = useGenerateAnalysis();
+
+  // Determinar qué estado usar (externo o interno)
+  const isAnalyzing = externalIsAnalyzing !== undefined ? externalIsAnalyzing : isPending;
+  const analysisResult = externalAnalysisResult !== undefined ? externalAnalysisResult : internalAnalysisResult;
+  const analysisError = externalAnalysisError !== undefined ? externalAnalysisError : internalError?.message;
 
   const handleAnalyze = async () => {
-    if (selectedCryptos.length === 0) {
-      alert('Por favor selecciona al menos una criptomoneda para analizar');
+    // Usar la función de análisis externa si se proporciona (para análisis de mercado completo)
+    if (externalOnAnalyze) {
+      await externalOnAnalyze();
       return;
     }
 
-    const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
-    const prompt = `Analiza el mercado de las siguientes criptomonedas: ${cryptoNames}. 
-    Proporciona un análisis detallado que incluya:
-    
-    1. **Resumen Ejecutivo**
-    2. **Análisis Individual** para cada criptomoneda seleccionada
-    3. **Análisis de Tendencias del Mercado**
-    4. **Factores de Riesgo**
-    5. **Recomendaciones de Inversión**
-    6. **Conclusiones**
-    
-    Datos actuales de las criptomonedas seleccionadas:
-    ${selectedCryptos.map(crypto => `
-    - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
-      * Precio actual: $${crypto.current_price}
-      * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
-      * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
-      * Market Cap: $${crypto.market_cap?.toLocaleString()}
-      * Ranking: #${crypto.market_cap_rank}
-    `).join('\n')}
-    
-    Por favor proporciona un análisis profesional y detallado en español.`;
+    // Lógica interna para analizar solo las criptomonedas seleccionadas
+    if (selectedCryptos.length === 0) {
+      alert('Por favor selecciona al menos una criptomoneda para analizar.');
+      return;
+    }
 
+    const cryptoDetails = selectedCryptos.map(c => 
+      `- ${c.name} (${c.symbol?.toUpperCase()}): Precio=$${c.current_price}, Market Cap=$${c.market_cap?.toLocaleString()}, Rank=${c.market_cap_rank}`
+    ).join('\n');
+
+    const prompt = `Realiza un análisis detallado de las siguientes criptomonedas:\n${cryptoDetails}\n\nIncluye un resumen, análisis individual, tendencias de mercado, riesgos y una conclusión.`;
     generateAnalysis(prompt);
   };
 
-  const handleDownloadReport = (format: 'md' | 'xlsx') => {
-    if (!analysisResult) return;
-    
-    if (format === 'md') {
-      const blob = new Blob([analysisResult], { type: 'text/markdown;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
-      link.setAttribute('download', `crypto_market_analysis_${timestamp}.md`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } else if (format === 'xlsx') {
-      exportAnalysisToXlsx(analysisResult, 'crypto_market_analysis');
+  const handleDownloadReport = (format: 'md' | 'csv') => {
+    if (analysisResult) {
+      if (format === 'md') {
+        exportAnalysisToMd(analysisResult, 'crypto_analysis_report');
+      } else if (format === 'csv') {
+        exportAnalysisToCsv(analysisResult, 'crypto_analysis_report');
+      }
     }
   };
+
+  const isButtonDisabled = isAnalyzing || (!externalOnAnalyze && selectedCryptos.length === 0);
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg shadow-lg space-y-6">
       <h2 className="text-2xl font-semibold mb-4">Análisis con IA</h2>
       
-      {selectedCryptos.length > 0 && (
+      {selectedCryptos.length > 0 && !externalOnAnalyze && (
         <div className="mb-4">
           <h3 className="text-lg font-medium mb-2">Criptomonedas seleccionadas:</h3>
           <div className="flex flex-wrap gap-2">
@@ -85,11 +84,10 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
         <button
           type="button"
           onClick={handleAnalyze}
-          disabled={isPending || selectedCryptos.length === 0}
+          disabled={isButtonDisabled}
           className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto sm:mx-0 w-full sm:w-auto"
-          aria-label="Analyze market trends with AI"
         >
-          {isPending ? (
+          {isAnalyzing ? (
             <>
               <LoadingIcon className="w-5 h-5 mr-2 animate-spin" />
               Analizando...
@@ -97,45 +95,43 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
           ) : (
             <>
              <SparklesIcon className="w-5 h-5 mr-2" />
-              Analizar Mercado
+              {externalOnAnalyze ? 'Análisis Completo del Mercado' : `Analizar ${selectedCryptos.length} Criptos`}
             </>
           )}
         </button>
-        {analysisResult && !isPending && (
+        {analysisResult && !isAnalyzing && (
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               type="button"
               onClick={() => handleDownloadReport('md')}
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-md shadow-md transition-colors flex items-center justify-center"
-              aria-label="Download analysis report as Markdown"
             >
               <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
-              📄 Reporte (.md)
+              Reporte (.md)
             </button>
             <button
               type="button"
-              onClick={() => handleDownloadReport('xlsx')}
+              onClick={() => handleDownloadReport('csv')}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md shadow-md transition-colors flex items-center justify-center"
-              aria-label="Download analysis report as Excel"
             >
               <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
-              📊 Reporte (.xlsx)
+              Reporte (.csv)
             </button>
           </div>
         )}
       </div>
 
-      {error && (
+      {analysisError && (
         <section id="analysis-error-display" className="bg-red-700/30 border border-red-500 text-red-300 p-4 rounded-lg shadow-lg flex items-start">
           <ErrorIcon className="w-6 h-6 mr-3 flex-shrink-0 text-red-400" />
           <div>
             <h3 className="font-semibold text-red-200">Error de Análisis</h3>
-            <p className="text-sm">{error.message}</p>
+            <p className="text-sm">{analysisError}</p>
           </div>
         </section>
       )}
 
-      {analysisResult && !isPending && (
+      {analysisResult && !isAnalyzing && (
         <section id="analysis-output-section" className="bg-slate-700/50 p-4 sm:p-6 rounded-xl shadow-lg border border-slate-600">
           <h2 className="text-2xl font-semibold mb-4 text-slate-100 flex items-center">
             <SparklesIcon className="w-7 h-7 mr-2 text-sky-400" />
