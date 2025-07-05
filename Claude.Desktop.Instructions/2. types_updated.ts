@@ -247,4 +247,11 @@ export interface SearchFilters {
   sortDirection: 'asc' | 'desc';
 }
 
-// Export de tipos principales para fácil importación - ya están exportados individualmente arriba
+// Export de tipos principales para fácil importación
+export type {
+  CryptoData,
+  CryptoCategoryData,
+  SectorAnalysisData,
+  MarketStatistics,
+  EnrichedCryptoData
+};
