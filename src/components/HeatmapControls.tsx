@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeatmapMetric } from '@/types';
+import { HeatmapMetric } from '../types';
 
 interface HeatmapControlsProps {
   selectedMetric: HeatmapMetric;

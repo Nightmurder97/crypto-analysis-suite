@@ -1,22 +1,49 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { LoadingIcon, ErrorIcon, SparklesIcon, ArrowDownTrayIcon } from './IconComponents.tsx';
+import { LoadingIcon, ErrorIcon, SparklesIcon, ArrowDownTrayIcon } from './IconComponents';
 import { exportAnalysisToXlsx } from '../utils/xlsxExporter';
+import { useGenerateAnalysis } from '../utils/apiClient';
+import { CryptoData } from '../types';
 
 interface AnalysisSectionProps {
-  onAnalyze: () => Promise<void>;
-  isAnalyzing: boolean;
-  analysisResult: string;
-  analysisError: string | null;
+  selectedCryptos: CryptoData[];
 }
 
-const AnalysisSection: React.FC<AnalysisSectionProps> = ({
-  onAnalyze,
-  isAnalyzing,
-  analysisResult,
-  analysisError,
-}) => {
+const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) => {
+  const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
+
+  const handleAnalyze = async () => {
+    if (selectedCryptos.length === 0) {
+      alert('Por favor selecciona al menos una criptomoneda para analizar');
+      return;
+    }
+
+    const cryptoNames = selectedCryptos.map(crypto => crypto.name).join(', ');
+    const prompt = `Analiza el mercado de las siguientes criptomonedas: ${cryptoNames}. 
+    Proporciona un análisis detallado que incluya:
+    
+    1. **Resumen Ejecutivo**
+    2. **Análisis Individual** para cada criptomoneda seleccionada
+    3. **Análisis de Tendencias del Mercado**
+    4. **Factores de Riesgo**
+    5. **Recomendaciones de Inversión**
+    6. **Conclusiones**
+    
+    Datos actuales de las criptomonedas seleccionadas:
+    ${selectedCryptos.map(crypto => `
+    - ${crypto.name} (${crypto.symbol?.toUpperCase()}):
+      * Precio actual: $${crypto.current_price}
+      * Cambio 24h: ${crypto.price_change_percentage_24h?.toFixed(2)}%
+      * Cambio 7d: ${crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
+      * Market Cap: $${crypto.market_cap?.toLocaleString()}
+      * Ranking: #${crypto.market_cap_rank}
+    `).join('\n')}
+    
+    Por favor proporciona un análisis profesional y detallado en español.`;
+
+    generateAnalysis(prompt);
+  };
 
   const handleDownloadReport = (format: 'md' | 'xlsx') => {
     if (!analysisResult) return;
@@ -38,28 +65,43 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="bg-gray-800 p-4 rounded-lg shadow-lg space-y-6">
+      <h2 className="text-2xl font-semibold mb-4">Análisis con IA</h2>
+      
+      {selectedCryptos.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-lg font-medium mb-2">Criptomonedas seleccionadas:</h3>
+          <div className="flex flex-wrap gap-2">
+            {selectedCryptos.map((crypto: CryptoData) => (
+              <span key={crypto.id} className="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm">
+                {crypto.symbol?.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="text-center space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-center sm:space-x-4">
         <button
           type="button"
-          onClick={onAnalyze}
-          disabled={isAnalyzing}
+          onClick={handleAnalyze}
+          disabled={isPending || selectedCryptos.length === 0}
           className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto sm:mx-0 w-full sm:w-auto"
           aria-label="Analyze market trends with AI"
         >
-          {isAnalyzing ? (
+          {isPending ? (
             <>
               <LoadingIcon className="w-5 h-5 mr-2 animate-spin" />
-              Analyzing...
+              Analizando...
             </>
           ) : (
             <>
              <SparklesIcon className="w-5 h-5 mr-2" />
-              Analyze Market Trends
+              Analizar Mercado
             </>
           )}
         </button>
-        {analysisResult && !isAnalyzing && (
+        {analysisResult && !isPending && (
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               type="button"
@@ -83,21 +125,21 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({
         )}
       </div>
 
-      {analysisError && (
+      {error && (
         <section id="analysis-error-display" className="bg-red-700/30 border border-red-500 text-red-300 p-4 rounded-lg shadow-lg flex items-start">
           <ErrorIcon className="w-6 h-6 mr-3 flex-shrink-0 text-red-400" />
           <div>
-            <h3 className="font-semibold text-red-200">Analysis Error</h3>
-            <p className="text-sm">{analysisError}</p>
+            <h3 className="font-semibold text-red-200">Error de Análisis</h3>
+            <p className="text-sm">{error.message}</p>
           </div>
         </section>
       )}
 
-      {analysisResult && !isAnalyzing && (
+      {analysisResult && !isPending && (
         <section id="analysis-output-section" className="bg-slate-700/50 p-4 sm:p-6 rounded-xl shadow-lg border border-slate-600">
           <h2 className="text-2xl font-semibold mb-4 text-slate-100 flex items-center">
             <SparklesIcon className="w-7 h-7 mr-2 text-sky-400" />
-            AI Market Analysis
+            Análisis del Mercado con IA
           </h2>
           <div className="prose prose-sm sm:prose-base prose-invert max-w-none bg-slate-800 p-4 rounded-lg border border-slate-600 max-h-[60vh] overflow-y-auto shadow-inner 
                           prose-headings:text-sky-300 prose-strong:text-sky-200 prose-a:text-cyan-400 hover:prose-a:text-cyan-300
