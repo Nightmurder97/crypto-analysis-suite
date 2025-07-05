@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useCryptoData } from '../utils/apiClient';
 import ClassicHeatmapDisplay from './ClassicHeatmapDisplay';
-import { HeatmapMetric } from '../types';
+import { HeatmapMetric, CryptoData } from '../types';
 
-const ClassicHeatmapView: React.FC = () => {
+interface ClassicHeatmapViewProps {
+  data: CryptoData[];
+}
+
+const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoData }) => {
   const [selectedMetric, setSelectedMetric] = useState<HeatmapMetric>('price_change_percentage_24h');
-  const { data: cryptoData, isLoading, error } = useCryptoData(1); // Obtener los primeros 1000
 
   const metrics: { key: HeatmapMetric; label: string }[] = [
     { key: 'price_change_percentage_1h_in_currency', label: 'Cambio 1h' },
@@ -16,24 +18,6 @@ const ClassicHeatmapView: React.FC = () => {
     { key: 'total_volume', label: 'Volumen 24h' },
     { key: 'current_price', label: 'Precio Actual' },
   ];
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-        <span className="ml-3 text-slate-300">Cargando datos para heatmap clásico...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-700/30 border border-red-500 text-red-300 p-4 rounded-lg">
-        <h3 className="font-semibold">Error al cargar datos del heatmap</h3>
-        <p className="text-sm">{error.message}</p>
-      </div>
-    );
-  }
 
   if (!cryptoData || cryptoData.length === 0) {
     return (

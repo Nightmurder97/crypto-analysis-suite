@@ -3,7 +3,8 @@ import { CryptoData } from '../types';
 import { useCryptoData } from '../utils/apiClient';
 
 interface CryptoTableProps {
-  currentPage: number;
+  currentPage?: number;
+  data?: CryptoData[];
   onSelectCrypto: (cryptos: CryptoData[]) => void;
 }
 
@@ -36,12 +37,13 @@ const Sparkline: React.FC<{ data: number[], color?: string }> = ({ data, color =
   );
 };
 
-const CryptoTable: React.FC<CryptoTableProps> = ({ currentPage, onSelectCrypto }) => {
+const CryptoTable: React.FC<CryptoTableProps> = ({ currentPage, data: externalData, onSelectCrypto }) => {
   const [sortKey, setSortKey] = useState<SortKey>('market_cap_rank');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [selectedCryptos, setSelectedCryptos] = useState<Set<string>>(new Set());
 
-  const { data, isLoading, error } = useCryptoData(currentPage);
+  const { data: fetchedData, isLoading, error } = useCryptoData(currentPage || 1);
+  const data = externalData || fetchedData;
 
   const sortedData = useMemo(() => {
     if (!data || !sortKey) return data || [];

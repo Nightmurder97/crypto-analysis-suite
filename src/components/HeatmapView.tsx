@@ -1,28 +1,12 @@
-import React, { useState } from 'react';
-import { useCryptoData } from '../utils/apiClient';
+import React from 'react';
+import { CryptoData } from '../types';
 import HeatmapDisplay from './HeatmapDisplay';
 
-const HeatmapView: React.FC = () => {
-  const { data: cryptoData, isLoading, error } = useCryptoData(1); // Obtener los primeros 1000
+interface HeatmapViewProps {
+  data: CryptoData[];
+}
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-        <span className="ml-3 text-slate-300">Cargando datos para heatmap...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-700/30 border border-red-500 text-red-300 p-4 rounded-lg">
-        <h3 className="font-semibold">Error al cargar datos del heatmap</h3>
-        <p className="text-sm">{error.message}</p>
-      </div>
-    );
-  }
-
+const HeatmapView: React.FC<HeatmapViewProps> = ({ data: cryptoData }) => {
   if (!cryptoData || cryptoData.length === 0) {
     return (
       <div className="text-center py-12">

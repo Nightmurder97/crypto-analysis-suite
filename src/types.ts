@@ -247,6 +247,7 @@ export interface SearchFilters {
   sortDirection: 'asc' | 'desc';
 }
 
+// 🎭 Tipo para diferentes vistas de la aplicación
 export type ViewType = 
   | 'table'
   | 'heatmap'
@@ -256,3 +257,4 @@ export type ViewType =
   | 'analysis'
   | 'simulator'
   | 'reports';
+

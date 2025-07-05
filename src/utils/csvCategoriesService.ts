@@ -21,7 +21,7 @@ let csvDataCache: CryptoCategoryData[] | null = null;
 // 📊 Función para parsear el CSV de categorías
 export const parseCryptoCategoriesCSV = (csvContent: string): CryptoCategoryData[] => {
   const lines = csvContent.trim().split('\n');
-  // const _headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+  // const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
   
   return lines.slice(1).map(line => {
     // Parseo más robusto para manejar comas dentro de comillas
@@ -152,7 +152,6 @@ export const mapCategoryToDisplayCategory = (csvCategory: string): string => {
     // AI & Data
     'artificial intelligence': 'AI & Big Data',
     'ai': 'AI & Big Data',
-    'ai & big data': 'AI & Big Data',
     'machine learning': 'AI & Big Data',
     'data': 'AI & Big Data',
     'oracle': 'AI & Big Data',
@@ -171,25 +170,21 @@ export const mapCategoryToDisplayCategory = (csvCategory: string): string => {
     
     // Exchange Tokens
     'exchange': 'Exchange Tokens',
-    'exchange token': 'Exchange Tokens',
     'trading': 'Exchange Tokens',
     'cex': 'Exchange Tokens',
     
     // Meme Coins
     'meme': 'Meme Coins',
-    'meme coin': 'Meme Coins',
     'dog': 'Meme Coins',
     'shiba': 'Meme Coins',
     
     // Privacy
     'privacy': 'Privacy Coins',
-    'privacy coin': 'Privacy Coins',
     'anonymous': 'Privacy Coins',
     'private': 'Privacy Coins',
     
     // Payments
     'payment': 'Payments',
-    'payments': 'Payments',
     'currency': 'Payments',
     'money': 'Payments'
   };

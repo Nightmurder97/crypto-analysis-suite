@@ -12,11 +12,10 @@ interface AnalysisSectionProps {
 
 const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) => {
   const { mutate: generateAnalysis, isPending, data: analysisResult, error } = useGenerateAnalysis();
-  const { data: allCryptoData } = useCryptoData(1); // Obtener los 1000 elementos
 
   const handleAnalyze = async () => {
-    // Si hay criptos seleccionadas, analizarlas. Si no, analizar el mercado completo
-    const cryptosToAnalyze = selectedCryptos.length > 0 ? selectedCryptos : (allCryptoData?.slice(0, 250) || []);
+    // Si hay criptos seleccionadas, analizarlas. Si no, analizar las seleccionadas
+    const cryptosToAnalyze = selectedCryptos.length > 0 ? selectedCryptos : [];
     
     if (cryptosToAnalyze.length === 0) {
       alert('No hay datos disponibles para analizar');
@@ -114,7 +113,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ selectedCryptos }) =>
         <button
           type="button"
           onClick={handleAnalyze}
-          disabled={isPending || selectedCryptos.length === 0}
+          disabled={isPending}
           className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto sm:mx-0 w-full sm:w-auto"
           aria-label="Analyze market trends with AI"
         >
