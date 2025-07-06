@@ -21,27 +21,8 @@ const performanceMetrics: { key: keyof CryptoData; label: string }[] = [
   { key: 'price_change_percentage_30d_in_currency', label: '30d %' },
 ];
 
-const getPerformanceColor = (value: number | null | undefined): string => {
-  if (value === null || value === undefined || isNaN(value)) return 'bg-slate-600'; // Neutral for N/A
-  const intensity = Math.min(Math.abs(value) / 15, 1); // Normalize for pct, cap at +/-15% for full intensity
-  
-  if (value > 0.05) return `rgba(34, 197, 94, ${intensity * 0.7 + 0.3})`; // Emerald-500 base
-  if (value < -0.05) return `rgba(239, 68, 68, ${intensity * 0.7 + 0.3})`; // Red-500 base
-  return 'bg-yellow-600 opacity-80'; // Near zero (yellowish, less intense)
-};
-
-const getVolumeColor = (value: number | null | undefined, allVolumes: number[]): string => {
-  if (value === null || value === undefined || isNaN(value)) return 'bg-slate-600';
-  if (allVolumes.length === 0) return 'bg-slate-600';
-
-  // Ordenar y dividir en tercios
-  const sorted = [...allVolumes].filter(v => v !== null && !isNaN(v)).sort((a, b) => a - b);
-  const idx = sorted.findIndex(v => v === value);
-  const tercio = Math.floor(sorted.length / 3);
-  if (idx >= 2 * tercio) return '#166534'; // Verde oscuro (alto)
-  if (idx >= tercio) return '#b45309'; // Naranja oscuro (medio)
-  return '#7f1d1d'; // Rojo oscuro (bajo)
-};
+// Las funciones getPerformanceColor y getVolumeColor serán reemplazadas por getAdvancedHeatmapColor
+import { getAdvancedHeatmapColor, HeatmapMetricType } from '../utils/colorUtils'; // Import the new color utility
 
 interface HeatmapCellProps {
   coin?: CryptoData; // Optional: not present for headers
@@ -102,33 +83,47 @@ const HeatmapCell: React.FC<HeatmapCellProps> =
 };
 
 const Legend: React.FC<{ type: 'performance' | 'volume' }> = ({ type }) => {
+  // This legend might need adjustment if getAdvancedHeatmapColor produces very different ranges
+  // than the original getPerformanceColor and getVolumeColor.
+  // For now, keeping it as is, but it's a point of potential refinement.
+  const performanceExamplePos = getAdvancedHeatmapColor(5, 'price_change_percentage_24h');
+  const performanceExampleNeut = getAdvancedHeatmapColor(0, 'price_change_percentage_24h');
+  const performanceExampleNeg = getAdvancedHeatmapColor(-5, 'price_change_percentage_24h');
+
+  // For volume, we need example values and min/max, or use fixed colors for legend
+  const volumeExampleHigh = getAdvancedHeatmapColor(1e9, 'total_volume', 1e6, 1e9); // Example high
+  const volumeExampleMid = getAdvancedHeatmapColor(5e8, 'total_volume', 1e6, 1e9);  // Example mid
+  const volumeExampleLow = getAdvancedHeatmapColor(1e6, 'total_volume', 1e6, 1e9);   // Example low
+
   return (
     <div className="flex flex-col items-center space-y-1 text-xs text-slate-400">
       {type === 'performance' && (
         <>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: getPerformanceColor(5)}}></div> Strong Positive</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: getPerformanceColor(0)}}></div> Neutral</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: getPerformanceColor(-5)}}></div> Strong Negative</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExamplePos}}></div> Positivo Fuerte</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExampleNeut}}></div> Neutral</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExampleNeg}}></div> Negativo Fuerte</div>
         </>
       )}
       {type === 'volume' && (
         <>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: '#166534'}}></div> High Volume</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: '#b45309'}}></div> Mid Volume</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: '#7f1d1d'}}></div> Low Volume</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleHigh}}></div> Volumen Alto</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleMid}}></div> Volumen Medio</div>
+          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleLow}}></div> Volumen Bajo</div>
         </>
       )}
     </div>
   );
 };
 
-
 const HeatmapDisplay: React.FC<HeatmapDisplayProps> = ({ data }) => {
   if (data.length === 0) {
     return <p className="text-slate-400 text-center py-8">No data available for heatmaps. Adjust filters or wait for data to load.</p>;
   }
 
+  // Calculate min/max for volume for color scaling
   const allVolumes = data.map(d => d.total_volume as number).filter(v => v !== null && !isNaN(v) && v > 0);
+  const minVolume = Math.min(...allVolumes);
+  const maxVolume = Math.max(...allVolumes);
 
   const performanceHeaderCols = ['Name', ...performanceMetrics.map(m => m.label)];
   const volumeHeaderCols = ['Name', 'Volume (24h)'];
@@ -151,7 +146,8 @@ const HeatmapDisplay: React.FC<HeatmapDisplayProps> = ({ data }) => {
                     key={`${coin.id}-${metric.key}`} 
                     coin={coin} 
                     metricKey={metric.key} 
-                    color={getPerformanceColor(coin[metric.key] as number | null)}
+                    // Use new color function for performance
+                    color={getAdvancedHeatmapColor(coin[metric.key] as number | null, metric.key as HeatmapMetricType)}
                     label={metric.label}
                   />
                 ))}
@@ -159,6 +155,7 @@ const HeatmapDisplay: React.FC<HeatmapDisplayProps> = ({ data }) => {
             ))}
           </div>
            <div className="mt-3 flex justify-center">
+            {/* Update Legend if necessary, or rely on intuitive colors */}
             <Legend type="performance" />
           </div>
         </div>
@@ -176,13 +173,15 @@ const HeatmapDisplay: React.FC<HeatmapDisplayProps> = ({ data }) => {
                 <HeatmapCell 
                   coin={coin} 
                   metricKey={'total_volume'} 
-                  color={getVolumeColor(coin.total_volume, allVolumes)}
+                  // Use new color function for volume, passing min/max
+                  color={getAdvancedHeatmapColor(coin.total_volume, 'total_volume', minVolume, maxVolume)}
                   label="Volume (24h)"
                 />
               </React.Fragment>
             ))}
           </div>
            <div className="mt-3 flex justify-center">
+            {/* Update Legend if necessary */}
             <Legend type="volume" />
           </div>
         </div>
