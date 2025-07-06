@@ -144,10 +144,10 @@ export const analyzeCryptoData = async (cryptoData: CryptoData[]): Promise<strin
   try {
     const ai = initializeGemini();
     const model = ai.getGenerativeModel({ 
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash-latest', // Changed to gemini-1.5-flash-latest
       generationConfig: {
-        maxOutputTokens: 8192, // ✅ Aumentado para respuestas más largas
-        temperature: 0.7,
+        maxOutputTokens: 32768, // Changed to 32768
+        temperature: 0.8, // Changed to 0.8
         topP: 0.9,
         topK: 40,
       }

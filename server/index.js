@@ -7,10 +7,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("La variable de entorno GEMINI_API_KEY no está definida.");
+const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("La variable de entorno GEMINI_API_KEY o VITE_GEMINI_API_KEY no está definida.");
 }
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(apiKey);
 
 app.post('/api/generate-analysis', async (req, res) => {
   try {
@@ -18,7 +20,7 @@ app.post('/api/generate-analysis', async (req, res) => {
     if (!prompt) {
       return res.status(400).json({ error: 'El prompt es obligatorio.' });
     }
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' }); // Consistent model
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();

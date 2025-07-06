@@ -1,0 +1,5 @@
+Claude.Desktop.Instructions/
+backup_duplicated_files/
+node_modules/
+dist/
+build/
