@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import ClassicHeatmapDisplay from './ClassicHeatmapDisplay';
 import { HeatmapMetric, CryptoData } from '../types';
 import { ArrowDownTrayIcon } from './IconComponents'; // Assuming IconComponents is in the same folder or adjust path
@@ -22,7 +22,7 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
     const dataToDownload = limitedData; // Data already filtered to top 100
     const csvContent = [
       ['Name', 'Symbol', 'Price', 'Market Cap', 'Volume', '24h Change', '1h Change', '7d Change', '30d Change', 'Category'].join(','),
-      ...dataToDownload.map(crypto => [
+      ...dataToDownload.map((crypto: CryptoData) => [
         crypto.name,
         crypto.symbol,
         crypto.current_price || 0,

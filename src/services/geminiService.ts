@@ -29,8 +29,6 @@ const createAdvancedAnalysisPrompt = (cryptoData: CryptoData[]): string => {
   );
 
   // Calcular métricas del mercado
-  const totalMarketCap = validData.reduce((sum, coin) => sum + (coin.market_cap || 0), 0);
-  const totalVolume = validData.reduce((sum, coin) => sum + (coin.total_volume || 0), 0);
   
   // Top performers (top5Gainers, top5Losers) son ahora calculados por getTopPerformers y usados en formatTable
   // No se necesitan estas variables separadas.
