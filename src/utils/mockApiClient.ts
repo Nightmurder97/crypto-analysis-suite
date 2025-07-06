@@ -4,19 +4,6 @@ import { CryptoData } from '../types';
 // Generate mock data based on the CSV structure
 const generateMockCryptoData = (count: number): CryptoData[] => {
   const mockData: CryptoData[] = [];
-  
-  const categories = [
-    'Smart Contract Platform',
-    'Stablecoin', 
-    'Exchange Token',
-    'Payments',
-    'Decentralized Finance',
-    'Gaming',
-    'NFT',
-    'Layer 1',
-    'Layer 2',
-    'Artificial Intelligence'
-  ];
 
   const cryptoNames = [
     'Bitcoin', 'Ethereum', 'Tether', 'BNB', 'XRP', 'Solana', 'USDC', 'Cardano', 
@@ -28,7 +15,6 @@ const generateMockCryptoData = (count: number): CryptoData[] => {
 
   for (let i = 0; i < count; i++) {
     const nameIndex = i % cryptoNames.length;
-    const categoryIndex = i % categories.length;
     const priceChange = (Math.random() - 0.5) * 40; // -20% to +20%
     
     mockData.push({
