@@ -353,7 +353,7 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
           </div>
           
           <div>
-            <h4 className="font-semibold text-cyan-300 mb-2">� Peor Sector:</h4>
+            <h4 className="font-semibold text-cyan-300 mb-2">📉 Peor Sector:</h4>
             <p className="text-gray-300">
               <strong>{sectorAnalysis[sectorAnalysis.length - 1]?.name}</strong> con{' '}
               <span className="text-red-400 font-bold">
