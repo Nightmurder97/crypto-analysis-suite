@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import CryptoTable from './components/CryptoTable';
 import AnalysisSection from './components/AnalysisSection';
-import PaginationControls from './components/PaginationControls';
+// PaginationControls no longer used in Overview
 import HeatmapView from './components/HeatmapView';
 import ClassicHeatmapView from './components/ClassicHeatmapView';
 import SectorHeatmapView from './components/SectorHeatmapView';
@@ -19,7 +19,7 @@ import { enrichCryptoDataWithCategories } from './utils/csvCategoriesService';
 const STABLECOIN_KEYWORDS = ['stablecoin', 'usd', 'dai', 'tether', 'busd', 'usdc', 'fdusd', 'usdt', 'usdp', 'pyusd', 'tusd', 'eurc', 'eurs'];
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(1);
+  // currentPage, setCurrentPage, totalPages, paginatedTableData removed as Overview table is now virtualized
   const [selectedCryptoForAnalysis, setSelectedCryptoForAnalysis] = useState<CryptoData[]>([]);
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [excludeStablecoins, setExcludeStablecoins] = useState(false);
@@ -61,27 +61,14 @@ function App() {
     });
   }, [allCryptoData, excludeStablecoins]);
 
-  // Datos paginados para la tabla principal
-  const paginatedTableData = useMemo(() => {
-    const itemsPerPage = 50; // Para la tabla mantenemos 50 por página
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredCryptoData.slice(startIndex, endIndex);
-  }, [filteredCryptoData, currentPage]);
-
   // Datos para heatmaps (TODOS los elementos, sin paginación)
+  // paginatedTableData and totalPages are removed
   const paginatedHeatmapData = useMemo(() => {
     return filteredCryptoData;
   }, [filteredCryptoData]);
 
   const paginatedClassicHeatmapData = useMemo(() => {
     return filteredCryptoData;
-  }, [filteredCryptoData]);
-
-  // Cálculo de páginas totales
-  const totalPages = useMemo(() => {
-    const itemsPerPage = 50;
-    return Math.max(1, Math.ceil(filteredCryptoData.length / itemsPerPage));
   }, [filteredCryptoData]);
 
   // Ya no necesitamos páginas para heatmaps
@@ -175,19 +162,13 @@ function App() {
               </button>
             </div>
             
-            {/* Tabla principal con ancho completo */}
+            {/* Tabla principal con ancho completo y virtualizada */}
             <div className="w-full bg-gray-800 rounded-lg shadow-lg overflow-hidden">
               <CryptoTable 
-                data={paginatedTableData} 
+                data={filteredCryptoData} // Pasar todos los datos filtrados
                 onSelectCrypto={setSelectedCryptoForAnalysis}
               />
-              <div className="p-4 border-t border-gray-700">
-                <PaginationControls 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
-                  onPageChange={setCurrentPage} 
-                />
-              </div>
+              {/* PaginationControls ya no son necesarios aquí si la tabla es virtualizada */}
             </div>
 
             {/* Sección de análisis */}
