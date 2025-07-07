@@ -17,8 +17,8 @@ const HeatmapView: React.FC<HeatmapViewProps> = ({ data: cryptoData }) => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-800 p-4 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-cyan-400">🔥 Heatmap del Mercado</h2>
+      <div className="bg-gray-800 p-4 rounded-lg border border-gray-600">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-200">🔥 Heatmap del Mercado</h2>
         <p className="text-gray-400 mb-4">
           Mostrando {cryptoData.length} criptomonedas con rendimiento y volumen en tiempo real
         </p>

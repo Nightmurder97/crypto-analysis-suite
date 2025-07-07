@@ -12,6 +12,20 @@ interface CryptoTableProps {
 type SortKey = keyof CryptoData | 'name' | 'market_cap_rank' | 'current_price' | 'total_volume' | 'price_change_percentage_1h_in_currency' | 'price_change_percentage_24h' | 'price_change_percentage_7d_in_currency' | 'price_change_percentage_30d_in_currency' | null;
 type SortOrder = 'asc' | 'desc';
 
+// Helper for consistent column widths. Using flex-basis.
+const columnConfig = [
+  { key: null, label: 'Select', flex: '0 0 4rem' }, // 64px
+  { key: 'market_cap_rank', label: '#', flex: '0 0 3rem' }, // 48px
+  { key: 'name', label: 'Name', flex: '1 1 13rem' }, // Flex-grow, flex-shrink, basis 208px
+  { key: 'current_price', label: 'Price', flex: '0 0 8rem' }, // 128px
+  { key: 'price_change_percentage_1h_in_currency', label: '1h %', flex: '0 0 6rem' }, // 96px
+  { key: 'price_change_percentage_24h', label: '24h %', flex: '0 0 6rem' }, // 96px
+  { key: 'price_change_percentage_7d_in_currency', label: '7d %', flex: '0 0 6rem' }, // 96px
+  { key: 'market_cap', label: 'Market Cap', flex: '0 0 9rem' }, // 144px
+  { key: 'total_volume', label: 'Volume (24h)', flex: '0 0 9rem' }, // 144px
+  { key: 'sparkline_in_7d', label: '7d Trend', flex: '0 0 7rem' }, // 112px
+];
+
 const Sparkline: React.FC<{ data: number[], color?: string }> = ({ data, color = 'currentColor' }) => {
   if (!data || data.length < 2) return <span className="text-slate-500 text-xs">N/A</span>;
 
@@ -120,19 +134,6 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ data: initialData, onSelectCr
     overscan: 10,
   });
 
-  const columns: { key: SortKey; label: string; width?: string, sticky?: boolean }[] = [
-    { key: null, label: 'Select', width: 'w-16', sticky: true },
-    { key: 'market_cap_rank', label: '#', width: 'w-12', sticky: true },
-    { key: 'name', label: 'Name', width: 'w-52', sticky: true }, // Make name sticky too
-    { key: 'current_price', label: 'Price', width: 'w-32' },
-    { key: 'price_change_percentage_1h_in_currency', label: '1h %', width: 'w-24' },
-    { key: 'price_change_percentage_24h', label: '24h %', width: 'w-24' },
-    { key: 'price_change_percentage_7d_in_currency', label: '7d %', width: 'w-24' },
-    { key: 'market_cap', label: 'Market Cap', width: 'w-36' },
-    { key: 'total_volume', label: 'Volume (24h)', width: 'w-36' },
-    { key: 'sparkline_in_7d' as any, label: '7d Trend', width: 'w-28' },
-  ];
-
   if (!initialData || initialData.length === 0) {
     return (
         <div className="flex justify-center items-center h-64">
@@ -142,77 +143,73 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ data: initialData, onSelectCr
   }
 
   return (
-    <div ref={parentRef} className="overflow-auto shadow-md rounded-lg max-h-[calc(100vh-280px)]"> {/* Adjusted max-h for potential header/controls */}
+    <div ref={parentRef} className="overflow-auto shadow-md rounded-lg max-h-[calc(100vh-280px)] bg-slate-800">
+      <div className="sticky top-0 z-10 bg-slate-700">
+        <div className="flex text-xs text-slate-400 uppercase">
+          {columnConfig.map(col => (
+            <div
+              key={col.key as string || 'select'}
+              className="px-4 py-3"
+              style={{ flex: col.flex }}
+              onClick={() => col.key && handleSort(col.key)}
+            >
+              {col.label}
+              {sortKey === col.key && (sortOrder === 'asc' ? ' ▲' : ' ▼')}
+            </div>
+          ))}
+        </div>
+      </div>
       <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, width: '100%', position: 'relative' }}>
-        <table className="min-w-full text-sm text-left text-slate-300 bg-slate-800">
-          <thead className="text-xs text-slate-400 uppercase bg-slate-700 sticky top-0 z-20">
-            <tr>
-              {columns.map(col => (
-                <th
-                  key={col.key as string || 'select'}
-                  scope="col"
-                  className={`px-4 py-3 ${col.width || ''} ${col.key ? 'cursor-pointer hover:bg-slate-600' : ''} ${col.sticky ? 'sticky bg-slate-700 z-10' : ''}`}
-                  style={col.sticky ? { left: col.label === 'Select' ? 0 : (col.label === '#' ? 'calc(4rem)' : 'calc(4rem + 3rem)')} : {}} // Adjust left positioning for sticky columns
-                  onClick={() => col.key && handleSort(col.key)}
-                >
-                  {col.label}
-                  {sortKey === col.key && (sortOrder === 'asc' ? ' ▲' : ' ▼')}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rowVirtualizer.getVirtualItems().map(virtualRow => {
-              const coin = sortedData[virtualRow.index];
-              if (!coin) return null; // Should not happen if count is correct
-              return (
-                <tr
-                  key={coin.id || virtualRow.index}
-                  className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors duration-100"
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  <td className={`px-4 py-3 sticky bg-slate-800 hover:bg-slate-700/50 z-10`} style={{ left: 0 }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedCryptos.has(coin.id)}
-                      onChange={(e) => handleCryptoSelect(coin, e.target.checked)}
-                      className="w-4 h-4 text-cyan-600 bg-slate-700 border-slate-600 rounded focus:ring-cyan-500"
-                    />
-                  </td>
-                  <td className={`px-4 py-3 font-medium text-slate-200 sticky bg-slate-800 hover:bg-slate-700/50 z-10`} style={{ left: 'calc(4rem)' }}>{coin.market_cap_rank}</td>
-                  <td className={`px-4 py-3 sticky bg-slate-800 hover:bg-slate-700/50 z-10`} style={{ left: 'calc(4rem + 3rem)' }}>
-                    <div className="flex items-center">
-                      <img src={coin.image} alt={coin.name} className="w-6 h-6 mr-2 rounded-full shrink-0"/>
-                      <span className="font-bold mr-2 text-slate-100 shrink-0">{coin.symbol?.toUpperCase()}</span>
-                      <span className="truncate ">{coin.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">{formatCurrency(coin.current_price)}</td>
-                  <td className="px-4 py-3">{formatPercentage(coin.price_change_percentage_1h_in_currency)}</td>
-                  <td className="px-4 py-3">{formatPercentage(coin.price_change_percentage_24h)}</td>
-                  <td className="px-4 py-3">{formatPercentage(coin.price_change_percentage_7d_in_currency)}</td>
-                  <td className="px-4 py-3">{formatBigNumber(coin.market_cap)}</td>
-                  <td className="px-4 py-3">{formatBigNumber(coin.total_volume)}</td>
-                  <td className="px-4 py-3">
-                    {coin.sparkline_in_7d && coin.sparkline_in_7d.price ? (
-                       <Sparkline
-                          data={coin.sparkline_in_7d.price}
-                          color={ (coin.sparkline_in_7d.price[coin.sparkline_in_7d.price.length -1] || 0) > (coin.sparkline_in_7d.price[0] || 0) ? '#22c55e' : '#ef4444' }
-                       />
-                    ) : <span className="text-slate-500 text-xs">N/A</span>}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {rowVirtualizer.getVirtualItems().map(virtualRow => {
+          const coin = sortedData[virtualRow.index];
+          if (!coin) return null;
+          return (
+            <div
+              key={coin.id || virtualRow.index}
+              className="flex items-center border-b border-slate-700 hover:bg-slate-700/50"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualRow.size}px`,
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              <div className="px-4 py-3" style={{ flex: columnConfig[0].flex }}>
+                 <input
+                    type="checkbox"
+                    aria-label={`Select ${coin.name}`}
+                    checked={selectedCryptos.has(coin.id)}
+                    onChange={(e) => handleCryptoSelect(coin, e.target.checked)}
+                    className="w-4 h-4 text-cyan-600 bg-slate-700 border-slate-600 rounded focus:ring-cyan-500"
+                  />
+              </div>
+              <div className="px-4 py-3 font-medium text-slate-200" style={{ flex: columnConfig[1].flex }}>{coin.market_cap_rank}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[2].flex }}>
+                <div className="flex items-center">
+                  <img src={coin.image} alt={coin.name} className="w-6 h-6 mr-2 rounded-full shrink-0"/>
+                  <span className="font-bold mr-2 text-slate-100 shrink-0">{coin.symbol?.toUpperCase()}</span>
+                  <span className="truncate">{coin.name}</span>
+                </div>
+              </div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[3].flex }}>{formatCurrency(coin.current_price)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[4].flex }}>{formatPercentage(coin.price_change_percentage_1h_in_currency)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[5].flex }}>{formatPercentage(coin.price_change_percentage_24h)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[6].flex }}>{formatPercentage(coin.price_change_percentage_7d_in_currency)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[7].flex }}>{formatBigNumber(coin.market_cap)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[8].flex }}>{formatBigNumber(coin.total_volume)}</div>
+              <div className="px-4 py-3" style={{ flex: columnConfig[9].flex }}>
+                {coin.sparkline_in_7d && coin.sparkline_in_7d.price ? (
+                   <Sparkline
+                      data={coin.sparkline_in_7d.price}
+                      color={ (coin.sparkline_in_7d.price[coin.sparkline_in_7d.price.length -1] || 0) > (coin.sparkline_in_7d.price[0] || 0) ? '#22c55e' : '#ef4444' }
+                   />
+                ) : <span className="text-slate-500 text-xs">N/A</span>}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

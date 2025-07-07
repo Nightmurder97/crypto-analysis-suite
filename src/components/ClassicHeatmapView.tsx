@@ -68,13 +68,13 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-800 p-4 rounded-lg">
+      <div className="bg-gray-800 p-4 rounded-lg border border-gray-600">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-          <h2 className="text-2xl font-semibold text-cyan-400">🎯 Heatmap Clásico</h2>
+          <h2 className="text-2xl font-semibold text-gray-200">🎯 Heatmap Clásico</h2>
           <button
             type="button"
             onClick={handleDownloadClassicHeatmapData}
-            className="mt-2 sm:mt-0 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-md transition-colors flex items-center gap-2"
+            className="mt-2 sm:mt-0 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
             disabled={limitedData.length === 0}
           >
             <ArrowDownTrayIcon className="w-4 h-4" />
@@ -84,13 +84,14 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
         
         {/* Selector de métrica */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label htmlFor="classic-heatmap-metric-select" className="block text-sm font-medium text-gray-300 mb-2">
             Métrica a visualizar:
           </label>
           <select
+            id="classic-heatmap-metric-select"
             value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value as HeatmapMetric)}
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full max-w-xs p-2.5"
+            className="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full max-w-xs p-2.5"
           >
             {metrics.map(metric => (
               <option key={metric.key} value={metric.key}>

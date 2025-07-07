@@ -44,12 +44,38 @@ code {
   }
 }
 
-/* Animaciones para heatmaps */
+/* Animaciones para heatmaps - SIMPLIFICADAS sin glow */
 .heatmap-cell {
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .heatmap-cell:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   z-index: 10;
+}
+
+/* Efecto simple para heatmaps - SIN GLOW */
+.glow-cell {
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Efecto reducido para celdas especiales - MUCHO MENOS INTENSO */
+.glow-cell-intense {
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Animación de pulso muy sutil para valores extremos - MUY REDUCIDA */
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.pulse-glow {
+  animation: subtle-pulse 4s ease-in-out infinite;
 }

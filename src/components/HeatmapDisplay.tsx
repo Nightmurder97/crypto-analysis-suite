@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CryptoData } from '../types';
+import {
+  createPerformanceColorScale,
+  createSequentialLogColorScale,
+  isColorLight,
+} from '../utils/colorUtils';
 
 interface HeatmapDisplayProps {
   data: CryptoData[]; // Paginated data
@@ -20,9 +25,6 @@ const performanceMetrics: { key: keyof CryptoData; label: string }[] = [
   { key: 'price_change_percentage_7d_in_currency', label: '7d %' },
   { key: 'price_change_percentage_30d_in_currency', label: '30d %' },
 ];
-
-// Las funciones getPerformanceColor y getVolumeColor serán reemplazadas por getAdvancedHeatmapColor
-import { getAdvancedHeatmapColor, HeatmapMetricType } from '../utils/colorUtils'; // Import the new color utility
 
 interface HeatmapCellProps {
   coin?: CryptoData; // Optional: not present for headers
@@ -61,128 +63,136 @@ const HeatmapCell: React.FC<HeatmapCellProps> =
     titleText = `${coin.name} (${String(coin.symbol).toUpperCase()}): ${label} - ${displayValue}`;
   } else {
     // Fallback if other conditions are not met (e.g. 'value' prop is used directly)
-    displayValue = (value !== undefined && value !== null) ? String(value) : 'N/A';
+    const rawValue = value as number | null;
+    if (rawValue === null || rawValue === undefined || isNaN(rawValue)) {
+        displayValue = 'N/A';
+    } else if (typeof rawValue === 'number' && (metricKey as string).includes('_percentage_')) {
+        displayValue = `${rawValue.toFixed(1)}%`;
+    } else if (metricKey === 'total_volume') {
+        displayValue = formatBigNumberConcise(rawValue);
+    } else {
+        displayValue = String(rawValue);
+    }
     titleText = coin ? `${coin.name} (${String(coin.symbol).toUpperCase()}): ${displayValue}` : displayValue;
   }
+
+  const textColorClass = useMemo(() => {
+    if (isHeader || isName) {
+      return 'text-gray-200 font-semibold'; // Texto claro para headers y nombres en tema oscuro
+    }
+    if (!color) {
+      return 'text-gray-200';
+    }
+    return isColorLight(color) ? 'text-black font-semibold' : 'text-white font-semibold';
+  }, [color, isHeader, isName]);
 
   return (
     <div
       title={titleText}
       className={`
-        p-1.5 text-xs text-white/95 overflow-hidden text-center shadow-sm
-        flex items-center justify-center 
-        ${isHeader ? 'font-semibold bg-slate-700 text-slate-300' : ''}
-        ${isName ? 'text-left justify-start font-medium text-slate-200 bg-slate-800 pl-2' : ''}
+        p-1.5 text-xs ${textColorClass} text-center 
+        flex items-center justify-center border border-gray-500
+        ${isHeader ? 'font-bold bg-gray-700' : ''}
+        ${isName ? 'text-left justify-start font-medium bg-gray-600 pl-2' : ''}
         ${colSpan ? `col-span-${colSpan}` : ''}
       `}
       style={!isHeader && !isName && color ? { backgroundColor: color } : {}}
     >
-      <span className={`truncate ${isName ? 'max-w-[120px] sm:max-w-[150px]' : 'max-w-full'}`}>{displayValue}</span>
-    </div>
-  );
-};
-
-const Legend: React.FC<{ type: 'performance' | 'volume' }> = ({ type }) => {
-  // This legend might need adjustment if getAdvancedHeatmapColor produces very different ranges
-  // than the original getPerformanceColor and getVolumeColor.
-  // For now, keeping it as is, but it's a point of potential refinement.
-  const performanceExamplePos = getAdvancedHeatmapColor(5, 'price_change_percentage_24h');
-  const performanceExampleNeut = getAdvancedHeatmapColor(0, 'price_change_percentage_24h');
-  const performanceExampleNeg = getAdvancedHeatmapColor(-5, 'price_change_percentage_24h');
-
-  // For volume, we need example values and min/max, or use fixed colors for legend
-  const volumeExampleHigh = getAdvancedHeatmapColor(1e9, 'total_volume', 1e6, 1e9); // Example high
-  const volumeExampleMid = getAdvancedHeatmapColor(5e8, 'total_volume', 1e6, 1e9);  // Example mid
-  const volumeExampleLow = getAdvancedHeatmapColor(1e6, 'total_volume', 1e6, 1e9);   // Example low
-
-  return (
-    <div className="flex flex-col items-center space-y-1 text-xs text-slate-400">
-      {type === 'performance' && (
-        <>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExamplePos}}></div> Positivo Fuerte</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExampleNeut}}></div> Neutral</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: performanceExampleNeg}}></div> Negativo Fuerte</div>
-        </>
-      )}
-      {type === 'volume' && (
-        <>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleHigh}}></div> Volumen Alto</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleMid}}></div> Volumen Medio</div>
-          <div className="flex items-center"><div className="w-3 h-3 mr-1.5 rounded-sm" style={{backgroundColor: volumeExampleLow}}></div> Volumen Bajo</div>
-        </>
-      )}
+      <span className={`truncate ${isName ? 'max-w-[120px] sm:max-w-[150px]' : 'max-w-full'}`}>
+        {displayValue}
+      </span>
     </div>
   );
 };
 
 const HeatmapDisplay: React.FC<HeatmapDisplayProps> = ({ data }) => {
+  // --- ESCALAS DE COLOR DINÁMICAS ---
+  const performanceColorScales = useMemo(() => {
+    const scales: { [key: string]: (val: number | null | undefined) => string } = {};
+    performanceMetrics.forEach(metric => {
+      const metricData = data.map(coin => coin[metric.key] as number | null | undefined);
+      scales[metric.key] = createPerformanceColorScale(metricData);
+    });
+    return scales;
+  }, [data]);
+
+  const volumeColorScale = useMemo(() => {
+    const volumeData = data.map(coin => coin.total_volume);
+    return createSequentialLogColorScale(volumeData);
+  }, [data]);
+
   if (data.length === 0) {
-    return <p className="text-slate-400 text-center py-8">No data available for heatmaps. Adjust filters or wait for data to load.</p>;
+    return <p className="text-gray-400 text-center py-8">No data available for heatmaps. Adjust filters or wait for data to load.</p>;
   }
 
-  // Calculate min/max for volume for color scaling
-  const allVolumes = data.map(d => d.total_volume as number).filter(v => v !== null && !isNaN(v) && v > 0);
-  const minVolume = Math.min(...allVolumes);
-  const maxVolume = Math.max(...allVolumes);
-
-  const performanceHeaderCols = ['Name', ...performanceMetrics.map(m => m.label)];
-  const volumeHeaderCols = ['Name', 'Volume (24h)'];
+  const Legend = () => (
+    <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg mb-4 text-xs text-gray-300 border border-gray-600 w-full max-w-lg">
+      {/* Performance Legend */}
+      <div className="flex flex-col space-y-2">
+        <span className="font-bold text-gray-200">Rendimiento (%)</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-red-400">Negativo</span>
+          <div className="w-24 h-4 rounded border border-gray-600" style={{ background: 'linear-gradient(to right, #b91c1c, #ef4444, #f87171, #9ca3af, #86efac, #22c55e, #166534)' }}></div>
+          <span className="text-green-400">Positivo</span>
+        </div>
+      </div>
+      {/* Volume Legend */}
+      <div className="flex flex-col space-y-2">
+        <span className="font-bold text-gray-200">Volumen</span>
+         <div className="flex items-center space-x-2">
+            <span className="mr-1 text-gray-300">Bajo</span>
+            <div className="w-24 h-4 rounded border border-gray-600" style={{ background: 'linear-gradient(to right, #93c5fd, #3b82f6, #1d4ed8)' }}></div>
+            <span className="ml-1 text-gray-300">Alto</span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="p-1 space-y-6">
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
         {/* Performance Heatmap */}
-        <div className="flex-auto lg:w-2/3 bg-slate-800 p-3 rounded-lg border border-slate-700">
-          <h3 className="text-lg font-semibold text-sky-300 mb-3 text-center">Performance Trends</h3>
-          <div className={`grid gap-px bg-slate-900/50 border border-slate-700 rounded`} style={{ gridTemplateColumns: `minmax(120px, 1.5fr) repeat(${performanceMetrics.length}, minmax(50px, 1fr))`}}>
-            {/* Headers */}
-            {performanceHeaderCols.map(label => <HeatmapCell key={`perf-header-${label}`} label={label} isHeader />)}
-            {/* Data Rows */}
-            {data.map((coin) => (
-              <React.Fragment key={`perf-row-${coin.id}`}>
-                <HeatmapCell coin={coin} isName />
-                {performanceMetrics.map(metric => (
-                  <HeatmapCell 
-                    key={`${coin.id}-${metric.key}`} 
-                    coin={coin} 
-                    metricKey={metric.key} 
-                    // Use new color function for performance
-                    color={getAdvancedHeatmapColor(coin[metric.key] as number | null, metric.key as HeatmapMetricType)}
-                    label={metric.label}
-                  />
-                ))}
+        <div className="flex-auto lg:w-2/3 bg-gray-800 p-4 rounded-lg border border-gray-600">
+          <h3 className="text-lg font-semibold text-gray-200 mb-3 text-center">Performance Trends</h3>
+          <div className="grid grid-cols-5 gap-px text-center bg-gray-700 border border-gray-500 rounded overflow-hidden">
+            <HeatmapCell isHeader label="Name" />
+            {performanceMetrics.map(metric => <HeatmapCell key={metric.key} isHeader label={metric.label} />)}
+
+            {data.map(coin => (
+              <React.Fragment key={`${coin.id}-perf`}>
+                <HeatmapCell isName coin={coin} />
+                {performanceMetrics.map(metric => {
+                  const value = coin[metric.key] as number | null;
+                  const color = performanceColorScales[metric.key](value);
+                  return <HeatmapCell key={`${coin.id}-${metric.key}`} coin={coin} metricKey={metric.key} color={color} label={metric.label} />;
+                })}
               </React.Fragment>
             ))}
           </div>
-           <div className="mt-3 flex justify-center">
-            {/* Update Legend if necessary, or rely on intuitive colors */}
-            <Legend type="performance" />
+          <div className="mt-3 flex justify-center">
+            <Legend />
           </div>
         </div>
 
         {/* Volume Heatmap */}
-        <div className="flex-auto lg:w-1/3 bg-slate-800 p-3 rounded-lg border border-slate-700">
-          <h3 className="text-lg font-semibold text-sky-300 mb-3 text-center">Volume (24h)</h3>
-          <div className={`grid gap-px bg-slate-900/50 border border-slate-700 rounded`} style={{ gridTemplateColumns: `minmax(120px, 1.5fr) minmax(70px, 1fr)` }}>
-            {/* Headers */}
-            {volumeHeaderCols.map(label => <HeatmapCell key={`vol-header-${label}`} label={label} isHeader />)}
-            {/* Data Rows */}
-            {data.map((coin) => (
-              <React.Fragment key={`vol-row-${coin.id}`}>
-                <HeatmapCell coin={coin} isName />
-                <HeatmapCell 
-                  coin={coin} 
-                  metricKey={'total_volume'} 
-                  // Use new color function for volume, passing min/max
-                  color={getAdvancedHeatmapColor(coin.total_volume, 'total_volume', minVolume, maxVolume)}
+        <div className="flex-auto lg:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-600">
+          <h3 className="text-lg font-semibold text-gray-200 mb-3 text-center">Volume (24h)</h3>
+          <div className="grid grid-cols-1 gap-px text-center border border-gray-500 bg-gray-700 rounded overflow-hidden">
+            {data.map(coin => {
+              const color = volumeColorScale(coin.total_volume);
+              return (
+                <HeatmapCell
+                  key={`${coin.id}-volume`}
+                  coin={coin}
+                  metricKey="total_volume"
                   label="Volume (24h)"
+                  color={color}
                 />
-              </React.Fragment>
-            ))}
+              )
+            })}
           </div>
-           <div className="mt-3 flex justify-center">
-            {/* Update Legend if necessary */}
-            <Legend type="volume" />
+          <div className="mt-3 flex justify-center">
+            <Legend />
           </div>
         </div>
       </div>
