@@ -245,8 +245,8 @@
 		// 🎨 PERSONALIZACIÓN VISUAL
 		// ========================================
 
-		// Tema claro preferido (tema oscuro favorito: "Default Dark Modern")
-		"workbench.colorTheme": "Default Light Modern",
+		// Tema oscuro favorito (Default Light Modern demasiado blanco)
+		"workbench.colorTheme": "Default Dark Modern",
 		"workbench.iconTheme": "vs-seti",
 		"window.commandCenter": true,
 		"window.titleBarStyle": "custom",
