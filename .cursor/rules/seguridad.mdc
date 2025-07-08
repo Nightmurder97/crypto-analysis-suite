@@ -1,0 +1,24 @@
+# SEGURIDAD
+
+## REGLA: PROTECCIÓN DE SECRETOS
+- Secretos (claves API, credenciales) SIEMPRE mediante variables de entorno
+- Archivos .env SIEMPRE en .gitignore
+- NUNCA hardcodear claves o tokens en código
+- Verificar .gitignore antes de commits
+
+## CONTROL DE VERSIONES
+- Commits frecuentes y pequeños
+- Sincronización regular con rama remota
+- Antes de git filter-repo: HAZ COPIA DE SEGURIDAD
+- Verificar repositorios Git anidados
+
+---
+description: "Reglas de seguridad para protección de secretos, variables de entorno y control de versiones seguro"
+globs: 
+  - ".env*"
+  - ".gitignore"
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+alwaysApply: true
+when: "always"
+priority: 1

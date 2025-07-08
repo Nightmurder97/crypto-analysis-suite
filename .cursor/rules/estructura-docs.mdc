@@ -1,0 +1,22 @@
+# ESTRUCTURA DE DOCUMENTACIÓN OBLIGATORIA
+
+## REGLA: ESTRUCTURA DOCS UNIVERSAL
+- SIEMPRE mantener estructura docs/ con subdirectorios: system/, planning/, technical/, backup/, templates/
+- OBLIGATORIO: docs/system/PLAN_INTEGRADO_MAESTRO.md con matriz de tareas priorizadas
+- OBLIGATORIO: docs/system/DOCUMENTACION_TECNICA.md para problemas complejos únicamente
+- OBLIGATORIO: docs/system/ESTADO_PROYECTO.md para dashboard de progreso
+- OBLIGATORIO: README.md principal + docs/README.md como índice
+
+## VERIFICACIÓN
+- Verificar que existe docs/system/ antes de trabajar
+- Verificar que existe PLAN_INTEGRADO_MAESTRO.md antes de iniciar tareas
+- Crear estructura si no existe
+
+---
+description: "Mantener estructura docs/ obligatoria con subdirectorios system/, planning/, technical/, backup/, templates/ y documentos core requeridos"
+globs: 
+  - "docs/**/*.md"
+  - "*.md"
+alwaysApply: true
+when: "always"
+priority: 1

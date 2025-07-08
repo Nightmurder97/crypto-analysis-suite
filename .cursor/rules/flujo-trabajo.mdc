@@ -1,0 +1,23 @@
+# FLUJO DE TRABAJO MULTI-IA
+
+## REGLA: PROTOCOLO DE TRABAJO
+- SIEMPRE leer docs/system/PLAN_INTEGRADO_MAESTRO.md antes de cualquier tarea
+- SIEMPRE actualizar estado en 3 documentos al cambiar tarea: plan maestro, estado proyecto, documentación técnica (solo si complejo)
+- NUNCA comenzar tarea sin revisar dependencias
+- NUNCA saltarse criterios de aceptación definidos
+
+## PROTOCOLO DE ACTUALIZACIÓN
+1. Cambio de estado → actualizar tabla en plan maestro
+2. Si problema complejo → documentar en DOCUMENTACION_TECNICA.md
+3. Actualizar contadores en ESTADO_PROYECTO.md
+4. Commit con formato: [TASK-ID] Descripción del cambio
+
+---
+description: "Protocolo de flujo de trabajo para colaboración multi-IA con lectura obligatoria del plan maestro y actualización de 3 documentos por cambio"
+globs: 
+  - "docs/system/*.md"
+  - "src/**/*.tsx"
+  - "src/**/*.ts"
+alwaysApply: true
+when: "always"
+priority: 1

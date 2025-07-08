@@ -1,0 +1,25 @@
+# DIAGNÓSTICO
+
+## REGLA: INVESTIGACIÓN PREVIA
+- SIEMPRE investigar exhaustivamente archivos relevantes antes de codificar
+- SIEMPRE identificar causa raíz técnica, no solo síntoma superficial
+- CONSIDERAR contexto de librerías externas y sus limitaciones
+- Solicitar capturas de pantalla/logs para errores de UI/runtime
+
+## PROCESO DIAGNÓSTICO
+- ANTES DE CODIFICAR: investigar componentes afectados, utilidades, configuración
+- Revisar package.json, vite.config.ts, tsconfig.json cuando sea relevante
+- Pedir síntomas observables precisos al usuario
+- Analizar logs de consola del navegador para errores de runtime
+
+---
+description: "Proceso de diagnóstico exhaustivo con investigación previa, análisis de causa raíz y consideración del contexto técnico"
+globs: 
+  - "src/**/*.tsx"
+  - "src/**/*.ts" 
+  - "package.json"
+  - "vite.config.ts"
+  - "tsconfig.json"
+alwaysApply: false
+when: "onMention"
+priority: 2
