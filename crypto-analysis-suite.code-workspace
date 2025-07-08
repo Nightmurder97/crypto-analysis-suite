@@ -1,17 +1,145 @@
 {
 	"folders": [
 		{
+			"name": "🏠 Crypto Analysis Suite",
 			"path": "."
+		},
+		{
+			"name": "🤖 Gemini CLI",
+			"path": "./gemini-cli"
+		},
+		{
+			"name": "📚 Documentación",
+			"path": "./docs"
 		}
 	],
 	"settings": {
-		"C_Cpp.copilotHover": "enabled",
-		"workbench.experimental.cloudChanges.autoStore": "onShutdown",
-		"workbench.experimental.cloudChanges.partialMatches.enabled": true,
+		// Configuración de interfaz (basada en preferencias del usuario)
 		"workbench.panel.defaultLocation": "bottom",
 		"workbench.sideBar.location": "left",
 		"workbench.view.alwaysShowHeaderActions": true,
-		"workbench.activityBar.visible": true,
-		"workbench.statusBar.visible": true
+		"workbench.statusBar.visible": true,
+		
+		// Configuración experimental de cloud changes
+		"workbench.experimental.cloudChanges.autoStore": "onShutdown",
+		"workbench.experimental.cloudChanges.partialMatches.enabled": true,
+		
+		// Configuración de TypeScript/React
+		"typescript.preferences.useAliasesForRenames": false,
+		"typescript.suggest.autoImports": true,
+		"typescript.updateImportsOnFileMove.enabled": "always",
+		
+		// Configuración de archivos
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/build": true,
+			"**/.git": true,
+			"**/backup_duplicated_files": true
+		},
+		
+		// Configuración de búsqueda
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/build": true,
+			"**/backup_duplicated_files": true
+		},
+		
+		// Configuración específica para el proyecto
+		"emmet.includeLanguages": {
+			"javascript": "javascriptreact",
+			"typescript": "typescriptreact"
+		},
+		
+		// Configuración de Git
+		"git.confirmSync": false,
+		"git.autofetch": true,
+		
+		// Configuración de formato
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		
+		// Configuración de Copilot
+		"C_Cpp.copilotHover": "enabled",
+		"github.copilot.enable": {
+			"*": true,
+			"markdown": true,
+			"typescript": true,
+			"typescriptreact": true
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			// Desarrollo React/TypeScript
+			"bradlc.vscode-tailwindcss",
+			"esbenp.prettier-vscode", 
+			"dbaeumer.vscode-eslint",
+			"ms-vscode.vscode-typescript-next",
+			
+			// Markdown y documentación
+			"yzhang.markdown-all-in-one",
+			"shd101wyy.markdown-preview-enhanced",
+			
+			// Git
+			"eamodio.gitlens",
+			
+			// Utilidades
+			"ms-vscode.hexeditor",
+			"ms-vscode.vscode-json",
+			
+			// AI/Copilot (según preferencias del usuario)
+			"github.copilot",
+			"ms-vscode.github-copilot-extension-pack"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "🚀 Start Development Server",
+				"type": "shell",
+				"command": "npm run dev",
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"presentation": {
+					"echo": true,
+					"reveal": "always",
+					"focus": false,
+					"panel": "shared",
+					"showReuseMessage": true,
+					"clear": false
+				},
+				"problemMatcher": []
+			},
+			{
+				"label": "🔨 Build Production",
+				"type": "shell",
+				"command": "npm run build",
+				"group": "build",
+				"presentation": {
+					"echo": true,
+					"reveal": "always",
+					"focus": false,
+					"panel": "shared"
+				}
+			},
+			{
+				"label": "🤖 Start Gemini CLI",
+				"type": "shell",
+				"command": "cd gemini-cli && npm start",
+				"group": "test",
+				"presentation": {
+					"echo": true,
+					"reveal": "always",
+					"focus": false,
+					"panel": "new"
+				}
+			}
+		]
 	}
 }
