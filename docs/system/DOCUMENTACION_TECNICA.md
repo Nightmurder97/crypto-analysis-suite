@@ -664,5 +664,27 @@ Después de mover VS Code a Applications, las **actualizaciones siguen fallando*
 
 ---
 
+## �� **08/01/2025 - 10:15**
+### ✅ **REGLAS CURSOR ACTUALIZADAS: CONFIRMACIÓN OBLIGATORIA**
+
+**Problema**: 
+Regla de confirmación obligatoria solo existía como memoria temporal, no como regla permanente del proyecto en Cursor.
+
+**Solución**:
+1. ✅ **Identificado sistema .cursor/rules/**: 8 archivos de reglas existentes
+2. ✅ **Actualizado seguridad.mdc**: Añadida "REGLA CRÍTICA: CONFIRMACIÓN OBLIGATORIA"
+3. ✅ **Header YAML corregido**: description, globs, alwaysApply configurados
+4. ✅ **Estructura limpia**: Sin duplicaciones, formato consistente
+
+**Contenido de la regla**:
+- SIEMPRE pedir confirmación antes de: instalaciones, desinstalaciones, modificaciones del sistema
+- Formato requerido: "¿Procedo? (y/n)"
+- NUNCA asumir aprobación automática
+- Recordatorio del incidente VS Code incluido
+
+**Estado**: ✅ **COMPLETADO** - Regla permanente en sistema Cursor
+
+---
+
 **Última Actualización**: 08/01/2025 - 08:40
 **Próxima Revisión**: 08/01/2025 - 15:00 

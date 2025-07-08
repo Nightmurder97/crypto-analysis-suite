@@ -6,6 +6,13 @@ alwaysApply: true
 
 # SEGURIDAD
 
+## REGLA CRÍTICA: CONFIRMACIÓN OBLIGATORIA
+
+- **ANTES** de ejecutar cualquier comando que instale, desinstale, modifique archivos del sistema, o tome acciones que cambien el sistema, **SIEMPRE** pedir confirmación explícita al usuario con "¿Procedo? (y/n)"
+- Esta regla se aplica a: instalaciones de software, desinstalaciones, modificación de archivos del sistema, ejecución de comandos destructivos, cambios de configuración importantes
+- **NUNCA** asumir que el usuario quiere que proceda automáticamente
+- **RECORDATORIO**: La violación de esta regla causó problemas al instalar VS Code sin permiso
+
 ## REGLA: PROTECCIÓN DE SECRETOS
 
 - Secretos (claves API, credenciales) SIEMPRE mediante variables de entorno
