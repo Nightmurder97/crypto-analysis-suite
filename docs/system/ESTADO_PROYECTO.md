@@ -10,10 +10,10 @@
 ## 🎯 **RESUMEN EJECUTIVO**
 
 ### **Progreso General**
-- **Tareas Completadas**: 4/16 (25%)
-- **Tareas En Progreso**: 1/16 (6.3%)
-- **Tareas Pendientes**: 11/16 (68.7%)
-- **Tareas Bloqueadas**: 0/15 (0%)
+- **Tareas Completadas**: 5/17 (29.4%)
+- **Tareas En Progreso**: 1/17 (5.9%)
+- **Tareas Pendientes**: 11/17 (64.7%)
+- **Tareas Bloqueadas**: 0/17 (0%)
 
 ### **Estado por Prioridad**
 - **🔴 Críticas**: 0/7 completadas (0%)
@@ -36,6 +36,7 @@
 | **SEC-01** | Configurar Gemini CLI - Export API Key | 08/01/2025 | .env / gemini-cli |
 | **DIAG-01** | Diagnosticar extensión Gemini Code Assist | 08/01/2025 | Cursor/VS Code |
 | **FIX-01** | Solucionar VS Code en Downloads (Squirrel Issue) | 08/01/2025 | VS Code/Applications |
+| **FIX-02** | Workaround 2 - Actualizaciones VS Code persistentes | 08/01/2025 | ShipIt/macOS |
 
 ### **🟡 EN PROGRESO**
 | ID | Tarea | Iniciada | Componente | Responsable |

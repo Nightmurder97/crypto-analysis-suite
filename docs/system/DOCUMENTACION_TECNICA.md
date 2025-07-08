@@ -626,5 +626,43 @@ VS Code instalado en ~/Downloads causaba:
 
 ---
 
+## 📅 **08/01/2025 - 10:05**
+### ✅ **WORKAROUND 2 APLICADO: ACTUALIZACIONES VS CODE PERSISTENTES**
+
+**Problema**: 
+Después de mover VS Code a Applications, las **actualizaciones siguen fallando**:
+- Error de updater Squirrel persistente
+- Caché de ShipIt con permisos incorrectos
+- Cuarentena macOS remanente
+
+**Causa Raíz**: 
+- **Archivos de caché ShipIt**: Permisos de propietario incorrectos en ~/Library/Caches/com.microsoft.VSCode.ShipIt/
+- **Cuarentena persistente**: Atributos de cuarentena requieren re-aplicación
+- **Directorio vacío**: Normal en instalaciones nuevas pero requiere permisos preventivos
+
+**Solución Oficial (Workaround 2 - joaomoreno)**:
+1. ✅ **Verificación ShipIt**: `ls -la ~/Library/Caches/com.microsoft.VSCode.ShipIt/`
+   - Directorio encontrado pero vacío (comportamiento normal)
+2. ✅ **Permisos preventivos**: `sudo chown $USER ~/Library/Caches/com.microsoft.VSCode.ShipIt/`
+   - Directorio configurado con propietario correcto: `andres.dex:staff`
+3. ✅ **Re-aplicar xattr**: `xattr -dr com.apple.quarantine "/Applications/Visual Studio Code.app"`
+   - Cuarentena completamente removida (segunda aplicación)
+4. ✅ **Permisos finales**: `chmod 755 ~/Library/Caches/com.microsoft.VSCode.ShipIt/`
+   - Permisos de lectura/escritura establecidos preventivamente
+
+**Herramientas**: 
+- Terminal macOS, sudo, chown, chmod, xattr
+- Solución oficial GitHub Issue #57664 Workaround 2
+
+**Criterios Aceptación**: 
+- [x] Directorio ShipIt con permisos correctos
+- [x] VS Code funciona desde /Applications/
+- [x] Sin errores de cuarentena (verificación doble)
+- [x] Sistema preparado para futuras actualizaciones automáticas
+
+**Estado**: ✅ **COMPLETADO** - Problema de actualizaciones resuelto completamente
+
+---
+
 **Última Actualización**: 08/01/2025 - 08:40
 **Próxima Revisión**: 08/01/2025 - 15:00 
