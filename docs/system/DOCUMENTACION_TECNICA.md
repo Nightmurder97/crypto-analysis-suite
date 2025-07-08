@@ -310,7 +310,7 @@ PLAN_INTEGRADO_MAESTRO.md (Documento Central)
 - Revisión de seguridad revela exposición en conversación
 
 **Causa Raíz**: 
-**PROBLEMA CRÍTICO IDENTIFICADO**: La clave API de Gemini (AIzaSyCRcG5ekJrLBhz9NUwgMHu1cJL0yyaWT9Q) fue expuesta en la conversación de chat durante la configuración de autenticación para gemini-cli.
+**PROBLEMA CRÍTICO IDENTIFICADO**: La clave API de Gemini (`[CLAVE_ELIMINADA_POR_SEGURIDAD]`) fue expuesta en la conversación de chat durante la configuración de autenticación para gemini-cli.
 
 **Análisis de Seguridad**:
 ✅ **Código fuente**: SEGURO - No hay clave hardcodeada
