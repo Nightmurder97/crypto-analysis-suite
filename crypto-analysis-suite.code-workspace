@@ -7,6 +7,11 @@
 	"settings": {
 		"C_Cpp.copilotHover": "enabled",
 		"workbench.experimental.cloudChanges.autoStore": "onShutdown",
-		"workbench.experimental.cloudChanges.partialMatches.enabled": true
+		"workbench.experimental.cloudChanges.partialMatches.enabled": true,
+		"workbench.panel.defaultLocation": "bottom",
+		"workbench.sideBar.location": "left",
+		"workbench.view.alwaysShowHeaderActions": true,
+		"workbench.activityBar.visible": true,
+		"workbench.statusBar.visible": true
 	}
 }

@@ -1,8 +1,3 @@
----
-description: Protocolo de flujo de trabajo para colaboración multi-IA con lectura obligatoria del plan maestro y actualización de 3 documentos por cambio
-globs: docs/system/*.md,src/**/*.tsx,src/**/*.ts
-alwaysApply: true
----
 
 # FLUJO DE TRABAJO MULTI-IA
 
@@ -19,3 +14,28 @@ alwaysApply: true
 2. Si problema complejo → documentar en DOCUMENTACION_TECNICA.md
 3. Actualizar contadores en ESTADO_PROYECTO.md
 4. Commit con formato: [TASK-ID] Descripción del cambio
+
+## SISTEMA INTEGRAL MULTI-IA
+
+### DOCUMENTACIÓN PROACTIVA
+- **Minimizar comunicación chat**: Todo se documenta en archivos .md
+- **Trazabilidad completa**: Decisiones, cambios, problemas complejos
+- **Contexto compartido**: Cualquier IA puede continuar trabajo
+- **Escalamiento preventivo**: Incidentes → reglas permanentes
+
+### EVOLUCIÓN DEBUGGING
+- **ANTES (Reactivo)**: Problemas individuales, soluciones temporales
+- **AHORA (Proactivo)**: Matriz tareas, patrones documentados, prevención
+- **Memoria persistente**: Lecciones → memorias → reglas automáticas
+
+### NAVEGACIÓN RECOMENDADA
+**Iniciar trabajo**: PLAN_MAESTRO → PROTOCOLO → MATRIZ_TAREAS → EJECUTAR → ACTUALIZAR
+**Continuar trabajo**: ESTADO_PROYECTO → MATRIZ_TAREAS → DOCUMENTACION_TECNICA → CONTINUAR → ACTUALIZAR
+
+### FORMATO ESTÁNDAR COMUNICACIÓN
+```
+TAREA: [ID] - [Descripción]
+ESTADO: [🔴|🟡|✅|❌] 
+COMPONENTE: [Archivo]
+NOTAS: [Solo críticas]
+```

@@ -1,0 +1,40 @@
+# PATRONES DEBUGGING PROACTIVO
+
+## REGLA: APLICAR PATRONES Si X→Y CONOCIDOS
+
+### SEGURIDAD CRÍTICA
+**Si Exposición de Secretos → FALLA CRÍTICA**
+- Detener todas las tareas inmediatamente
+- Aplicar protocolo seguridad: regenerar clave, documentar incidente
+- Crear medidas preventivas permanentes (reglas + memorias)
+- BitGuardian detecta exposiciones → escalamiento obligatorio
+
+### COMPATIBILIDAD macOS
+**Si Problemas Actualización/Extensiones → Revisar Ubicación/Cuarentena**
+- Apps en Downloads activan cuarentena automática
+- Solución: mover a /Applications + `xattr -dr com.apple.quarantine`
+- Verificar permisos ShipIt: `sudo chown $USER ~/Library/Caches/com.microsoft.VSCode.ShipIt/`
+- Aplicar Workaround 2 oficial para problemas persistentes
+
+### UI/UX PROBLEMAS RECURRENTES
+**Si Inconsistencia Visual → Escalas Dinámicas**
+- Para distribuciones extremas: percentiles P5-P95 + escala logarítmica
+- Para datos desiguales: cuantización con niveles discretos
+- NUNCA usar escalas fijas que "aplastan" valores pequeños
+
+**Si Crash/Pantalla Blanco → Runtime/TypeScript Error**
+- Aislar problema simplificando componente principal
+- Aplicar manejo defensivo (null, 0, NaN, Infinity)
+- Verificar imports y tipos, restaurar gradualmente
+
+**Si Desalineación Tablas Virtualizadas → Refactorizar Arquitectura**
+- Abandonar <table> nativa con react-virtual
+- Usar div+Flexbox/Grid para sincronización header/body
+- Problema arquitectural conocido, no CSS patch
+
+### ESCALAMIENTO OBLIGATORIO
+**Si Problema Nuevo → Documentar Patrón**
+1. Aplicar solución encontrada
+2. Documentar en DOCUMENTACION_TECNICA.md como problema complejo
+3. Crear patrón Si X→Y para casos futuros
+4. Actualizar memorias/reglas para prevención automática

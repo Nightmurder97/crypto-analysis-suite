@@ -175,6 +175,34 @@ NOTAS: [Solo observaciones críticas]
 
 ---
 
+## 🧠 **DEBUGGING EVOLUTIVO: ANÁLISIS TÉCNICO INTEGRADO**
+
+### **EVOLUCIÓN: REACTIVO → PROACTIVO**
+- **ANTES**: Responder a problemas conforme surgen, soluciones temporales
+- **AHORA**: Sistema integral con patrones documentados, prevención automática
+- **OBJETIVO**: Convertir lecciones en memorias y reglas permanentes
+
+### **PATRONES Si X→Y OBLIGATORIOS**
+1. **Si Exposición Secretos** → FALLA CRÍTICA (detener tareas, protocolo seguridad)
+2. **Si Apps en Downloads (macOS)** → Cuarentena (mover /Applications + xattr)
+3. **Si Crash/Pantalla Blanco** → Runtime Error (aislar componente principal)
+4. **Si Desalineación Tabla Virtualizada** → Problema Arquitectural (div+Flexbox)
+5. **Si Gradientes Imperceptibles** → Escalas Fijas (usar percentiles P5-P95)
+
+### **RED FLAGS DETECCIÓN TEMPRANA**
+- 🚨 **Seguridad**: Exposición claves → BitGuardian → escalamiento crítico
+- 🚨 **macOS**: Apps Downloads → cuarentena automática → problemas extensiones
+- 🚨 **UI/UX**: Runtime errors → simplificar componente → manejo defensivo
+- 🚨 **Arquitectura**: Virtualización tablas → refactorizar estructura
+
+### **ESCALAMIENTO PREVENTIVO OBLIGATORIO**
+- Todo incidente → memoria persistente
+- Todo patrón → regla Cursor automática
+- Toda solución → documentación integral
+- Todo aprendizaje → prevención futura
+
+---
+
 ## 🔍 **CRITERIOS DE CALIDAD**
 
 ### **Antes de marcar una tarea como COMPLETADA**:
@@ -183,6 +211,8 @@ NOTAS: [Solo observaciones críticas]
 - ✅ **Responsividad**: Los cambios funcionan en diferentes tamaños de pantalla
 - ✅ **Rendimiento**: No hay regresiones de rendimiento observables
 - ✅ **Limpieza**: No hay código comentado, console.logs o imports innecesarios
+- ✅ **Patrones**: Aplicados patrones Si X→Y cuando corresponde
+- ✅ **Preventivo**: Problemas nuevos documentados como patrones
 
 ### **Criterios específicos por tipo de tarea**:
 
@@ -191,12 +221,16 @@ NOTAS: [Solo observaciones críticas]
 - ✅ Colores según paleta establecida
 - ✅ Tipografía homogénea
 - ✅ Interacciones intuitivas
+- ✅ Escalas dinámicas para datos desiguales
+- ✅ Manejo defensivo de casos límite
 
 **Para tareas de lógica/datos**:
 - ✅ Manejo de errores robusto
 - ✅ Validación de datos de entrada
 - ✅ Optimización de rendimiento
 - ✅ Código documentado
+- ✅ Validaciones estrictas (null, 0, NaN, Infinity)
+- ✅ Memoización para cálculos complejos
 
 **Para tareas de integración**:
 - ✅ APIs funcionando correctamente

@@ -1,8 +1,3 @@
----
-description: Proceso de diagnóstico exhaustivo con investigación previa, análisis de causa raíz y consideración del contexto técnico
-globs: src/**/*.tsx,src/**/*.ts,package.json,vite.config.ts,tsconfig.json
-alwaysApply: false
----
 
 # DIAGNÓSTICO
 
@@ -19,3 +14,24 @@ alwaysApply: false
 - Revisar package.json, vite.config.ts, tsconfig.json cuando sea relevante
 - Pedir síntomas observables precisos al usuario
 - Analizar logs de consola del navegador para errores de runtime
+
+## DEBUGGING EVOLUTIVO: REACTIVO → PROACTIVO
+
+### ESTRATEGIAS AVANZADAS
+- **Aislamiento Problemas**: Simplificar componente principal cuando runtime error
+- **Manejo Defensivo**: Validaciones robustas, casos límite (null, 0, NaN, Infinity)
+- **Escalamiento Preventivo**: Convertir incidentes en reglas permanentes
+- **Documentación Integral**: Solo problemas complejos en DOCUMENTACION_TECNICA.md
+
+### RED FLAGS DETECCIÓN TEMPRANA
+- **macOS**: Apps en Downloads → cuarentena automática
+- **UI/UX**: Crash/pantalla blanco → Runtime/TypeScript error
+- **Tablas**: Desalineación con virtualización → Problema arquitectural
+- **Colores**: Gradientes imperceptibles → Escalas fijas problemáticas
+- **Seguridad**: Exposición claves → BitGuardian, escalamiento crítico
+
+### PROTOCOLO PROACTIVO
+1. Identificar patrón Si X→Y aplicable
+2. Aplicar solución conocida documentada
+3. Si problema nuevo → documentar patrón para futuros casos
+4. Actualizar memorias/reglas para prevención automática

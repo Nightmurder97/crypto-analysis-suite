@@ -1,8 +1,3 @@
----
-description: Reglas específicas para desarrollo React/TypeScript con manejo defensivo, validaciones robustas y optimización de rendimiento
-globs: src/**/*.tsx,src/**/*.ts,*.tsx,*.ts
-alwaysApply: true
----
 
 # DESARROLLO REACT/TYPESCRIPT
 
@@ -18,3 +13,27 @@ alwaysApply: true
 - Incluir validaciones robustas y manejo de casos límite (null, 0, NaN, Infinity)
 - Manejo de errores en funciones críticas, especialmente cálculos matemáticos
 - Verificar tipos TypeScript estrictos
+
+## PATRONES UI/UX ESPECÍFICOS
+
+### TABLAS VIRTUALIZADAS
+- Si desalineación header/body → Refactorizar a div+Flexbox/Grid
+- NUNCA usar <table> nativa con react-virtual
+- Sincronización header/body es problemática con virtualización
+
+### ESCALAS COLORES DATOS DESIGUALES
+- Para distribuciones extremas (volumen): usar percentiles P5-P95 + escala logarítmica
+- Para datos agrupados: cuantización con niveles discretos, NO gradientes continuos
+- Evitar escalas fijas (-10% a +10%) que "aplastan" valores pequeños
+
+### RED FLAGS UI/UX
+- Si crash/pantalla blanco → Runtime error, simplificar componente principal
+- Si gradientes imperceptibles → Usar percentiles dinámicos
+- Si tabla desalineada con virtualización → Cambiar a div structure
+
+## ARQUITECTURA RECOMENDADA
+
+- Stack: React+TypeScript+Vite+TailwindCSS+React Query
+- Memoización para cálculos complejos (useMemo)
+- Debouncing para inputs usuario
+- Caché automático con React Query
