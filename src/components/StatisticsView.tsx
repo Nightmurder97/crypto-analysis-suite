@@ -5,21 +5,36 @@ interface StatisticsViewProps {
   data: CryptoData[];
 }
 
+const STABLECOIN_KEYWORDS = ['stablecoin', 'usd', 'dai', 'tether', 'busd', 'usdc', 'fdusd', 'usdt', 'usdp', 'pyusd', 'tusd', 'eurc', 'eurs'];
+
+// Volumen mínimo para ser considerado en los rankings (1 millón USD)
+const MIN_VOLUME_USD = 1_000_000;
+
 const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
   const statistics = useMemo(() => {
     const validData = data.filter(crypto => 
-      crypto.price_change_percentage_24h !== null &&
+      crypto.price_change_percentage_24h !== null && 
       crypto.total_volume !== null &&
-      crypto.market_cap !== null
+      crypto.market_cap !== null &&
+      crypto.total_volume >= MIN_VOLUME_USD // Filtro de volumen mínimo
     );
 
     if (validData.length === 0) {
       return null;
     }
 
+    // Excluir stablecoins para rankings de volumen
+    const nonStablecoinData = validData.filter(crypto => {
+      const name = crypto.name.toLowerCase();
+      const symbol = crypto.symbol.toLowerCase();
+      return !STABLECOIN_KEYWORDS.some(keyword => 
+        name.includes(keyword) || symbol.includes(keyword)
+      );
+    });
+
     // Cálculos estadísticos
     const changes24h = validData.map(c => c.price_change_percentage_24h!);
-    const volumes = validData.map(c => c.total_volume!);
+    const volumes = nonStablecoinData.map(c => c.total_volume!); // Usar datos sin stablecoins
     const marketCaps = validData.map(c => c.market_cap!);
 
     // Estadísticas básicas
@@ -41,45 +56,36 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
       extremeLoss: changes24h.filter(c => c < -20).length,
     };
 
-    // Análisis de volumen
-    const totalVolume = volumes.reduce((sum, vol) => sum + vol, 0);
-    const avgVolume = totalVolume / volumes.length;
-    const highVolumeThreshold = avgVolume * 10;
-    const highVolumeAssets = validData.filter(c => c.total_volume! > highVolumeThreshold);
+    // Rankings
+    const topPerformers = [...validData]
+      .sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0))
+      .slice(0, 10);
 
-    // Top y bottom performers
-    const sortedByChange = [...validData].sort((a, b) => 
-      (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0)
-    );
+    const bottomPerformers = [...validData]
+      .sort((a, b) => (a.price_change_percentage_24h || 0) - (b.price_change_percentage_24h || 0))
+      .slice(0, 10);
 
-    const topPerformers = sortedByChange.slice(0, 10);
-    const bottomPerformers = sortedByChange.slice(-10).reverse();
+    const topByVolume = [...nonStablecoinData]
+      .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0))
+      .slice(0, 10);
 
-    // Análisis de capitalización
-    const totalMarketCap = marketCaps.reduce((sum, cap) => sum + cap, 0);
-    const largeCapThreshold = 10_000_000_000; // $10B
-    const midCapThreshold = 1_000_000_000;   // $1B
-    
-    const largeCap = validData.filter(c => c.market_cap! >= largeCapThreshold);
-    const midCap = validData.filter(c => c.market_cap! >= midCapThreshold && c.market_cap! < largeCapThreshold);
-    const smallCap = validData.filter(c => c.market_cap! < midCapThreshold);
+    const worstByVolume = [...nonStablecoinData]
+      .filter(crypto => crypto.total_volume! >= MIN_VOLUME_USD) // Filtro adicional para worst by volume
+      .sort((a, b) => (a.total_volume || 0) - (b.total_volume || 0))
+      .slice(0, 10);
 
     return {
       total: validData.length,
       avg24h,
       median24h,
       stdDev,
+      totalVolume: volumes.reduce((sum, val) => sum + val, 0),
+      totalMarketCap: marketCaps.reduce((sum, val) => sum + val, 0),
       distribution,
-      totalVolume,
-      avgVolume,
-      highVolumeAssets,
       topPerformers,
       bottomPerformers,
-      totalMarketCap,
-      largeCap,
-      midCap,
-      smallCap,
-      validData
+      topByVolume,
+      worstByVolume,
     };
   }, [data]);
 
@@ -110,6 +116,7 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
         <h2 className="text-2xl font-bold text-cyan-400 mb-2">📊 Estadísticas del Mercado</h2>
         <p className="text-gray-400">
           Análisis estadístico de {statistics.total} criptomonedas • 
+          Volumen mínimo: {formatBigNumber(MIN_VOLUME_USD)} •
           Datos actualizados en tiempo real
         </p>
       </div>
@@ -117,14 +124,14 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
       {/* Métricas principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-gray-800 p-6 rounded-lg text-center">
-          <div className="text-2xl font-bold text-cyan-400">
+          <div className={`text-2xl font-bold ${statistics.avg24h >= 0 ? 'text-success' : 'text-danger'}`}>
             {statistics.avg24h.toFixed(2)}%
           </div>
           <div className="text-gray-400">Cambio promedio 24h</div>
         </div>
         
         <div className="bg-gray-800 p-6 rounded-lg text-center">
-          <div className="text-2xl font-bold text-blue-400">
+          <div className={`text-2xl font-bold ${statistics.median24h >= 0 ? 'text-success' : 'text-danger'}`}>
             {statistics.median24h.toFixed(2)}%
           </div>
           <div className="text-gray-400">Cambio mediano 24h</div>
@@ -146,19 +153,18 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
       </div>
 
       {/* Distribución de rendimientos */}
-      <div className="bg-gray-800 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-cyan-400 mb-4">📈 Distribución de Rendimientos 24h</h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Gráfico de barras simple */}
+      <div className="bg-neutral-800 p-6 rounded-lg">
+        <h3 className="text-xl font-bold text-cyan-400 mb-4">📈 Distribución de Rendimientos</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-3">
             {[
-                             { label: 'Ganancia extrema (>20%)', count: statistics.distribution.extremeGain, color: 'bg-emerald-500' },
-              { label: 'Ganancia fuerte (5-20%)', count: statistics.distribution.strongGain, color: 'bg-green-500' },
-              { label: 'Ganancia moderada (0-5%)', count: statistics.distribution.moderateGain, color: 'bg-green-400' },
-              { label: 'Neutral (0%)', count: statistics.distribution.neutral, color: 'bg-yellow-500' },
-              { label: 'Pérdida moderada (0 a -5%)', count: statistics.distribution.moderateLoss, color: 'bg-orange-500' },
-              { label: 'Pérdida fuerte (-5 a -20%)', count: statistics.distribution.strongLoss, color: 'bg-red-500' },
-                             { label: 'Pérdida extrema (menos de -20%)', count: statistics.distribution.extremeLoss, color: 'bg-red-600' },
+              { label: 'Ganancia Extrema (>20%)', count: statistics.distribution.extremeGain, color: 'bg-green-500' },
+              { label: 'Ganancia Fuerte (5-20%)', count: statistics.distribution.strongGain, color: 'bg-green-400' },
+              { label: 'Ganancia Moderada (0-5%)', count: statistics.distribution.moderateGain, color: 'bg-green-300' },
+              { label: 'Neutral (0%)', count: statistics.distribution.neutral, color: 'bg-gray-400' },
+              { label: 'Pérdida Moderada (0 a -5%)', count: statistics.distribution.moderateLoss, color: 'bg-red-300' },
+              { label: 'Pérdida Fuerte (-5 a -20%)', count: statistics.distribution.strongLoss, color: 'bg-red-400' },
+              { label: 'Pérdida Extrema (<-20%)', count: statistics.distribution.extremeLoss, color: 'bg-red-500' },
             ].map((item) => {
               const percentage = getDistributionPercentage(item.count, statistics.total);
               return (
@@ -199,46 +205,45 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
       <div className="bg-gray-800 p-6 rounded-lg">
         <h3 className="text-xl font-bold text-cyan-400 mb-4">💰 Análisis por Capitalización</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-700 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-yellow-400">{statistics.largeCap.length}</div>
-                         <div className="text-gray-400 text-sm">Large Cap (más de $10B)</div>
-            <div className="text-xs text-gray-500 mt-1">
-              {formatBigNumber(statistics.largeCap.reduce((sum, c) => sum + (c.market_cap || 0), 0))}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-400">
+              {formatBigNumber(statistics.totalMarketCap)}
             </div>
+            <div className="text-gray-400">Capitalización total</div>
           </div>
           
-          <div className="bg-gray-700 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-blue-400">{statistics.midCap.length}</div>
-            <div className="text-gray-400 text-sm">Mid Cap ($1B-$10B)</div>
-            <div className="text-xs text-gray-500 mt-1">
-              {formatBigNumber(statistics.midCap.reduce((sum, c) => sum + (c.market_cap || 0), 0))}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-400">
+              {((statistics.distribution.extremeGain + statistics.distribution.strongGain + statistics.distribution.moderateGain) / statistics.total * 100).toFixed(1)}%
             </div>
+            <div className="text-gray-400">Activos en positivo</div>
           </div>
           
-          <div className="bg-gray-700 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-green-400">{statistics.smallCap.length}</div>
-                         <div className="text-gray-400 text-sm">Small Cap (menos de $1B)</div>
-            <div className="text-xs text-gray-500 mt-1">
-              {formatBigNumber(statistics.smallCap.reduce((sum, c) => sum + (c.market_cap || 0), 0))}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-red-400">
+              {((statistics.distribution.moderateLoss + statistics.distribution.strongLoss + statistics.distribution.extremeLoss) / statistics.total * 100).toFixed(1)}%
             </div>
+            <div className="text-gray-400">Activos en negativo</div>
           </div>
         </div>
       </div>
 
-      {/* Top/Bottom performers */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top performers */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <h3 className="text-xl font-bold text-green-400 mb-4">🚀 Top 10 Performers</h3>
-          <div className="space-y-2">
+      {/* Rankings de Rendimiento - TAMAÑO REDUCIDO */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Top 10 Performers */}
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-success mb-3">🚀 Top 10 Ganadores</h3>
+          <div className="space-y-1">
             {statistics.topPerformers.map((crypto, index) => (
-              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700 rounded">
+              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700/50 rounded-md">
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400 text-sm w-6">#{index + 1}</span>
-                  <span className="font-semibold text-white">{crypto.symbol.toUpperCase()}</span>
-                  <span className="text-gray-400 text-sm truncate">{crypto.name}</span>
+                  <span className="text-gray-400 text-xs w-5 text-center">#{index + 1}</span>
+                  <img src={crypto.image} alt={crypto.name} className="w-5 h-5 rounded-full flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-sm text-gray-100 truncate block">{crypto.symbol.toUpperCase()}</span>
+                  </div>
                 </div>
-                <span className="font-bold text-green-400">
+                <span className="font-semibold text-sm text-success ml-2">
                   +{(crypto.price_change_percentage_24h || 0).toFixed(2)}%
                 </span>
               </div>
@@ -246,19 +251,66 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
           </div>
         </div>
 
-        {/* Bottom performers */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <h3 className="text-xl font-bold text-red-400 mb-4">📉 Bottom 10 Performers</h3>
-          <div className="space-y-2">
+        {/* Bottom 10 Performers */}
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-danger mb-3">📉 Top 10 Perdedores</h3>
+          <div className="space-y-1">
             {statistics.bottomPerformers.map((crypto, index) => (
-              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700 rounded">
+              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700/50 rounded-md">
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400 text-sm w-6">#{index + 1}</span>
-                  <span className="font-semibold text-white">{crypto.symbol.toUpperCase()}</span>
-                  <span className="text-gray-400 text-sm truncate">{crypto.name}</span>
+                  <span className="text-gray-400 text-xs w-5 text-center">#{index + 1}</span>
+                  <img src={crypto.image} alt={crypto.name} className="w-5 h-5 rounded-full flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-sm text-gray-100 truncate block">{crypto.symbol.toUpperCase()}</span>
+                  </div>
                 </div>
-                <span className="font-bold text-red-400">
+                <span className="font-semibold text-sm text-danger ml-2">
                   {(crypto.price_change_percentage_24h || 0).toFixed(2)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Rankings por Volumen - TAMAÑO REDUCIDO */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Top 10 por Volumen */}
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-blue-400 mb-3">🔊 Top 10 por Volumen</h3>
+          <div className="space-y-1">
+            {statistics.topByVolume.map((crypto, index) => (
+              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700/50 rounded-md">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 text-xs w-5 text-center">#{index + 1}</span>
+                  <img src={crypto.image} alt={crypto.name} className="w-5 h-5 rounded-full flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-sm text-gray-100 truncate block">{crypto.symbol.toUpperCase()}</span>
+                  </div>
+                </div>
+                <span className="font-semibold text-sm text-blue-300 ml-2">
+                  {formatBigNumber(crypto.total_volume || 0)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Worst 10 por Volumen */}
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-purple-400 mb-3">🔇 Menor Volumen</h3>
+          <div className="space-y-1">
+            {statistics.worstByVolume.map((crypto, index) => (
+              <div key={crypto.id} className="flex items-center justify-between p-2 bg-gray-700/50 rounded-md">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 text-xs w-5 text-center">#{index + 1}</span>
+                  <img src={crypto.image} alt={crypto.name} className="w-5 h-5 rounded-full flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-sm text-gray-100 truncate block">{crypto.symbol.toUpperCase()}</span>
+                  </div>
+                </div>
+                <span className="font-semibold text-sm text-purple-300 ml-2">
+                  {formatBigNumber(crypto.total_volume || 0)}
                 </span>
               </div>
             ))}
@@ -268,41 +320,23 @@ const StatisticsView: React.FC<StatisticsViewProps> = ({ data }) => {
 
       {/* Insights automáticos */}
       <div className="bg-gradient-to-r from-cyan-900 to-blue-900 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-cyan-300 mb-4">🧠 Insights Automáticos</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <h3 className="text-xl font-bold text-cyan-300 mb-4">🧠 Insights del Mercado</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
           <div>
-            <strong className="text-cyan-300">Volatilidad del mercado:</strong>
-            <p className="text-gray-300 mt-1">
-              {statistics.stdDev > 15 ? 'Alta volatilidad' : 
-               statistics.stdDev > 8 ? 'Volatilidad moderada' : 'Baja volatilidad'} 
-              con una desviación estándar de {statistics.stdDev.toFixed(2)}%
+            <h4 className="font-semibold text-cyan-300 mb-2">📊 Análisis de Volatilidad:</h4>
+            <p className="text-gray-300">
+              La desviación estándar del {statistics.stdDev.toFixed(2)}% indica una volatilidad {' '}
+              {statistics.stdDev > 10 ? 'alta' : statistics.stdDev > 5 ? 'moderada' : 'baja'} en el mercado.
             </p>
           </div>
           
           <div>
-            <strong className="text-cyan-300">Sentimiento del mercado:</strong>
-            <p className="text-gray-300 mt-1">
-              {statistics.avg24h > 2 ? 'Muy alcista' :
-               statistics.avg24h > 0 ? 'Alcista' :
-               statistics.avg24h > -2 ? 'Bajista' : 'Muy bajista'} 
-              con un cambio promedio de {statistics.avg24h.toFixed(2)}%
-            </p>
-          </div>
-          
-          <div>
-            <strong className="text-cyan-300">Actividad de trading:</strong>
-            <p className="text-gray-300 mt-1">
-                             {statistics.highVolumeAssets.length} activos con volumen excepcional 
-               (más de {formatBigNumber(statistics.avgVolume * 10)})
-            </p>
-          </div>
-          
-          <div>
-            <strong className="text-cyan-300">Distribución de caps:</strong>
-            <p className="text-gray-300 mt-1">
-              {((statistics.largeCap.length / statistics.total) * 100).toFixed(1)}% large-cap, 
-              {((statistics.midCap.length / statistics.total) * 100).toFixed(1)}% mid-cap, 
-              {((statistics.smallCap.length / statistics.total) * 100).toFixed(1)}% small-cap
+            <h4 className="font-semibold text-cyan-300 mb-2">💡 Tendencia General:</h4>
+            <p className="text-gray-300">
+              {statistics.avg24h > 0 ? 'Mercado alcista' : 'Mercado bajista'} con promedio de {' '}
+              <span className={statistics.avg24h >= 0 ? 'text-green-400' : 'text-red-400'}>
+                {statistics.avg24h.toFixed(2)}%
+              </span>
             </p>
           </div>
         </div>

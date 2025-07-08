@@ -1,0 +1,62 @@
+# 🎯 CURSOR RULES - SISTEMA UNIVERSAL MULTI-IA
+# Reglas para proyectos con gestión colaborativa entre IAs
+
+## 📁 ESTRUCTURA DE PROYECTO
+- SIEMPRE mantener estructura docs/ con subdirectorios: system/, planning/, technical/, backup/, templates/
+- OBLIGATORIO: docs/system/PLAN_INTEGRADO_MAESTRO.md con matriz de tareas priorizadas
+- OBLIGATORIO: docs/system/DOCUMENTACION_TECNICA.md para problemas complejos únicamente
+- OBLIGATORIO: docs/system/ESTADO_PROYECTO.md para dashboard de progreso
+- OBLIGATORIO: README.md principal + docs/README.md como índice
+
+## 🔄 FLUJO DE TRABAJO
+- SIEMPRE leer docs/system/PLAN_INTEGRADO_MAESTRO.md antes de cualquier tarea
+- SIEMPRE actualizar estado en 3 documentos al cambiar tarea: plan maestro, estado proyecto, documentación técnica (solo si complejo)
+- NUNCA comenzar tarea sin revisar dependencias
+- NUNCA saltarse criterios de aceptación definidos
+
+## 📝 DOCUMENTACIÓN
+- Documentar ÚNICAMENTE problemas complejos, apartados importantes, y grandes problemas que cuestan resolver
+- NO documentar pasos menores, acciones obvias, o pequeños chequeos rutinarios
+- Usar formato cronológico: Problema/Causa Raíz/Solución/Herramientas/Criterios/Estado
+- Mantener enlaces cruzados entre documentos relacionados
+
+## 🎯 FORMATO DE COMUNICACIÓN
+- Usar formato estándar: TAREA: [ID] - [Descripción] | ESTADO: [🔴 PENDIENTE | 🟡 EN PROGRESO | ✅ COMPLETADO | ❌ BLOQUEADO] | COMPONENTE: [Archivo] | NOTAS: [Solo críticas]
+- Minimizar comunicación en chat - Todo se documenta en archivos .md
+- Preferir documentación en archivos sobre explicaciones en chat
+
+## 🔧 CRITERIOS DE CALIDAD
+- Implementaciones robustas sobre parches rápidos
+- Validación visual cuando sea posible
+- Commits pequeños y frecuentes con formato: [TASK-ID] Descripción del cambio
+- Compatibilidad multi-IA con contexto compartido
+
+## 🚨 SEGURIDAD
+- Secretos (claves API, credenciales) SIEMPRE mediante variables de entorno
+- Archivos .env SIEMPRE en .gitignore
+- Commits frecuentes y pequeños
+- Sincronización regular con rama remota
+
+## 📊 PROTOCOLO DE ACTUALIZACIÓN
+1. Cambio de estado → actualizar tabla en plan maestro
+2. Si problema complejo → documentar en DOCUMENTACION_TECNICA.md
+3. Actualizar contadores en ESTADO_PROYECTO.md
+4. Commit con formato: [TASK-ID] Descripción del cambio
+
+## 🎨 DESARROLLO
+- Para proyectos React/TypeScript: Manejo defensivo de código con validaciones robustas
+- Para errores de runtime: Simplificación temporal del componente principal para aislar problema
+- Para refactorización: Asegurar que TODOS los componentes que consumen la lógica sean actualizados
+- Optimizar rendimiento considerando recursos (reducir llamadas API, optimizar prompts IA)
+
+## 🔍 DIAGNÓSTICO
+- SIEMPRE investigar exhaustivamente archivos relevantes antes de codificar
+- SIEMPRE identificar causa raíz técnica, no solo síntoma superficial
+- CONSIDERAR contexto de librerías externas y sus limitaciones
+- Solicitar capturas de pantalla/logs para errores de UI/runtime
+
+## 🌐 COMUNICACIÓN
+- Always respond in spanish
+- Documentar problemas en docs/system/DOCUMENTACION_TECNICA.md
+- Usar README.md para información principal del proyecto
+- Mantener docs/README.md como índice completo de documentación 

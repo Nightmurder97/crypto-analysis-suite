@@ -1,101 +1,74 @@
-# 📈 Crypto Analysis Suite
+# 🪙 Crypto Analysis Suite
 
-Bienvenido a Crypto Analysis Suite, una aplicación web integral para el análisis profesional del mercado de criptomonedas. Esta herramienta ofrece una interfaz avanzada para visualizar datos, obtener análisis impulsados por IA y simular estrategias de portafolio.
+**Versión**: 3.0  
+**Estado**: Listo para uso  
+**Última actualización**: 08/01/2025
 
-## ✨ Funcionalidades
+## 🚀 **Inicio Rápido**
 
-- **Resumen de datos**: Tabla ordenable y filtrable con métricas de las 1000 principales criptomonedas.
-- **Heatmaps de mercado**: Visualizaciones para identificar tendencias:
-    - **Heatmap dual**: Rendimiento y volumen en paralelo.
-    - **Heatmap clásico**: Cuadrícula configurable para distintos indicadores.
-    - **Heatmap por sector**: Análisis por sector (IA, DeFi, Gaming, etc.).
-- **Análisis estadístico**: Gráficos y distribuciones para estudiar volatilidad y outliers.
-- **Análisis con IA**: Usa la API de Google Gemini para generar informes y resúmenes profesionales.
-- **Simulador de portafolio**: Herramienta interactiva para crear y probar portafolios virtuales.
-- **Reportes visuales**: Infografía dinámica y resumen ejecutivo profesional.
-- **Exportación de datos**: Descarga de datos en CSV desde cualquier vista.
+```bash
+# Instalar dependencias
+npm install
 
-## 🛠️ Tecnologías
+# Iniciar servidor de desarrollo
+npm run dev
 
-- **Frontend**: React, TypeScript
-- **Estilos**: CSS Modules
-- **IA**: Google Gemini API (`@google/genai`)
-- **Gráficos**: Chart.js con `react-chartjs-2`
-- **Datos**: CoinGecko API
-- **Build**: Vite
+# Construir para producción
+npm run build
+```
 
-## 📁 Estructura del proyecto
+## 🎯 **Características Principales**
+
+- **📊 Análisis de Criptomonedas**: Tabla principal con datos actualizados
+- **🔥 Heatmaps Interactivos**: Visualización por rendimiento y volumen
+- **📈 Estadísticas Avanzadas**: Análisis sectorial y rankings
+- **🤖 Reportes con IA**: Generación automática de análisis
+
+## 🏗️ **Estructura del Proyecto**
 
 ```
 crypto-analysis-suite/
-├── src/
-│   ├── components/
-│   │   ├── AnalysisSection.tsx
-│   │   ├── ClassicHeatmapDisplay.tsx
-│   │   ├── CryptoTable.tsx
-│   │   ├── HeatmapControls.tsx
-│   │   ├── HeatmapDisplay.tsx
-│   │   ├── IconComponents.tsx
-│   │   ├── PaginationControls.tsx
-│   │   ├── ReportsView.tsx
-│   │   ├── SectorHeatmapView.tsx
-│   │   ├── SimulatorView.tsx
-│   │   └── StatisticsView.tsx
-│   ├── services/
-│   │   └── geminiService.ts
-│   ├── utils/
-│   │   ├── apiClient.ts
-│   │   ├── csvExporter.ts
-│   │   └── csvParser.ts
-│   ├── App.tsx
-│   ├── index.css
-│   ├── index.tsx
-│   └── types.ts
-├── Reports/
-│   └── ... (reportes generados)
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── index.html
-└── README.md
+├── src/                    # Código fuente
+│   ├── components/         # Componentes React
+│   ├── services/          # Servicios (API, IA)
+│   └── utils/             # Utilidades
+├── docs/                  # Documentación organizada
+│   ├── system/           # Sistema de documentación
+│   ├── planning/         # Planes y resoluciones
+│   ├── technical/        # Documentación técnica
+│   ├── backup/           # Archivos de respaldo
+│   └── templates/        # Plantillas y guías
+├── public/               # Archivos estáticos
+└── Reports/              # Reportes generados
 ```
 
-## 🚀 Instrucciones rápidas de ejecución
+## 📚 **Documentación**
 
-### 1. Requisitos previos
-- Node.js (v18 o superior)
-- npm
+**Punto de entrada**: [`docs/system/INDICE_DOCUMENTACION.md`](docs/system/INDICE_DOCUMENTACION.md)
 
-### 2. Instalación
+### **Documentos Clave**:
+- **[Plan Maestro](docs/system/PLAN_INTEGRADO_MAESTRO.md)** - Roadmap completo
+- **[Estado Actual](docs/system/ESTADO_PROYECTO.md)** - Progreso del proyecto
+- **[Documentación Técnica](docs/system/DOCUMENTACION_TECNICA.md)** - Problemas y soluciones
 
-```bash
-git clone <url-del-repositorio>
-cd crypto-analysis-suite
-npm install
-```
+## 🔧 **Tecnologías**
 
-### 3. Variables de entorno
+- **React + TypeScript** - Frontend
+- **Vite** - Build tool
+- **Tailwind CSS** - Estilos
+- **Gemini AI** - Análisis inteligente
+- **CoinGecko API** - Datos de mercado
 
-Para usar el análisis con IA, necesitas una clave de API de Google Gemini.
+## 🤝 **Contribución**
 
-1. Crea un archivo `.env` en la raíz del proyecto.
-2. Añade tu clave:
+1. Consultar [`docs/system/PROTOCOLO_IA_COLABORACION.md`](docs/system/PROTOCOLO_IA_COLABORACION.md)
+2. Revisar [`docs/system/MATRIZ_TAREAS.md`](docs/system/MATRIZ_TAREAS.md)
+3. Seguir estándares establecidos
 
-    ```
-    GEMINI_API_KEY=TU_CLAVE_AQUI
-    ```
+## 📄 **Licencia**
 
-### 4. Ejecución
+MIT - Ver archivo LICENSE para detalles
 
-```bash
-npm run dev
-```
+---
 
-La app estará disponible en `http://localhost:5173`.
-
-### 5. Notas importantes
-- **CORS**: Si tienes errores de CORS al consultar CoinGecko, revisa la configuración de tu navegador o usa extensiones para desactivar restricciones.
-- **Límites de Gemini**: Si ves errores de cuota (`429 RESOURCE_EXHAUSTED`), tu clave ha superado el límite gratuito. Cambia de clave o proyecto en Google Cloud.
-
-## 🤝 Contribuciones
-¡Se agradecen contribuciones! Abre un issue o pull request para sugerencias o mejoras.
+**Desarrollado con ❤️ y 🤖 IA** 

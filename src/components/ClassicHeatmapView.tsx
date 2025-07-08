@@ -9,17 +9,24 @@ interface ClassicHeatmapViewProps {
 
 const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoData }) => {
   const [selectedMetric, setSelectedMetric] = useState<HeatmapMetric>('price_change_percentage_24h');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
 
-  // Tomar solo los primeros 100 para el heatmap clásico (10x10 grid)
-  // This must be defined before useCallback that depends on it.
-  const limitedData = useMemo(() => cryptoData.slice(0, 100), [cryptoData]);
+  // Lógica de paginación
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return cryptoData.slice(startIndex, endIndex);
+  }, [cryptoData, currentPage]);
+
+  const totalPages = useMemo(() => Math.ceil(cryptoData.length / itemsPerPage), [cryptoData]);
 
   const handleDownloadClassicHeatmapData = useCallback(() => {
-    if (limitedData.length === 0) {
+    if (paginatedData.length === 0) {
       alert("No hay datos para descargar.");
       return;
     }
-    const dataToDownload = limitedData; // Data already filtered to top 100
+    const dataToDownload = paginatedData; // Data already filtered to top 100
     const csvContent = [
       ['Name', 'Symbol', 'Price', 'Market Cap', 'Volume', '24h Change', '1h Change', '7d Change', '30d Change', 'Category'].join(','),
       ...dataToDownload.map((crypto: CryptoData) => [
@@ -46,7 +53,7 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, [limitedData]);
+  }, [paginatedData]);
 
   const metrics: { key: HeatmapMetric; label: string }[] = [
     { key: 'price_change_percentage_1h_in_currency', label: 'Cambio 1h' },
@@ -75,10 +82,10 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
             type="button"
             onClick={handleDownloadClassicHeatmapData}
             className="mt-2 sm:mt-0 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
-            disabled={limitedData.length === 0}
+            disabled={paginatedData.length === 0}
           >
             <ArrowDownTrayIcon className="w-4 h-4" />
-            Descargar CSV (Top 100)
+            Descargar CSV (Página Actual)
           </button>
         </div>
         
@@ -102,10 +109,33 @@ const ClassicHeatmapView: React.FC<ClassicHeatmapViewProps> = ({ data: cryptoDat
         </div>
 
         <p className="text-gray-400 mb-4">
-          Mostrando top 100 criptomonedas en formato grid 10x10
+          Mostrando {paginatedData.length} criptomonedas en formato grid 10x10
         </p>
         
-        <ClassicHeatmapDisplay data={limitedData} selectedMetric={selectedMetric} />
+        <ClassicHeatmapDisplay data={paginatedData} selectedMetric={selectedMetric} />
+
+        {/* Controles de Paginación */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-4">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+            <span className="text-gray-300">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

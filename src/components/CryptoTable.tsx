@@ -188,7 +188,7 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ data: initialData, onSelectCr
               <div className="px-4 py-3 font-medium text-slate-200" style={{ flex: columnConfig[1].flex }}>{coin.market_cap_rank}</div>
               <div className="px-4 py-3" style={{ flex: columnConfig[2].flex }}>
                 <div className="flex items-center">
-                  <img src={coin.image} alt={coin.name} className="w-6 h-6 mr-2 rounded-full shrink-0"/>
+                  <img src={coin.image} alt={coin.name} className="w-6 h-6 mr-2 rounded-full shrink-0 object-cover"/>
                   <span className="font-bold mr-2 text-slate-100 shrink-0">{coin.symbol?.toUpperCase()}</span>
                   <span className="truncate">{coin.name}</span>
                 </div>

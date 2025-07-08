@@ -6,8 +6,6 @@ import HeatmapView from './components/HeatmapView';
 import ClassicHeatmapView from './components/ClassicHeatmapView';
 import SectorHeatmapView from './components/SectorHeatmapView';
 import StatisticsView from './components/StatisticsView';
-import SimulatorView from './components/SimulatorView';
-import ReportsView from './components/ReportsView';
 import { CryptoData, ActiveTab } from './types';
 import { useCryptoData } from './utils/apiClient';
 import { enrichCryptoDataWithCategories } from './utils/csvCategoriesService';
@@ -248,12 +246,6 @@ function App() {
           </div>
         );
         
-      case 'simulator':
-        return <SimulatorView />;
-        
-      case 'reports':
-        return <ReportsView />;
-        
       default:
         return <div className="text-center text-gray-400">Sección en desarrollo</div>;
     }
@@ -303,9 +295,7 @@ function App() {
               { key: 'classicHeatmap', label: '🎯 Heatmap Clásico', icon: '🎯' },
               { key: 'sectorHeatmap', label: '🏢 Sectores', icon: '🏢' },
               { key: 'statistics', label: '📈 Estadísticas', icon: '📈' },
-              { key: 'aiAnalysis', label: '🤖 Análisis IA', icon: '🤖' },
-              { key: 'simulator', label: '🎮 Simulador', icon: '🎮' },
-              { key: 'reports', label: '📑 Reportes', icon: '📑' }
+              { key: 'aiAnalysis', label: '🤖 Análisis IA', icon: '🤖' }
             ].map(tab => (
               <button
                 key={tab.key}

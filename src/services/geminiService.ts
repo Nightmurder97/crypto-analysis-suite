@@ -19,7 +19,6 @@ const initializeGemini = () => {
   return genAI;
 };
 
-// 🧠 PROMPT MEJORADO: Más estructurado y específico
 const createAdvancedAnalysisPrompt = (cryptoData: CryptoData[]): string => {
   // Preparar estadísticas del mercado
   const validData = cryptoData.filter(coin => 
@@ -28,17 +27,8 @@ const createAdvancedAnalysisPrompt = (cryptoData: CryptoData[]): string => {
     coin.market_cap !== null
   );
 
-  // Calcular métricas del mercado
-  
-  // Top performers (top5Gainers, top5Losers) son ahora calculados por getTopPerformers y usados en formatTable
-  // No se necesitan estas variables separadas.
-    
-  // Distribución de tendencias
-  const NUM_ITEMS_FOR_TABLES = 5; // Number of items for Top/Worst performers tables
-
-  // Helper function to sort and slice data for tables
-  const getTopPerformers = (criteria: keyof CryptoData, order: 'asc' | 'desc', count: number) => {
-    return [...validData]
+  const getTopPerformers = (data: CryptoData[], criteria: keyof CryptoData, order: 'asc' | 'desc', count: number) => {
+    return [...data]
       .filter(coin => coin[criteria] !== null && coin[criteria] !== undefined)
       .sort((a, b) => {
         const valA = a[criteria] as number;
@@ -48,156 +38,86 @@ const createAdvancedAnalysisPrompt = (cryptoData: CryptoData[]): string => {
       .slice(0, count);
   };
 
-  const formatTable = (title: string, coins: CryptoData[], metricField: keyof CryptoData, isPercentage: boolean = true) => {
-    if (coins.length === 0) return `${title}:\nNo data available.\n`;
-    let table = `${title}:\n`;
-    table += `| Ranking | Nombre | Símbolo | % Cambio | Precio | Market Cap | Volumen 24h |\n`;
-    table += `|:--------|:-------|:--------|:---------|:-------|:-----------|:------------|\n`;
-    coins.forEach((coin, idx) => {
-        const metricValue = coin[metricField];
-        const displayMetric = typeof metricValue === 'number' ? (isPercentage ? `${metricValue.toFixed(2)}%` : metricValue) : 'N/A';
-        table += `| ${coin.market_cap_rank || idx + 1} | ${coin.name} | ${coin.symbol.toUpperCase()} | ${isPercentage ? ( (metricValue || 0) > 0 ? '🟢 ' : '🔻 ') : ''}${displayMetric} | ${coin.current_price?.toLocaleString() || 'N/A'} | ${coin.market_cap?.toLocaleString() || 'N/A'} | ${coin.total_volume?.toLocaleString() || 'N/A'} |\n`;
-    });
-    return table + '\n';
+  const formatTopList = (coins: CryptoData[], metricField: keyof CryptoData, emoji: string) => {
+    if (coins.length === 0) return 'No data available.\n';
+    return coins.map((coin, idx) => `${idx + 1}. **${coin.name}** (${coin.symbol.toUpperCase()}) ${emoji} ${((coin[metricField] || 0) as number).toFixed(2)}%`).join('\n');
   };
 
-  // Prepare data for the prompt
-  const totalMarketCap = validData.reduce((sum, coin) => sum + (coin.market_cap || 0), 0);
-  const totalVolume = validData.reduce((sum, coin) => sum + (coin.total_volume || 0), 0);
+  const top1h = getTopPerformers(validData, 'price_change_percentage_1h_in_currency', 'desc', 10);
+  const top24h = getTopPerformers(validData, 'price_change_percentage_24h', 'desc', 10);
+  const top7d = getTopPerformers(validData, 'price_change_percentage_7d_in_currency', 'desc', 10);
+  const top30d = getTopPerformers(validData, 'price_change_percentage_30d_in_currency', 'desc', 10);
 
-  const assetsUp24h = validData.filter(c => (c.price_change_percentage_24h || 0) > 0).length;
-  const assetsDown24h = validData.filter(c => (c.price_change_percentage_24h || 0) < 0).length;
-  const assetsNeutral24h = validData.length - assetsUp24h - assetsDown24h;
-
-  const assetsUp30d = validData.filter(c => (c.price_change_percentage_30d_in_currency || 0) > 0).length;
-  const assetsDown30d = validData.filter(c => (c.price_change_percentage_30d_in_currency || 0) < 0).length;
-  const assetsNeutral30d = validData.length - assetsUp30d - assetsDown30d;
-
-  const mostVolatile24h = getTopPerformers('price_change_percentage_24h', 'desc', NUM_ITEMS_FOR_TABLES)
-    .map(c => `${c.name} (${Math.abs(c.price_change_percentage_24h || 0).toFixed(2)}%)`)
-    .join(', ');
-
-  const highestLiquidity = getTopPerformers('total_volume', 'desc', NUM_ITEMS_FOR_TABLES)
-    .map(c => `${c.name} ($${(c.total_volume || 0).toLocaleString()})`)
-    .join(', ');
-
-  // Data for tables
-  const best24h = getTopPerformers('price_change_percentage_24h', 'desc', NUM_ITEMS_FOR_TABLES);
-  const worst24h = getTopPerformers('price_change_percentage_24h', 'asc', NUM_ITEMS_FOR_TABLES);
-  const best7d = getTopPerformers('price_change_percentage_7d_in_currency', 'desc', NUM_ITEMS_FOR_TABLES);
-  const worst7d = getTopPerformers('price_change_percentage_7d_in_currency', 'asc', NUM_ITEMS_FOR_TABLES);
-  const best30d = getTopPerformers('price_change_percentage_30d_in_currency', 'desc', NUM_ITEMS_FOR_TABLES);
-  const worst30d = getTopPerformers('price_change_percentage_30d_in_currency', 'asc', NUM_ITEMS_FOR_TABLES);
-
-  const topVolume = getTopPerformers('total_volume', 'desc', NUM_ITEMS_FOR_TABLES);
-  const topMarketCap = getTopPerformers('market_cap', 'desc', NUM_ITEMS_FOR_TABLES);
-
-  // Construct the prompt string
-  // This is a simplified version. A more dynamic approach would be better for complex data.
   const dataSummary = `
-**DATOS DEL MERCADO (${validData.length} criptomonedas analizadas):**
+### 🔼 Top 10 - Última Hora (1h)
+${formatTopList(top1h, 'price_change_percentage_1h_in_currency', '🔼')}
 
-**Métricas Generales:**
-- Capitalización total del mercado: $${totalMarketCap.toLocaleString()}
-- Volumen total 24h: $${totalVolume.toLocaleString()}
+### 🔼 Top 10 - Últimas 24 Horas
+${formatTopList(top24h, 'price_change_percentage_24h', '🟢')}
 
-**Dashboard de Métricas Clave:**
-*   Market Cap Total: $${totalMarketCap.toLocaleString()}
-*   Activos al Alza (últimas 24h): ${assetsUp24h} 🟢
-*   Activos a la Baja (últimas 24h): ${assetsDown24h} 🔻
-*   Activos Sin Cambio (últimas 24h): ${assetsNeutral24h}
-*   Activos al Alza (últimos 30d): ${assetsUp30d} 🟢
-*   Activos a la Baja (últimos 30d): ${assetsDown30d} 🔻
-*   Activos Sin Cambio (últimos 30d): ${assetsNeutral30d}
-*   Activos más Volátiles (24h, indicativo): ${mostVolatile24h || 'N/A'}
-*   Activos con Mayor Liquidez (24h): ${highestLiquidity || 'N/A'}
+### 🔼 Top 10 - Última Semana (7d)
+${formatTopList(top7d, 'price_change_percentage_7d_in_currency', '🟢')}
 
-${formatTable('Mejores Rendimientos (Últimas 24 horas)', best24h, 'price_change_percentage_24h')}
-${formatTable('Peores Rendimientos (Últimas 24 horas)', worst24h, 'price_change_percentage_24h')}
-${formatTable('Mejores Rendimientos (Últimos 7 días)', best7d, 'price_change_percentage_7d_in_currency')}
-${formatTable('Peores Rendimientos (Últimos 7 días)', worst7d, 'price_change_percentage_7d_in_currency')}
-${formatTable('Mejores Rendimientos (Últimos 30 días)', best30d, 'price_change_percentage_30d_in_currency')}
-${formatTable('Peores Rendimientos (Últimos 30 días)', worst30d, 'price_change_percentage_30d_in_currency')}
-
-${formatTable('Top 5 por Volumen 24h', topVolume, 'total_volume', false)}
-${formatTable('Top 5 por Market Cap', topMarketCap, 'market_cap', false)}
+### 🔼 Top 10 - Último Mes (30d)
+${formatTopList(top30d, 'price_change_percentage_30d_in_currency', '🟢')}
 `;
 
-  return `Eres un analista experto de criptomonedas de nivel institucional. Tu tarea es generar un informe de mercado detallado, perspicaz y profesional en **español**.
-Utiliza **EXCLUSIVAMENTE** los datos pre-procesados que se proporcionan a continuación. No inventes ni alucines datos.
-El informe debe seguir rigurosamente la siguiente estructura y mantener un tono formal y analítico, utilizando emojis para mejorar la legibilidad y tablas en formato Markdown cuando se indique.
+  return `Eres un analista experto de criptomonedas de nivel institucional. Tu tarea es generar un informe de mercado detallado, perspicaz y profesional en **español**, basándote **EXCLUSIVAMENTE** en los datos que se te proporcionan.
 
-${dataSummary}
-
-**INSTRUCCIONES PARA EL INFORME:**
-
-# 🪙 INFORME DE MERCADO DE CRIPTOMONEDAS
-*Fecha del Análisis: ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} ${new Date().toLocaleTimeString('es-ES')}*
-
-##  EXECUTIVE SUMMARY
-[Proporciona un resumen conciso (4-5 líneas) del comportamiento del mercado, destacando tendencias clave, sentimiento general y cualquier movimiento significativo observado en los datos proporcionados.]
-
-## DASHBOARD DE MÉTRICAS CLAVE
-[Esta sección ya está incluida en los datos de entrada. Puedes referenciarla o resumirla brevemente si es necesario, pero enfócate en el análisis.]
-
-## Tendencias Generales del Grupo
-[Analiza las tendencias generales del mercado basándote en los datos de activos al alza/baja y los rendimientos en 1h, 24h, 7d, 30d. Describe el sentimiento del mercado a corto, medio y largo plazo.]
-
-## Mejores Rendimientos
-[Comenta brevemente los activos listados en las tablas de "Mejores Rendimientos". Si identificas patrones (ej. un sector en particular, una narrativa común), menciónalo. No necesitas repetir todos los datos de las tablas.]
-
-## Peores Rendimientos
-[Comenta brevemente los activos listados en las tablas de "Peores Rendimientos". Identifica posibles razones o implicaciones si los datos lo sugieren.]
-
-## Top por Volumen y Market Cap
-[Analiza la concentración de volumen y capitalización. ¿Qué implica que ciertos activos dominen estas métricas? Comenta la liquidez.]
-
-## Análisis de Volumen
-[Profundiza en el análisis del volumen de negociación. ¿Hay algo destacable sobre el volumen total o el volumen de activos específicos? ¿Qué indica sobre la actividad del mercado y la confianza de los inversores?]
-
-## Observaciones Clave
-[Presenta 3-4 observaciones cruciales o insights derivados de todos los datos proporcionados. Estas deben ser conclusiones importantes que un inversor debería conocer.]
-
-## Estrategias Recomendadas
-[Basándote **estrictamente** en los datos y tendencias observadas, sugiere 2-3 estrategias de trading o inversión. Para cada estrategia, incluye:
-*   **Fundamento:** ¿Por qué esta estrategia? (basado en datos)
-*   **Activos Potenciales:** (si aplica, de los datos)
-*   **Entrada Sugerida:** (conceptual, ej. "tras confirmación de X")
-*   **Trigger:** (ej. "RSI saliendo de sobreventa")
-*   **Salida (Take Profit):** (conceptual)
-*   **Stop Loss:** (conceptual)
-*   **Riesgos:**
-No inventes niveles de precios específicos si no están en los datos.]
-
-## Matriz de Performance Ajustada a Riesgo
-[Crea una tabla Markdown similar a la del ejemplo, evaluando 5-7 activos destacados de los datos. Las columnas deben ser: "Activo Destacado", "Retorno (30D)", "Volatilidad (Implied)", "Liquidez (Volumen/MCap)", "Recomendación", "Scoring Inversión (1-10)", "Scoring Riesgo (1-10)", "Scoring Liquidez (1-10)". La Volatilidad Implied y los Scorings serán tu evaluación cualitativa basada en los datos.]
-Ejemplo de tabla:
-| Activo Destacado | Retorno (30D) | Volatilidad (Implied) | Liquidez (Volumen/MCap) | Recomendación | Scoring Inversión | Scoring Riesgo | Scoring Liquidez |
-|:-----------------|:--------------|:----------------------|:------------------------|:---------------|:-----------------|:---------------|:-----------------|
-| Bitcoin (BTC)    | 🟢 Bajo (+X.X%) | Baja                  | Muy Alta (0.XXX)        | Hold / Acumular | X/10             | X/10           | X/10             |
-
-## Ideas de Trading Accionables (TOP 3)
-[Presenta 3 ideas de trading concretas y accionables basadas en los datos. Para cada una:
-*   **Contexto:** Breve descripción.
-*   **Acción:** (ej. "Comprar si X consolida por encima de Y")
-*   **Objetivo:** (conceptual)
-*   **Stop-Loss:** (conceptual)
-*   **Horizonte:** (ej. "Intradía", "Corto Plazo")]
-
-## Sugerencias de Asignación de Cartera por Perfil de Riesgo
-[Proporciona sugerencias de asignación de cartera (conceptual, usando los activos de los datos) para perfiles Conservador, Moderado y Agresivo. Justifica brevemente.]
-
-## MUST-TAKE MESSAGES
-[Lista en formato bullet point los activos más destacados de los datos proporcionados, indicando por qué son notables (ej. "BTC: Volumen | Market Cap. Oportunidad destacada." o "XYZ: Top 30d. Fuerte rendimiento.")]
+**Instrucción Principal:** Rellena la siguiente plantilla de informe. Sigue la estructura y las instrucciones entre corchetes [INSTRUCCIÓN: ...] de forma rigurosa. Adopta el tono y estilo del ejemplo de "Executive Summary" que se te proporciona. No inventes datos que no se puedan derivar de la información de entrada.
 
 ---
-**Recordatorios Finales:**
-- El análisis debe ser **objetivo y basado en datos**.
-- Utiliza un **lenguaje profesional y claro**.
-- Asegúrate de que el informe sea **comprensible y útil** para un inversor.
-- **Formato Markdown es esencial.**
-- **Incluye emojis relevantes** para mejorar la presentación visual.
-- No excedas la longitud máxima de respuesta si es posible, pero prioriza la calidad y completitud del informe según esta estructura.
+### EJEMPLO DE ESTILO Y TONO (Para el Executive Summary)
+*El mercado de criptomonedas se encuentra en una fase de consolidación y corrección a corto plazo, evidenciada por el hecho de que solo el 15.4% de los activos han experimentado ganancias en las últimas 24 horas. Sin embargo, el panorama a medio plazo muestra una resiliencia notable, con un 65.0% de las criptomonedas al alza en las últimas 7 días, lo que sugiere que las caídas recientes podrían ser una oportunidad de compra para los inversores con una perspectiva a más largo plazo. La capitalización total del mercado se mantiene robusta en $3.22 billones, con Bitcoin (BTC) y Ethereum (ETH) dominando la liquidez y la capitalización.*
+---
+
+**DATOS DE MERCADO PARA TU ANÁLISIS:**
+${dataSummary}
+**Total de criptomonedas analizadas:** ${validData.length}
+**Datos completos (primeros 5 para referencia):**
+${JSON.stringify(validData.slice(0, 5), null, 2)}
+
+---
+**PLANTILLA DE INFORME A RELLENAR:**
+
+# 📊 Análisis Integral de Mercado de Criptomonedas
+
+## 📈 Executive Summary
+[INSTRUCCIÓN: Escribir 4-5 párrafos sobre:
+- Estado general del mercado y sentimiento
+- Capitalización total y dominancia BTC (si se puede calcular)
+- Tendencias principales observadas en los datos de Top Performers
+- Nivel de riesgo actual inferido de la volatilidad
+- Puntos clave más importantes
+- Recomendación general de posicionamiento]
+
+## 🎯 Dashboard de Métricas Clave
+[INSTRUCCIÓN: Rellena los siguientes puntos basándote en los datos. Si un dato no se puede calcular, indícalo como "No disponible".]
+### Indicadores Principales:
+- **Capitalización Total del Mercado**: [Calcula la suma de market_cap]
+- **Dominancia de Bitcoin**: [Calcula (BTC market_cap / Total market_cap) * 100, si BTC está en los datos]
+- **Índice de Miedo y Codicia**: [Infiere un estado (ej. Miedo, Neutral, Codicia) basado en la proporción de activos al alza vs a la baja en 24h y 7d]
+- **Volumen Total 24h**: [Calcula la suma de total_volume]
+- **Número de Activos en Tendencia Alcista**: [Calcula el número de activos con cambio > 0 en 24h y 7d y su porcentaje]
+
+### Métricas de Volatilidad:
+- **Volatilidad Promedio 24h**: [Describe si es alta o baja y menciona el activo más volátil del top 10 de 24h]
+- **Correlación con Mercados Tradicionales**: [Indica "No disponible con los datos actuales"]
+
+## 🏢 Análisis por Grupos de Capitalización
+[INSTRUCCIÓN: Esta sección requiere un análisis más profundo. Si es muy complejo, puedes indicar "Análisis detallado por capitalización no implementado en esta versión". De lo contrario, intenta agrupar los 20 primeros activos por market cap y analiza su tendencia general.]
+
+## 💎 Must-Take Messages
+[INSTRUCCIÓN: Lista 5-7 mensajes clave o takeaways basados en los datos de los Top Performers. Por ejemplo: "El token X muestra un momentum excepcional en el último mes, indicando un fuerte interés especulativo." o "El sector Y parece estar en una fase de corrección, como lo demuestra la presencia de varios de sus tokens en las listas de peores rendimientos (si estuvieran disponibles)."]
+
+## ⚠️ Observaciones Clave y Alertas
+[INSTRUCCIÓN: Identifica cualquier patrón o anomalía en los datos. Por ejemplo, si un mismo token aparece en el top de 1h, 24h y 7d, es una observación clave sobre su momentum. Si un token tiene un cambio de precio enorme pero un volumen muy bajo, es una alerta de posible baja liquidez o manipulación.]
+
+## 🔮 Conclusiones y Perspectivas de Mercado
+[INSTRUCCIÓN: Ofrece una conclusión final sobre la fase actual del mercado y qué podrían esperar los inversores en los próximos días basándote estrictamente en los datos de rendimiento proporcionados.]
+
+---
+**Disclaimer**: Este análisis es únicamente para fines informativos y educativos. No constituye asesoramiento financiero.
 `;
 };
 

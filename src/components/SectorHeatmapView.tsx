@@ -30,6 +30,20 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
   const [csvStats, setCsvStats] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expandedSectors, setExpandedSectors] = useState<Set<string>>(new Set());
+
+  // Función para alternar la expansión de un sector
+  const toggleSectorExpansion = (sectorName: string) => {
+    setExpandedSectors(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectorName)) {
+        newSet.delete(sectorName);
+      } else {
+        newSet.add(sectorName);
+      }
+      return newSet;
+    });
+  };
 
   // 🔄 Cargar estadísticas del CSV
   useEffect(() => {
@@ -228,23 +242,70 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
         </div>
       </div>
 
-      {/* Ranking de sectores */}
-      <div className="bg-gray-800 p-6 rounded-lg">
+      {/* Ranking de Sectores Desplegable */}
+      <div className="bg-gray-800 p-4 md:p-6 rounded-lg">
         <h3 className="text-xl font-bold text-cyan-400 mb-4">🏆 Ranking de Sectores (24h)</h3>
         <div className="space-y-2">
-          {sectorAnalysis.slice(0, 10).map((sector, index) => (
-            <div key={sector.name} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-              <div className="flex items-center gap-3">
-                <span className="text-gray-400 font-mono text-sm w-6">#{index + 1}</span>
-                <span className="font-semibold text-white">{sector.name}</span>
-                <span className="text-gray-400 text-sm">({sector.count} activos)</span>
+          {sectorAnalysis.map((sector, index) => (
+            <div key={sector.name} className="bg-gray-900/50 rounded-lg">
+              <div 
+                className="flex items-center justify-between p-3 cursor-pointer hover:bg-gray-700/50 rounded-t-lg"
+                onClick={() => toggleSectorExpansion(sector.name)}
+              >
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="text-gray-400 font-mono text-sm w-6">#{index + 1}</span>
+                  <span className="font-semibold text-white">{sector.name}</span>
+                  <span className="text-gray-400 text-sm">({sector.count} activos)</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="hidden md:inline text-gray-400 text-sm">{formatBigNumber(sector.totalMarketCap)}</span>
+                  <span className={`font-bold text-lg w-24 text-right ${sector.avgChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {sector.avgChange >= 0 ? '+' : ''}{sector.avgChange.toFixed(2)}%
+                  </span>
+                  <span className="text-gray-400 text-xl w-6 text-center">
+                    {expandedSectors.has(sector.name) ? '▲' : '▼'}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-gray-400 text-sm">{formatBigNumber(sector.totalMarketCap)}</span>
-                <span className={`font-bold text-lg ${sector.avgChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {sector.avgChange >= 0 ? '+' : ''}{sector.avgChange.toFixed(2)}%
-                </span>
-              </div>
+              
+              {expandedSectors.has(sector.name) && (
+                <div className="p-2 md:p-4 border-t border-gray-700">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-gray-400">
+                        <th className="p-2">Activo</th>
+                        <th className="p-2 text-right">Precio</th>
+                        <th className="p-2 text-right">Cambio 24h</th>
+                        <th className="hidden md:table-cell p-2 text-right">Market Cap</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sector.cryptos
+                        .sort((a, b) => (b.market_cap || 0) - (a.market_cap || 0))
+                        .map(crypto => (
+                        <tr key={crypto.id} className="border-b border-gray-800 last:border-none">
+                          <td className="p-2">
+                            <div className="flex items-center gap-2">
+                              <img src={crypto.image} alt={crypto.name} className="w-5 h-5 rounded-full" />
+                              <div>
+                                <div className="font-medium text-white">{crypto.name}</div>
+                                <div className="text-gray-500">{crypto.symbol.toUpperCase()}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-2 text-right text-white font-mono">${(crypto.current_price || 0).toLocaleString()}</td>
+                          <td className={`p-2 text-right font-semibold ${crypto.price_change_percentage_24h && crypto.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {crypto.price_change_percentage_24h?.toFixed(2)}%
+                          </td>
+                          <td className="hidden md:table-cell p-2 text-right text-gray-400 font-mono">
+                            {formatBigNumber(crypto.market_cap || 0)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -257,7 +318,6 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
             key={sector.name} 
             className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
-            {/* Header del sector con gradiente dinámico */}
             <div className={`bg-gradient-to-r ${getSectorColor(sector.avgChange)} p-4`}>
               <div className="flex justify-between items-start">
                 <div>
@@ -273,7 +333,6 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
               </div>
             </div>
             
-            {/* Métricas del sector */}
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
@@ -291,7 +350,6 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
                 </div>
               </div>
               
-              {/* Top performers del sector */}
               {sector.topPerformers.length > 0 && (
                 <div className="border-t border-gray-700 pt-3">
                   <h4 className="text-sm font-semibold text-green-300 mb-2">
@@ -312,7 +370,6 @@ const SectorHeatmapView: React.FC<SectorHeatmapViewProps> = ({ data: enrichedDat
                 </div>
               )}
 
-              {/* Worst performers del sector */}
               {sector.worstPerformers.length > 0 && sector.avgChange < 0 && (
                 <div className="border-t border-gray-700 pt-3">
                   <h4 className="text-sm font-semibold text-red-300 mb-2">
