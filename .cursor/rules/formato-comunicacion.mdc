@@ -1,22 +1,21 @@
+---
+description: Formato estándar de comunicación entre IAs con estados de tareas y minimización de chat en favor de documentación .md
+globs: docs/**/*.md,*.md
+alwaysApply: true
+---
+
 # FORMATO DE COMUNICACIÓN
 
 ## REGLA: COMUNICACIÓN ESTÁNDAR
+
 - Usar formato estándar: TAREA: [ID] - [Descripción] | ESTADO: [🔴 PENDIENTE | 🟡 EN PROGRESO | ✅ COMPLETADO | ❌ BLOQUEADO] | COMPONENTE: [Archivo] | NOTAS: [Solo críticas]
 - Minimizar comunicación en chat - Todo se documenta en archivos .md
 - Preferir documentación en archivos sobre explicaciones en chat
 - Always respond in spanish
 
 ## ESTADOS DE TAREAS
+
 - 🔴 PENDIENTE: Sin iniciar
 - 🟡 EN PROGRESO: Actualmente trabajando
 - ✅ COMPLETADO: Terminado y verificado
 - ❌ BLOQUEADO: Impedido por dependencia externa
-
----
-description: "Formato estándar de comunicación entre IAs con estados de tareas y minimización de chat en favor de documentación .md"
-globs: 
-  - "docs/**/*.md"
-  - "*.md"
-alwaysApply: true
-when: "always"
-priority: 1

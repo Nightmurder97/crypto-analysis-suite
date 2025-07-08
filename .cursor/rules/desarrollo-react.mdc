@@ -1,23 +1,20 @@
+---
+description: Reglas específicas para desarrollo React/TypeScript con manejo defensivo, validaciones robustas y optimización de rendimiento
+globs: src/**/*.tsx,src/**/*.ts,*.tsx,*.ts
+alwaysApply: true
+---
+
 # DESARROLLO REACT/TYPESCRIPT
 
 ## REGLA: CÓDIGO DEFENSIVO
+
 - Para proyectos React/TypeScript: Manejo defensivo de código con validaciones robustas
 - Para errores de runtime: Simplificación temporal del componente principal para aislar problema
 - Para refactorización: Asegurar que TODOS los componentes que consumen la lógica sean actualizados
 - Optimizar rendimiento considerando recursos (reducir llamadas API, optimizar prompts IA)
 
 ## VALIDACIONES
+
 - Incluir validaciones robustas y manejo de casos límite (null, 0, NaN, Infinity)
 - Manejo de errores en funciones críticas, especialmente cálculos matemáticos
 - Verificar tipos TypeScript estrictos
-
----
-description: "Reglas específicas para desarrollo React/TypeScript con manejo defensivo, validaciones robustas y optimización de rendimiento"
-globs: 
-  - "src/**/*.tsx"
-  - "src/**/*.ts"
-  - "*.tsx"
-  - "*.ts"
-alwaysApply: true
-when: "onEdit"
-priority: 1

@@ -1,22 +1,20 @@
+---
+description: Documentación técnica selectiva solo para problemas complejos con formato cronológico y enlaces cruzados
+globs: docs/system/DOCUMENTACION_TECNICA.md,docs/README.md,README.md
+alwaysApply: false
+---
+
 # DOCUMENTACIÓN TÉCNICA
 
 ## REGLA: DOCUMENTACIÓN SELECTIVA
+
 - Documentar ÚNICAMENTE problemas complejos, apartados importantes, y grandes problemas que cuestan resolver
 - NO documentar pasos menores, acciones obvias, o pequeños chequeos rutinarios
 - Usar formato cronológico: Problema/Causa Raíz/Solución/Herramientas/Criterios/Estado
 - Mantener enlaces cruzados entre documentos relacionados
 
 ## UBICACIÓN
+
 - Problemas complejos → docs/system/DOCUMENTACION_TECNICA.md
 - Usar README.md para información principal del proyecto
 - Mantener docs/README.md como índice completo de documentación
-
----
-description: "Documentación técnica selectiva solo para problemas complejos con formato cronológico y enlaces cruzados"
-globs: 
-  - "docs/system/DOCUMENTACION_TECNICA.md"
-  - "docs/README.md"
-  - "README.md"
-alwaysApply: false
-when: "onMention"
-priority: 2

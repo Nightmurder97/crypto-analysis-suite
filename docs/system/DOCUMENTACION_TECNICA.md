@@ -60,23 +60,29 @@ Usuario solicita que cada regla del sistema .cursor vaya en un archivo separado,
 - `delete_file`: Para eliminar archivo original con todas las reglas
 - `run_terminal_cmd`: Para verificar estructura resultante
 
-**Corrección Posterior**:
-- Usuario identificó falta de metadatos YAML completos
-- Agregados campos faltantes: `when` y `priority`
-- Configuración específica por tipo de regla:
-  - `when: "always"` para reglas críticas (estructura, flujo, comunicación, seguridad)
-  - `when: "onEdit"` para reglas de desarrollo
-  - `when: "onMention"` para reglas de documentación y diagnóstico
-  - `priority: 1` para reglas críticas, `priority: 2` para opcionales
+**Corrección Crítica - Formato Oficial**:
+- Usuario identificó que Cursor no reconocía las reglas
+- Investigación web + documentación oficial de Cursor revelaron error grave
+- Campos `when` y `priority` **NO EXISTEN** en Cursor - fueron inventados
+- Formato correcto es solo: `description`, `globs`, `alwaysApply`
+- **Corregido a formato oficial de Cursor**:
+  ```yaml
+  ---
+  description: Texto simple sin comillas
+  globs: pattern1,pattern2  # Sin array, separados por comas
+  alwaysApply: true/false
+  ---
+  ```
 
 **Criterios de Aceptación Cumplidos**:
 - ✅ Cada regla en archivo separado
-- ✅ Configuración YAML correcta por archivo
-- ✅ Globs específicos por tipo de regla
+- ✅ Configuración MDC oficial de Cursor por archivo
+- ✅ Globs específicos por tipo de regla (formato correcto: separados por comas)
 - ✅ Eliminación de duplicados
 - ✅ Estructura .cursor/rules/ limpia
 - ✅ Mantenibilidad mejorada
-- ✅ Metadatos YAML completos: description, globs, alwaysApply, when, priority
+- ✅ Formato frontmatter oficial: description, globs, alwaysApply únicamente
+- ✅ Cursor reconoce y aplica las reglas correctamente
 
 **Estado**: COMPLETADO
 
