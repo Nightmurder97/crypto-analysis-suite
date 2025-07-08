@@ -69,7 +69,21 @@
 			"markdown": true,
 			"typescript": true,
 			"typescriptreact": true
-		}
+		},
+		
+		// Configuración de barras laterales (según preferencias del usuario)
+		"workbench.activityBar.location": "default",
+		"workbench.sideBar.location": "left",
+		"workbench.panel.defaultLocation": "bottom",
+		
+		// Configuración de extensiones en barra secundaria derecha
+		"workbench.view.extensions.secondary.cline": true,
+		"workbench.view.extensions.secondary.claude-dev": true,
+		"workbench.view.extensions.secondary.geminicodeassist": true,
+		"workbench.secondarySideBar.location": "right",
+		
+		// Configuración específica para mostrar barra secundaria
+		"workbench.sideBar.showSecondaryPanelOnRight": true
 	},
 	"extensions": {
 		"recommendations": [
@@ -92,7 +106,13 @@
 			
 			// AI/Copilot (según preferencias del usuario)
 			"github.copilot",
-			"ms-vscode.github-copilot-extension-pack"
+			"ms-vscode.github-copilot-extension-pack",
+			
+			// Asistentes IA configurados para barra secundaria derecha
+			"saoudrizwan.claude-dev",
+			"rooveterinaryinc.roo-cline",
+			"anthropic.claude-code",
+			"google.geminicodeassist"
 		]
 	},
 	"tasks": {
