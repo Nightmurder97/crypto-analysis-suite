@@ -1,0 +1,54 @@
+---
+description: Protocolo estricto para manejo de claves API - NUNCA exponer claves completas
+alwaysApply: true
+---
+
+# SEGURIDAD CRÍTICA - MANEJO DE CLAVES API
+
+## REGLA FUNDAMENTAL: NUNCA EXPONER CLAVES COMPLETAS
+
+### ❌ PROHIBIDO ABSOLUTAMENTE
+- `cat .env` sin filtrar
+- `grep API_KEY` sin enmascarar
+- `echo $API_KEY` directo
+- Mostrar claves en comandos de terminal
+- Incluir claves en documentación (ni como ejemplo)
+
+### ✅ PROTOCOLO SEGURO OBLIGATORIO
+
+#### Para Exportar Variables de Entorno:
+```bash
+# MÉTODO CORRECTO:
+source .env
+export GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
+# VERIFICACIÓN SEGURA:
+echo "Clave configurada - Terminación: ****${GEMINI_API_KEY: -4}"
+```
+
+#### Para Verificación:
+- Solo mostrar **4 últimos caracteres**: `${VAR: -4}`
+- Usar enmascarado: `****xxxx`
+- Nunca mostrar más de 4 caracteres finales
+
+#### Para Documentación:
+- Usar placeholders: `[CLAVE_OCULTA]`
+- Usar ejemplos genéricos: `TU_CLAVE_AQUI`
+- Nunca claves reales, ni en contexto de "ejemplo"
+
+### 🚨 PROTOCOLO DE EMERGENCIA
+
+Si se expone accidentalmente una clave:
+1. Regenerar inmediatamente en proveedor
+2. Actualizar .env con nueva clave
+3. Documentar incidente con clave enmascarada
+4. Verificar logs de uso no autorizado
+
+### 📋 CHECKLIST PRE-COMANDO
+
+Antes de cualquier comando con variables de entorno:
+- [ ] ¿El comando mostrará la clave completa?
+- [ ] ¿Estoy usando el método de verificación seguro?
+- [ ] ¿He enmascarado todas las claves en la documentación?
+
+**RECORDATORIO**: Doble incidente en crypto-analysis-suite demostró criticidad de este protocolo.

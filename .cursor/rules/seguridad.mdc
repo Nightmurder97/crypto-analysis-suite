@@ -13,6 +13,13 @@ alwaysApply: true
 - NUNCA hardcodear claves o tokens en código
 - Verificar .gitignore antes de commits
 
+## REGLA CRÍTICA: NUNCA EXPONER CLAVES EN CHAT
+
+- NUNCA usar `cat .env`, `grep API_KEY` o `echo $API_KEY` sin enmascarar
+- SOLO mostrar últimos 4 caracteres: `****${VAR: -4}`
+- Usar protocol seguro: `source .env` + `export` sin mostrar contenido
+- En documentación: usar `[CLAVE_OCULTA]` o `TU_CLAVE_AQUI`
+
 ## CONTROL DE VERSIONES
 
 - Commits frecuentes y pequeños

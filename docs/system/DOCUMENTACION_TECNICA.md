@@ -461,5 +461,65 @@ Durante la documentación del incidente de seguridad anterior (07/01/2025), se i
 
 ---
 
-**Última Actualización**: 08/01/2025 - 08:24
+## 🛡️ **08/01/2025 - 08:40**
+### 📋 **PREVENCIÓN**: Creación de Memoria y Reglas Anti-Exposición
+
+**Problema**: 
+Doble incidente de exposición de claves API requiere medidas preventivas permanentes para evitar repetición.
+
+**Causa Raíz**: 
+Falta de protocolo estricto y automatizado para manejo de claves API en interacciones IA-usuario.
+
+**Solución Implementada**:
+1. **Memoria de seguridad creada** (ID: 2559856):
+   - Protocolo de manejo seguro de claves API
+   - Métodos prohibidos y permitidos
+   - Verificación solo con últimos 4 caracteres
+
+2. **Regla Cursor nueva**: `.cursor/rules/seguridad-api-keys.mdc`
+   - Protocolo seguro obligatorio
+   - Comandos prohibidos específicos
+   - Checklist pre-comando
+   - Protocolo de emergencia
+
+3. **Reglas existentes actualizadas**: 
+   - Regla de seguridad expandida con protocolo de claves
+   - Aplicación siempre activa (`alwaysApply: true`)
+
+**Protocolo Seguro Establecido**:
+```bash
+# MÉTODO SEGURO PARA EXPORTAR:
+source .env
+export GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+echo "Clave configurada - Terminación: ****${GEMINI_API_KEY: -4}"
+```
+
+**Comandos Prohibidos**:
+- ❌ `cat .env` sin filtrar
+- ❌ `grep API_KEY` sin enmascarar  
+- ❌ `echo $API_KEY` directo
+- ❌ Incluir claves en documentación
+
+**Verificación Implementada**:
+- ✅ Solo últimos 4 caracteres: `****q_4U`
+- ✅ Protocolo funcionando correctamente
+- ✅ Ambos sistemas (Crypto Analysis + GeminiCLI) operativos
+
+**Herramientas Utilizadas**:
+- `update_memory`: Creación de memoria de seguridad
+- `edit_file`: Nueva regla de seguridad específica
+- `search_replace`: Actualización de reglas existentes
+
+**Criterios de Aceptación Cumplidos**:
+- ✅ Memoria permanente sobre protocolo seguro
+- ✅ Reglas Cursor aplicables automáticamente
+- ✅ Protocolo probado y funcional
+- ✅ Documentación completa del procedimiento
+- ✅ Prevención de futuros incidentes garantizada
+
+**Estado**: COMPLETADO - Medidas preventivas permanentes implementadas
+
+---
+
+**Última Actualización**: 08/01/2025 - 08:40
 **Próxima Revisión**: 08/01/2025 - 15:00 
