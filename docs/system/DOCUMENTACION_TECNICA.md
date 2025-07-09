@@ -2,6 +2,25 @@
 
 > **NORMA OBLIGATORIA:** Prohibido inventar, imaginar o estimar datos, fechas u horas. Si no se sabe, debe indicarse. Valores simulados deben estar claramente marcados como tales.
 
+### [E5.9] Estrategia para evitar alucinaciones en análisis Gemini (pendiente)
+
+**Problema:**
+El análisis IA de Gemini puede “alucinar” o inventar datos si el prompt no incluye toda la información requerida por el template.
+
+**Causa raíz:**
+La API pública de CoinGecko no entrega todos los datos técnicos (RSI, MACD, correlaciones, ideas de trading, scoring, etc) que exige el template. Gemini rellena los huecos para cumplir la estructura.
+
+**Solución propuesta:**
+- Calcular localmente los indicadores técnicos y métricas derivadas usando históricos de CoinGecko.
+- Enriquecer el prompt con todos los datos calculados y tablas completas.
+- Cambiar la instrucción del prompt para que Gemini nunca invente datos: “Si no hay datos, escribe ‘No disponible’ y no inventes nada”.
+
+**Estado:**
+Pendiente de implementación.
+El usuario ha solicitado dejar la tarea documentada y pendiente para la próxima sesión.
+
+---
+
 ## 🗓️ 08/07/2025 - 22:00
 
 ### ⚙️ TAREA E4.1: Actualización de Prompt de IA para Reporte Específico
