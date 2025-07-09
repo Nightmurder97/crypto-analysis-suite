@@ -1054,3 +1054,13 @@ aunque la variable esté correctamente definida en `.env`.
 3. Documentar validación visual y feedback de usuario.
 
 **Estado:** EN PROGRESO
+
+### [E5.9] Checklist de problemas pendientes para Jules (pendiente)
+
+1. [E5.9-1] Implementar cálculo local de indicadores técnicos (RSI, MACD, correlaciones, scoring, ideas de trading, etc) usando históricos de CoinGecko para enriquecer el prompt de Gemini y evitar alucinaciones.
+2. [E5.9-2] Modificar el prompt de Gemini para que, si falta un dato, indique "No disponible" y nunca invente información.
+3. [E5.9-3] Automatizar la generación de todas las tablas obligatorias del template Gemini usando solo datos reales de la API y cálculos locales.
+4. [E5.9-4] Validar que el análisis IA Gemini incluya exactamente 1000 criptomonedas y que los 4 bloques de 250 funcionen siempre (sin errores de selección ni de tokens).
+5. [E5.9-5] Mejorar el manejo de errores y mensajes visuales en la UI para advertir si faltan datos técnicos o si el análisis IA no es 100% fiel a los datos reales.
+
+---
